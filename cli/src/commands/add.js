@@ -5,7 +5,8 @@ import kleur from "kleur";
 import { Listr } from "listr2";
 import path from "node:path";
 import process from "node:process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { get } from "https";
 
 export function initializeAdd(program) {
     const log = {
@@ -14,6 +15,9 @@ export function initializeAdd(program) {
         error: (msg) => console.error(kleur.red().bold(msg)),
         success: (msg) => console.log(kleur.green().bold(msg)),
     };
+
+    const githubBase =
+        "https://raw.githubusercontent.com/aidan-neel/neel-ui/ui/registry/ui/default";
 
     const availableComponents = [
         "alert-dialog",
@@ -28,6 +32,19 @@ export function initializeAdd(program) {
         "skeleton",
         "toast",
     ];
+
+    const fetchFile = (url) =>
+        new Promise((resolve, reject) => {
+            get(url, (res) => {
+                if (res.statusCode !== 200) {
+                    return reject(new Error(`Failed to fetch ${url}`));
+                }
+
+                let data = "";
+                res.on("data", (chunk) => (data += chunk));
+                res.on("end", () => resolve(data));
+            }).on("error", reject);
+        });
 
     program
         .command("add [components...]")
@@ -47,7 +64,8 @@ export function initializeAdd(program) {
                     log.info(`Starting installation at ${kleur.magenta(cwd)}`);
                 }
 
-                let components;
+                let components = [];
+
                 if (componentsArg.length === 1 && componentsArg[0] === "*") {
                     components = availableComponents;
                 } else {
@@ -56,16 +74,27 @@ export function initializeAdd(program) {
                     );
                 }
 
-                if (components.length === 0) {
-                    log.warn("No valid components specified.");
-                    process.exit(0);
+                // Always include button
+                if (!components.includes("button")) {
+                    components.unshift("button");
                 }
 
                 const tasks = new Listr(
                     components.map((name) => ({
                         title: `Installing ${name}`,
                         task: async () => {
-                            await new Promise((r) => setTimeout(r, 400));
+                            const url = `${githubBase}/${name}.svelte`;
+                            const destPath = path.resolve(
+                                "src/lib/ui/components",
+                                `${name}.svelte`
+                            );
+
+                            mkdirSync(path.dirname(destPath), {
+                                recursive: true,
+                            });
+
+                            const data = await fetchFile(url);
+                            writeFileSync(destPath, data, "utf8");
                         },
                     })),
                     {
@@ -80,6 +109,7 @@ export function initializeAdd(program) {
                 }
             } catch (err) {
                 log.error("Something went wrong.");
+                console.error(err);
                 process.exit(1);
             }
         });

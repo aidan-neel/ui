@@ -5,12 +5,10 @@ import kleur from "kleur";
 import { Listr } from "listr2";
 import path from "node:path";
 import process from "node:process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import inquirer from "inquirer";
-import fs from "node:fs";
-import { json } from "node:stream/consumers";
-import dependencies from "../../registry/config/dependencies.json" with { type: "json" };
-import { execSync } from 'node:child_process';
+import { execSync } from "node:child_process";
+import { get } from "https";
 
 export function initializeInit(program) {
     const log = {
@@ -19,6 +17,35 @@ export function initializeInit(program) {
         error: (msg) => console.error(kleur.red().bold(msg)),
         success: (msg) => console.log(kleur.green().bold(msg)),
     };
+
+    const githubBase =
+        "https://raw.githubusercontent.com/aidan-neel/neel-ui/ui/registry";
+
+    const fileMap = {
+        "config/ui.css": "src/lib/ui/ui.css",
+        "config/utils.ts": "src/lib/ui/utils.ts",
+        "config/internals/body.ts": "src/lib/ui/internals/body.ts",
+        "config/internals/state.svelte.ts":
+            "src/lib/ui/internals/state.svelte.ts",
+        "config/internals/transition.ts": "src/lib/ui/internals/transition.ts",
+        "config/internals/trigger.ts": "src/lib/ui/internals/trigger.ts",
+        "config/components/internals/background-blur.svelte":
+            "src/lib/ui/components/internals/background-blur.svelte",
+        "themes/default.css": "src/lib/ui/themes/default.css",
+    };
+
+    const fetchFile = (url) =>
+        new Promise((resolve, reject) => {
+            get(url, (res) => {
+                if (res.statusCode !== 200) {
+                    return reject(new Error(`Failed to fetch ${url}`));
+                }
+
+                let data = "";
+                res.on("data", (chunk) => (data += chunk));
+                res.on("end", () => resolve(data));
+            }).on("error", reject);
+        });
 
     program
         .command("init")
@@ -64,78 +91,64 @@ export function initializeInit(program) {
                                     "src/lib/ui/components",
                                     "src/lib/ui/internals",
                                     "src/lib/ui/themes",
+                                    "src/lib/ui/components/internals",
                                 ];
 
                                 directories.forEach((directory) => {
-                                    try {
-                                        if (!fs.existsSync(directory)) {
-                                            fs.mkdirSync(directory, {
-                                                recursive: true,
-                                            });
-                                        }
-                                    } catch (error) {}
+                                    if (!existsSync(directory)) {
+                                        mkdirSync(directory, {
+                                            recursive: true,
+                                        });
+                                    }
                                 });
                             },
                         },
                         {
-                            title: "Installing required files",
+                            title: "Downloading registry files",
                             task: async () => {
-                                const fileMap = {
-                                    "./registry/config/ui.css":
-                                        "src/lib/ui/ui.css",
-                                    "./registry/config/utils.ts":
-                                        "src/lib/ui/utils.ts",
-                                    "./registry/config/internals/body.ts":
-                                        "src/lib/ui/internals/body.ts",
-                                    "./registry/config/internals/state.svelte.ts":
-                                        "src/lib/ui/internals/state.svelte.ts",
-                                    "./registry/config/internals/transition.ts":
-                                        "src/lib/ui/internals/transition.ts",
-                                    "./registry/config/internals/trigger.ts":
-                                        "src/lib/ui/internals/trigger.ts",
-                                    "./registry/config/components/internals/background-blur.svelte":
-                                        "src/lib/ui/components/internals/background-blur.svelte",
-                                    "./registry/themes/default.css":
-                                        "src/lib/ui/themes/default.css",
-                                };
+                                for (const [
+                                    remotePath,
+                                    localPath,
+                                ] of Object.entries(fileMap)) {
+                                    const url = `${githubBase}/${remotePath}`;
+                                    const destPath = path.resolve(localPath);
+                                    const destDir = path.dirname(destPath);
 
-                                Object.entries(fileMap).forEach(
-                                    ([src, dest]) => {
-                                        const resolvedSrc = path.resolve(src);
-                                        const resolvedDest = path.resolve(dest);
-                                        const destDir =
-                                            path.dirname(resolvedDest);
+                                    mkdirSync(destDir, { recursive: true });
 
-                                        fs.mkdirSync(destDir, {
-                                            recursive: true,
-                                        });
-
-                                        const data = fs.readFileSync(
-                                            resolvedSrc,
-                                            "utf8"
-                                        );
-                                        fs.writeFileSync(resolvedDest, data);
-                                    }
-                                );
+                                    const data = await fetchFile(url);
+                                    writeFileSync(destPath, data, "utf8");
+                                }
                             },
                         },
                         {
-                            title: "Installing dependencies",
+                            title: "Installing dependencies from registry",
                             task: async () => {
-                                const packageJsonPath = path.resolve("./package.json");
+                                const depUrl = `${githubBase}/config/dependencies.json`;
+                                const packageJsonPath =
+                                    path.resolve("./package.json");
 
-                                if (!fs.existsSync(packageJsonPath)) {
-                                  throw new Error("No package.json found in the root directory.");
+                                if (!existsSync(packageJsonPath)) {
+                                    throw new Error(
+                                        "No package.json found in the root directory."
+                                    );
                                 }
-                                
-                                const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-                                
+
+                                const depJson = await fetchFile(depUrl);
+                                const dependencies = JSON.parse(depJson);
+
+                                const pkg = JSON.parse(
+                                    readFileSync(packageJsonPath, "utf8")
+                                );
                                 pkg.dependencies = {
-                                  ...(pkg.dependencies || {}),
-                                  ...dependencies.dependencies,
+                                    ...(pkg.dependencies || {}),
+                                    ...dependencies.dependencies,
                                 };
-                                
-                                fs.writeFileSync(packageJsonPath, JSON.stringify(pkg, null, 2) + "\n");
+
+                                writeFileSync(
+                                    packageJsonPath,
+                                    JSON.stringify(pkg, null, 2) + "\n"
+                                );
                             },
                         },
                     ],
@@ -153,6 +166,7 @@ export function initializeInit(program) {
                 }
             } catch (err) {
                 log.error("Something went wrong.");
+                console.error(err);
                 process.exit(1);
             }
         });
