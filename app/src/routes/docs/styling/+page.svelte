@@ -5,7 +5,7 @@
 <main class="flex flex-col w-full h-screen pb-12">
 	<header class="flex flex-col gap-1 pb-6 border-b rounded-none">
 		<p class="text-4xl font-bold">Styling</p>
-		<p class="text-lg text-foreground-muted">Learn how to style aidan-neel/ui</p>
+		<p class="text-lg text-foreground-muted">Learn how to style @aidan-neel/ui</p>
 	</header>
 
 	<p class="text-base pt-6">
@@ -26,7 +26,7 @@
 
 	<CodeBlock
 		lang="css"
-		class="mb-6"
+		class="mb-6 p-3 max-h-[25rem]"
 		code={`@theme {
     /* Fonts */
     --font-sans: 'Geist';

@@ -2,7 +2,7 @@
 title: Alert
 description: Displays a callout for user attention.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/alert
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert
 ---
 
 <script>

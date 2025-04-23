@@ -2,7 +2,7 @@
 title: Badge
 description: Displays a badge or a component that looks like a badge.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/badge
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/badge
 ---
 
 <script>

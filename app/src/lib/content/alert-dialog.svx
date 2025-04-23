@@ -2,7 +2,7 @@
 title: alert-dialog
 description: A pop-up that stops what you're doing to show an important message and get a response
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/alert-dialog
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dialog
 ---
 
 <script>

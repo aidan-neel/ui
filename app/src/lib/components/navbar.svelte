@@ -14,13 +14,11 @@
 		<a href="/" class="font-bold text-lg flex flex-row items-center gap-2"><Logo />aidan-neel/ui</a>
 	</div>
 
-	<div class="flex flex-row gap-2">
-		{#if $page.url.pathname === '/'}
-			<Navbutton href="/">Home</Navbutton>
-			<Navbutton href="/docs/introduction">Docs</Navbutton>
-			<Navbutton href="/docs/components">Components</Navbutton>
-			<Navbutton href="/docs/theming">Theming</Navbutton>
-		{/if}
+	<div class="flex flex-row gap-2 lg:flex hidden">
+        <Navbutton href="/">Home</Navbutton>
+        <Navbutton href="/docs/introduction">Docs</Navbutton>
+        <Navbutton href="/docs/components">Components</Navbutton>
+        <Navbutton href="/themes">Themes</Navbutton>
 	</div>
 
 	<div class="flex w-80 flex-row gap-8 items-center">

@@ -2,7 +2,7 @@
 title: Card
 description: Displays content in a structured, flexible layout.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/card
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/card
 ---
 
 <script>

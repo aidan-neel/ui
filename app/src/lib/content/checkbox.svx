@@ -2,7 +2,7 @@
 title: Checkbox
 description: Displays a selectable option for user input.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/checkbox
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/checkbox
 ---
 
 <script>

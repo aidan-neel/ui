@@ -2,7 +2,7 @@
 title: Input
 description: Allows the user to enter text or data.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/input
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/input
 ---
 
 <script>

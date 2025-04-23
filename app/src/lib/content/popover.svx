@@ -2,7 +2,7 @@
 title: Popover
 description: Displays a popup element that appears near a trigger.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/toast
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/toast
 ---
 
 <script>

@@ -2,7 +2,7 @@
 title: Modal
 description: A modal is an alternatively styled pop-up that requires user interaction before proceeding.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/modal
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/modal
 ---
 
 <script>

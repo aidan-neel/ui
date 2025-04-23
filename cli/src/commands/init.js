@@ -19,7 +19,7 @@ export function initializeInit(program) {
     };
 
     const githubBase =
-        "https://raw.githubusercontent.com/aidan-neel/neel-ui/ui/registry";
+        "https://raw.githubusercontent.com/aidan-neel/ui/ui/registry";
 
     const fileMap = {
         "config/ui.css": "src/lib/ui/ui.css",

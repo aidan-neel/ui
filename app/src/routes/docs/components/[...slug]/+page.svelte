@@ -11,6 +11,7 @@
 	import { Button } from '$lib/ui/components/button';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import CodeBlock from '$lib/components/docs/code-block.svelte';
 
 	const {
 		data
@@ -50,11 +51,7 @@
 
 <div class="py-6 flex flex-col gap-4">
 	<h1>Installation</h1>
-	<div class="rounded-lg border p-3 font-mono text-sm font-medium">
-		<span class="text-foreground-muted font-mono">npx</span> @aidan-neel/ui
-		<span class="text-foreground-muted font-mono">add</span>
-		{Title.toLowerCase()}
-	</div>
+	<CodeBlock lang="shell" code={`npx @aidan-neel/ui add ${Title.toLowerCase()}`} class="p-3" />
 </div>
 
 <div class="flex-grow w-full pb-16">

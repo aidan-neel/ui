@@ -17,9 +17,9 @@ export function initializeAdd(program) {
     };
 
     const githubApiBase =
-        "https://api.github.com/repos/aidan-neel/neel-ui/contents/registry/ui/default";
+        "https://api.github.com/repos/aidan-neel/ui/contents/registry/ui/default";
     const githubRawBase =
-        "https://raw.githubusercontent.com/aidan-neel/neel-ui/ui/registry/ui/default";
+        "https://raw.githubusercontent.com/aidan-neel/ui/ui/registry/ui/default";
 
     const availableComponents = [
         "alert-dialog",

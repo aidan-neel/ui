@@ -2,7 +2,7 @@
 title: Button
 description: Displays a button or a component that looks like a button.
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/button
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/button
 ---
 
 <script>

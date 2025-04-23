@@ -2,7 +2,7 @@
 title: Skeleton
 description: Displays a skeleton loading state
 component: true
-source: https://github.com/aidan-neel/ui/tree/main/src/lib/registry/default/ui/skeleton
+source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/skeleton
 ---
 
 <script>

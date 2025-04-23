@@ -20,7 +20,7 @@
 			Check out some of the
 			<a href="/docs/components/alert" class="underline font-medium">components</a> and get started
 			with the
-			<a href="/docs/components/installation  " class="underline font-medium">installation</a> page.
+			<a href="/docs/installation" class="underline font-medium">installation</a> page.
 		</p>
 	</div>
 </main>
