@@ -6,7 +6,7 @@ import { Listr } from "listr2";
 import path from "node:path";
 import process from "node:process";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { get } from "https";
+import { get, request } from "node:https";
 
 export function initializeAdd(program) {
     const log = {
@@ -16,7 +16,9 @@ export function initializeAdd(program) {
         success: (msg) => console.log(kleur.green().bold(msg)),
     };
 
-    const githubBase =
+    const githubApiBase =
+        "https://api.github.com/repos/aidan-neel/neel-ui/contents/registry/ui/default";
+    const githubRawBase =
         "https://raw.githubusercontent.com/aidan-neel/neel-ui/ui/registry/ui/default";
 
     const availableComponents = [
@@ -32,6 +34,32 @@ export function initializeAdd(program) {
         "skeleton",
         "toast",
     ];
+
+    const fetchJson = (url) =>
+        new Promise((resolve, reject) => {
+            const req = request(
+                url,
+                {
+                    headers: { "User-Agent": "component-installer" },
+                },
+                (res) => {
+                    if (res.statusCode !== 200) {
+                        return reject(
+                            new Error(
+                                `Failed to fetch ${url} - ${res.statusCode}`
+                            )
+                        );
+                    }
+
+                    let data = "";
+                    res.on("data", (chunk) => (data += chunk));
+                    res.on("end", () => resolve(JSON.parse(data)));
+                }
+            );
+
+            req.on("error", reject);
+            req.end();
+        });
 
     const fetchFile = (url) =>
         new Promise((resolve, reject) => {
@@ -64,7 +92,7 @@ export function initializeAdd(program) {
                     log.info(`Starting installation at ${kleur.magenta(cwd)}`);
                 }
 
-                let components = [];
+                let components;
 
                 if (componentsArg.length === 1 && componentsArg[0] === "*") {
                     components = availableComponents;
@@ -74,7 +102,6 @@ export function initializeAdd(program) {
                     );
                 }
 
-                // Always include button
                 if (!components.includes("button")) {
                     components.unshift("button");
                 }
@@ -83,18 +110,27 @@ export function initializeAdd(program) {
                     components.map((name) => ({
                         title: `Installing ${name}`,
                         task: async () => {
-                            const url = `${githubBase}/${name}.svelte`;
-                            const destPath = path.resolve(
+                            const apiUrl = `${githubApiBase}/${name}?ref=ui`;
+                            const rawDir = `${githubRawBase}/${name}`;
+                            const targetDir = path.resolve(
                                 "src/lib/ui/components",
-                                `${name}.svelte`
+                                name
                             );
 
-                            mkdirSync(path.dirname(destPath), {
-                                recursive: true,
-                            });
+                            mkdirSync(targetDir, { recursive: true });
 
-                            const data = await fetchFile(url);
-                            writeFileSync(destPath, data, "utf8");
+                            const files = await fetchJson(apiUrl);
+
+                            for (const file of files) {
+                                const content = await fetchFile(
+                                    file.download_url
+                                );
+                                const destPath = path.join(
+                                    targetDir,
+                                    file.name
+                                );
+                                writeFileSync(destPath, content, "utf8");
+                            }
                         },
                     })),
                     {

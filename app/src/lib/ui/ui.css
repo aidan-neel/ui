@@ -1,16 +1,6 @@
-/* Import Google Fonts for default typography (Geist and Geist Mono) */
 @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
-
-/* Import the default theme (can be replaced or extended) */
+@import 'tailwindcss';
 @import './themes/default.css';
-
-/* Declare Tailwind layers for better control and overrides */
-@layer theme, base, components, utilities;
-
-/* Import Tailwind layers individually so they can be overridden if needed */
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/preflight.css' layer(base);
-@import 'tailwindcss/utilities.css' layer(utilities);
 
 /* Floating utility - positions element absolutely in the top-left corner */
 .floating {
