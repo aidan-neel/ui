@@ -34,14 +34,14 @@
 
 		html = await highlighter.codeToHtml(code, {
 			lang: lang,
-			theme: isDarkMode ? 'ui-dark' : 'ui-light'
+			theme: isDarkMode ? 'github-dark' : 'github-light'
 		});
 
 		loaded = true;
 	});
 </script>
 
-<div {...rest} class={cn(classProp, 'rounded-lg bg-secondary/60 w-full p-4 h-fit text-sm overflow-auto')}>
+<div {...rest} class={cn(classProp, 'rounded-lg bg-secondary w-full p-4 h-fit text-[14px] overflow-auto')}>
 	{#if loaded}
 		<code class="font-mono w-full">{@html html}</code>
 	{:else}

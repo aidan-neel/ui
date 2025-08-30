@@ -9,7 +9,7 @@
 	const uiState = states[key];
 
 	let element = $state<HTMLButtonElement | undefined>();
-	const { children, class: classProp, ...rest }: ButtonProps = $props();
+	const { children, class: classProp, onclick, ...rest }: ButtonProps = $props();
 
 	onMount(() => {
 		uiState.data.buttonRef = element;
@@ -87,6 +87,7 @@
     onclick={() => {
         if (uiState.data.open) closePopover();
         else openPopover();
+        onclick?.();
     }}	
     onmouseenter={handleEnter}
 	onmouseleave={handleLeave}

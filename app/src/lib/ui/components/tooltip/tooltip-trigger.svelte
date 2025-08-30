@@ -11,9 +11,8 @@
     const uiState = states[key];
 
     type Props = {
-        children: Snippet;
-        class: string;
-        variant?: string;
+        children?: Snippet;
+        class?: string;
     } & ButtonProps
 
     let { children, class: className, variant, ...rest }: Props = $props();

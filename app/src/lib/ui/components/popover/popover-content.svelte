@@ -5,17 +5,15 @@
 	import { flyAndScale } from '$lib/ui/internals/transition';
     import { getContext } from 'svelte';
 	import { computePosition, flip } from '@floating-ui/dom';
+	import type { PopoverContentProps } from '.';
 
 	const {
 		children,
 		class: classProp,
 		allowClickOutside = true,
+        portal = false,
 		...rest
-	}: {
-		children: Snippet;
-		class?: string;
-		allowClickOutside?: boolean;
-	} = $props();
+	}: PopoverContentProps = $props();
 
     const key = getContext("key") as string;
     const uiState = states[key];
@@ -47,6 +45,11 @@
         document.addEventListener('scroll', handleScroll);
         
 		uiState.data.popoverRef = popover;
+
+        if (portal && document && popover) {
+            document.body.appendChild(popover);
+            return () => popover!.remove();
+        }
 
         if (uiState.data.open && popover) {
             computePosition(uiState.data.buttonRef, popover, {

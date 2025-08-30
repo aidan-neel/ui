@@ -5,14 +5,11 @@
 
     const key = getContext('key')
 
-    type Props = {
-        children: Snippet;
-        class: string;
-    }
+    type Props = Popover.PopoverContentProps;
 
-    let props: Props = $props();
+    let { children, class: className, ...rest }: Props = $props();
 </script>
 
-<Popover.Content allowClickOutside={false} class={cn(props.class, "p-1.5 px-2 shadow-none rounded-[0.4rem] border-none bg-foreground text-foreground-opposite font-medium text-xs")}>
-    {@render props.children?.()}
+<Popover.Content {...rest} portal={true} allowClickOutside={false} class={cn(className, "p-1.5 px-2 shadow-none rounded-[0.4rem] border-none bg-foreground text-foreground-opposite font-medium text-xs")}>
+    {@render children?.()}
 </Popover.Content>

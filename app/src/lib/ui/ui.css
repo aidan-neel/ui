@@ -6,6 +6,13 @@
 /* Chosen Theme */
 @import './themes/default.css';
 
+@font-face {
+	font-family: 'SF Mono';
+	src: url('/fonts/SFMono-Regular.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
 /* Floating utility - positions element absolutely in the top-left corner */
 .floating {
 	width: max-content;

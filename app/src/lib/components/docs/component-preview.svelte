@@ -5,6 +5,11 @@
 	import { cn } from '$lib/ui/utils';
 	import { Tween } from 'svelte/motion';
 	import { cubicOut } from 'svelte/easing';
+    import * as Tooltip from '$lib/ui/components/tooltip';
+    import Button from '$lib/ui/components/button';
+    import Copy from "@lucide/svelte/icons/copy";
+    import Check from "@lucide/svelte/icons/check";
+	import { flyAndScale } from '$lib/ui/internals/transition';
 
 	let {
 		children,
@@ -27,6 +32,8 @@
 		selectedTab = tab;
 		indicatorX.target = index * 112; // Assuming each tab button is w-28 (112px)
 	}
+
+    let copying = $state<boolean>(false);
 </script>
 
 <div class="flex flex-col w-[102%] mx-[-1%]">
@@ -40,12 +47,43 @@
     </div>
     <div
         {...rest}
-        class={cn(classProp, `w-full ${selectedTab === 1 ? 'border items-center justify-center min-h-[22rem] py-24' : 'bg-secondary items-start justify-start'} rounded-xl flex flex-col overflow-auto max-w-full`)}
+        class={cn(classProp, `w-full ${selectedTab === 1 ? 'border items-center justify-center min-h-[22rem] py-24' : 'items-start justify-start'} rounded-xl flex flex-col overflow-auto max-w-full`)}
     >   
-        <div class={cn(classProp, "w-fit flex items-center justify-center")}>
+        <div class={cn(classProp, "w-full relative flex items-center justify-center")}>
             {#if selectedTab === 1}
                 {@render children?.()}
             {:else}
+                <Tooltip.Root placement={'top'} delay={0}>
+                    <Tooltip.Trigger onclick={() => {
+                        copying = true;
+                        console.log('n')
+                        navigator.clipboard.writeText(code)
+                        setTimeout(() => {
+                            copying = false;
+                        }, 3000);
+                    }} variant="ghost" class="size-8 z-50 absolute top-4 right-4">
+                        {#if copying}
+                            <div in:flyAndScale={{ duration: 400 }}>
+                                <Check size={20} class="text-foreground-muted" />
+                            </div>
+                        {:else}
+                            <div in:flyAndScale={{ duration: 400 }}>
+                                <Copy size={20} class="text-foreground-muted" />
+                            </div>
+                        {/if}
+                    </Tooltip.Trigger>  
+                    <Tooltip.Content>
+                        {#if copying}
+                            <div in:flyAndScale={{ duration: 400 }}>
+                                Copied
+                            </div>
+                        {:else}
+                            <div in:flyAndScale={{ duration: 400 }}>
+                                Copy to clipboard
+                            </div>
+                        {/if}
+                    </Tooltip.Content>
+                </Tooltip.Root>
                 <CodeBlock code={code} />
             {/if}
         </div>
