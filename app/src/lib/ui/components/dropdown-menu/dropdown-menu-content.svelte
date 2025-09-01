@@ -13,6 +13,6 @@
     let props: Props = $props();
 </script>
 
-<Popover.Content class={cn(props.class, "p-1")}>
+<Popover.Content class={cn(props.class, "p-1.5 shadow-md flex flex-col gap-0.5")}>
     {@render props.children?.()}
 </Popover.Content>

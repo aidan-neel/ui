@@ -39,6 +39,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/component
         </Command.Trigger>
         <Command.Content>
             <Command.Search />
+            <Command.Separator />
             <Command.Results>
                 <Command.Group heading="Suggestions">
                     <Command.Item name="calendar">

@@ -18,6 +18,6 @@
         states[parent].data.open = false;
     }
     callback?.();
-}} class={cn(className, `px-2 ${inset ? 'pl-8' : ''} font-normal w-full h-9 duration-100 rounded-lg hover:cursor-default text-sm items-center justify-between text-left`)} variant={"ghost"}>
+}} class={cn(className, `px-2 ${inset ? 'pl-8' : ''} w-full h-[2rem] text-[14px] duration-50  rounded-lg font-medium hover:cursor-default items-center justify-between text-left`)} variant={"ghost"}>
     {@render children?.()}
 </Button>

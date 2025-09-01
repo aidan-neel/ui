@@ -49,7 +49,7 @@ source: https://github.com/aidan-neel/ui/tree/main/registry/ui/default/alert-dia
 </AlertDialog.Root>`}>
     <AlertDialog.Root>
         <AlertDialog.Trigger variant="outlined">Show Dialog</AlertDialog.Trigger>
-        <AlertDialog.Content class="max-w-[30rem]">
+        <AlertDialog.Content class="max-w-[30rem] sm:py-5 py-8">
             <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
             <AlertDialog.Description>
                 This action cannot be undone. This will permanently delete your account and remove your data from our servers.

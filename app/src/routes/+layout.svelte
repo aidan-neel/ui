@@ -18,6 +18,8 @@
 
 <ModeWatcher />
 <Toaster />
-<Navbar />
+<main class="w-screen flex flex-row justify-center">
+    <Navbar />
+</main>
 
 {@render children?.()}

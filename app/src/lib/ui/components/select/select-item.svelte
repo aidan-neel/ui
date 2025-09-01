@@ -24,7 +24,7 @@
     setTimeout(() => {
         uiState.data.open = false;
     }, 1)
-}} {...props} class={cn(props.class, "w-full hover:cursor-default font-normal h-9 duration-100 px-2 items-center justify-between text-left")} variant={"ghost"}>
+}} {...props} class={cn(props.class, "w-full h-[2rem] text-[14px] duration-50  rounded-lg font-medium hover:cursor-default px-2 items-center justify-between text-left")} variant={"ghost"}>
     {@render props.children?.()}
 
     {#if uiState.data.value === props.value}

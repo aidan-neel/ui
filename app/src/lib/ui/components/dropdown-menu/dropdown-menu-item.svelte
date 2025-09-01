@@ -30,6 +30,6 @@
         }
     }, 100)
     callback?.();
-}} class={cn(className, "w-full h-9 duration-100 rounded-lg font-normal hover:cursor-default px-3 items-center justify-between text-left")} variant={"ghost"}>
+}} class={cn(className, "w-full h-[1.8rem] text-[14px] duration-50 rounded-lg font-medium hover:cursor-default px-2 items-center justify-between text-left")} variant={"ghost"}>
     {@render children?.()}
 </Button>

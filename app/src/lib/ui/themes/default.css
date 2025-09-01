@@ -8,7 +8,7 @@
 
 	/* Colors */
 	--color-background: #ffffff;
-	--color-border: #dfdfdf;
+	--color-border: #e2e2e2;
 	--color-input: #dfdfdf;
 	--color-primary: #2685d9;
 	--color-foreground-opposite: #ffffff;
@@ -38,8 +38,8 @@
 	--padding-btn-x: 0.85rem;
 
 	/* Font sizes */
-	--text-xs: 12.25px;
-	--text-sm: 14.75px;
+	--text-xs: 12px;
+	--text-sm: 14px;
 }
 
 .dark {
@@ -48,14 +48,14 @@
 	--font-mono: 'Geist Mono';
 
 	/* Colors */
-	--color-background: #0a0a0a;
+	--color-background: #111111;
 	--color-border: #1c1c1c;
-	--color-input: #3b3c3c;
+	--color-input: #333232;
 	--color-primary: #0b7bde;
 	--color-foreground-opposite: #0d0d0d;
 	--color-foreground: #e8e9eb;
 	--color-muted: #292929;
-	--color-popover: #262626;
+	--color-popover: rgb(39 39 39);
 	--color-foreground-muted: #9c9c9c;
 	--color-foreground-btn: #ffffff;
 	--color-secondary: #171717;

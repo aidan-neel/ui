@@ -20,7 +20,7 @@
 
 <div {...rest} class="px-1 pt-1 flex flex-col">
     {#if uiState.searchContent === ''}
-        <p class={cn(className, "text-xs select-none px-2 py-2 text-foreground-muted font-medium")}>
+        <p class={cn(className, "text-xs select-none px-2 pb-3 pt-1 text-foreground-muted font-medium")}>
             {heading}
         </p>
     {/if}

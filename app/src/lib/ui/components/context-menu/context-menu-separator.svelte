@@ -5,6 +5,6 @@
     let { children, class: className, ...rest }: ContextMenuSeparatorProps = $props();
 </script>
 
-<div {...rest} class={cn(className, "h-[1px] bg-input my-1 mx-[-4px]")}>
+<div {...rest} class={cn(className, "h-[var(--border-size)] w-[calc(100%-1rem)] rounded-full mx-auto bg-input/50 my-1")}>
     {@render children?.()}
 </div>

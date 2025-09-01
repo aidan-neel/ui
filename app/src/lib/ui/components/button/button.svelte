@@ -13,7 +13,7 @@
 		variant = 'primary',
 		children,
 		class: classProp,
-        size,
+        size = 'default',
 		element = $bindable(),
         onhover,
         onhoverend,
@@ -36,7 +36,7 @@
 	<a
 		bind:this={element as HTMLAnchorElement}
 		href={href}
-		class={cn(classProp, button({ variant }))}
+		class={cn(classProp, button({ variant, size }))}
 		onmouseenter={() => onhover?.()}
         onmouseleave={() => onhoverend?.()}
         onclick={() => onclick?.()}
@@ -53,7 +53,7 @@
 {:else}
 	<button
 		bind:this={element as HTMLButtonElement}
-		class={cn(classProp, button({ variant }))}
+		class={cn(classProp, button({ variant, size }))}
 		onmouseenter={() => onhover?.()}
 		onmouseleave={() => onhoverend?.()}
         onclick={() => onclick?.()}

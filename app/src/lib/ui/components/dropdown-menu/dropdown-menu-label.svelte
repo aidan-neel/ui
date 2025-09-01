@@ -13,6 +13,6 @@
     let { children, class: className, ...rest}: Props = $props();
 </script>
 
-<p {...rest} class={cn(className, "select-none px-3 py-2 pb-1 font-semibold text-foreground")}>
+<p {...rest} class={cn(className, "select-none px-2 py-2 pb-1 font-medium text-foreground-muted text-xs")}>
     {@render children?.()}
 </p>

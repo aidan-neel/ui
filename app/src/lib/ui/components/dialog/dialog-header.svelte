@@ -16,7 +16,7 @@
     {@render children?.()}
     <Button onclick={() => {
         uiState.open = false;
-    }} class="absolute top-3 right-3 size-8 text-foreground-muted" variant="ghost">
+    }} size='icon' class="absolute top-3 right-3 text-foreground-muted" variant="ghost">
         <X />
     </Button>
 </div>

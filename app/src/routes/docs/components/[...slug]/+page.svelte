@@ -32,7 +32,7 @@
 </script>
 
 <header class="flex flex-col gap-1 pb-4">
-	<h1 class="text-4xl font-medium tracking-tighter">{sanitizeComponent(Title)}</h1>
+	<h1 class="text-4xl font-semibold">{sanitizeComponent(Title)}</h1>
 	<p class="mt-2 text-foreground-muted">
 		{Description}
 	</p>

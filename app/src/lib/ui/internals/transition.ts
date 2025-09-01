@@ -71,6 +71,11 @@ export const flyAndScale = (
 	const style = getComputedStyle(node);
 	const transform = style.transform === 'none' ? '' : style.transform;
 
+	params.y = -4;
+	params.x = -4;
+	params.start = 0.96;
+	params.duration = 200;
+
 	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
 		const [minA, maxA] = scaleA;
 		const [minB, maxB] = scaleB;

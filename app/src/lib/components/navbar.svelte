@@ -18,9 +18,9 @@
 </script>
 
 <nav
-	class="w-full z-20 top-0 rounded-none px-6 flex-shrink-0 fixed {$page.url.pathname === '/'
+	class="w-3/5 mx-auto z-20 top-0 rounded-none flex-shrink-0 fixed {$page.url.pathname === '/'
 		? ' border-transpar bg-transparent'
-		: ''} bg-background h-14 flex items-center justify-between"
+		: ''} dark:bg-secondary/20 bg-secondary h-14 flex items-center justify-between"
 >
 	<div class="flex w-96 flex-row gap-2 items-center">
 		<a href="/" class="font-bold text-lg mr-2 p-2 rounded-lg hover:bg-secondary duration-150 flex flex-row items-center gap-2"><Logo /></a>

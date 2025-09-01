@@ -40,7 +40,7 @@
         transition:fly={{ x: 125, y: 0, duration: 300 }}
         class={cn(
             className,
-            `p-4 border transition-all fixed flex flex-col top-0 right-0 z-50 overflow-y-auto m-auto shadow-sm bg-background w-full max-w-[25rem] h-screen`
+            `p-5 border transition-all fixed flex flex-col top-0 right-0 z-50 overflow-y-auto m-auto shadow-sm bg-background w-full max-w-[25rem] h-screen`
         )}
         use:clickOutside={() => {
             if (allowClickOutside) {

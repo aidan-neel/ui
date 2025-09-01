@@ -37,7 +37,7 @@
 <Button
 	{...rest}
 	onclick={toggle}
-	class={cn(className, `px-2 pl-8 relative hover:bg-muted/50 w-full h-9 font-normal duration-100 rounded-lg hover:cursor-default text-sm items-center justify-between text-left`)}
+	class={cn(className, `px-2 pl-8 relative w-full h-[2rem] text-[14px] duration-50  rounded-lg font-medium hover:cursor-default items-center justify-between text-left`)}
 	variant="ghost"
 >
 	<div class="w-4 h-4 absolute left-2">

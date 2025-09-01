@@ -5,13 +5,15 @@
 	const { children }: { children: Snippet } = $props();
 </script>
 
-<main class="h-screen pt-14 w-screen flex flex-col">
-	<div class="flex-1 justify-center h-full w-full flex-row flex">
-		<SideNavbar class="lg:visible invisible flex-shrink-0" />
-		<div
-			class="flex flex-col w-full mb-96 xl:w-[70%] 2xl:w-[40%] lg:ml-[20%] lg:w-[70%] 2xl:ml-0 p-6 xl:p-16"
-		>
-			{@render children?.()}
-		</div>
-	</div>
+<main class="h-screen flex items-center justify-center pt-14 w-screen bg-secondary dark:bg-secondary/20 flex-col">
+    <div class="h-screen pt-4 w-3/5 flex overflow-hidden flex-row">
+        <SideNavbar class="w-1/6 flex-shrink-0 h-screen">
+
+        </SideNavbar>
+        <div
+            class="flex flex-col h-full w-full bg-background border-border/50 rounded-tl-xl rounded-tr-xl p-16 border overflow-y-auto"
+        >
+            {@render children?.()}
+        </div>
+    </div>
 </main>

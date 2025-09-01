@@ -13,6 +13,6 @@
     const uiState = states[key].data as AlertDialogState;
 </script>
 
-<div {...rest} class={cn(className, `flex flex-col-reverse sm:flex-row mt-3 gap-2 justify-end items-center`)}>
+<div {...rest} class={cn(className, `flex flex-col-reverse w-full sm:flex-row mt-6 gap-2 justify-end items-center`)}>
     {@render children?.()}
 </div>
