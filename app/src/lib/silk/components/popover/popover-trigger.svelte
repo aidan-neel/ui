@@ -1,19 +1,28 @@
-<script lang="ts">
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import { Button, type ButtonProps } from '$lib/silk/components/button';
-	import { computePosition, flip } from '@floating-ui/dom';
+	<script lang="ts">
+	import { Button } from '$lib/silk/components/button';
+	import { positionFloatingPanel } from '$lib/silk/utils';
 	import { getContext, onMount, tick } from 'svelte';
-	import { states } from '$lib/silk/internals/state.svelte.ts';
-	import type { PopoverTriggerProps } from '.';
+	import { states, type UIState } from '$lib/silk/internals/state.svelte.ts';
+	import type { PopoverState, PopoverTriggerProps } from '.';
 
-	const key = getContext("key") as string;
-	const uiState = states[key];
+	const key = getContext('key') as string;
+	const uiState = states[key] as UIState<PopoverState>;
 
 	let element = $state<HTMLButtonElement | undefined>();
-	const { children, class: classProp, onclick, ...rest }: PopoverTriggerProps = $props();
+	type Props = PopoverTriggerProps;
+
+	let {
+		children,
+		class: classProp,
+		onclick,
+		style,
+		id,
+		'aria-haspopup': ariaHaspopup,
+		...rest
+	}: Props = $props();
 
 	onMount(() => {
-		uiState.data.buttonRef = element;
+		uiState.data.buttonRef = element ?? null;
 	});
 
 	function openPopover() {
@@ -21,23 +30,15 @@
 
 		if (uiState.data.closeTimeout) {
 			clearTimeout(uiState.data.closeTimeout);
-			uiState.data.closeTimeout = null;
+			uiState.data.closeTimeout = undefined;
 		}
 		uiState.data.open = true;
 
 		const button = element;
 		const popover = uiState.data.popoverRef;
 
-        if (button && popover) {
-			computePosition(button, popover, {
-				placement: uiState.data.placement,
-				middleware: [flip()]
-			}).then(({ x, y }) => {
-				Object.assign(popover.style, {
-					left: `${x}px`,
-					top: `${y}px`
-				});
-			});
+		if (button && popover) {
+			positionFloatingPanel(button, popover, uiState.data.placement);
 		}
 	}
 
@@ -45,15 +46,21 @@
 		if (!uiState.data) return;
 		if (uiState.data.closeTimeout) clearTimeout(uiState.data.closeTimeout);
 
+		if (delay <= 0) {
+			uiState.data.open = false;
+			uiState.data.closeTimeout = undefined;
+			return;
+		}
+
 		uiState.data.closeTimeout = setTimeout(() => {
 			uiState.data.open = false;
-			uiState.data.closeTimeout = null;
+			uiState.data.closeTimeout = undefined;
 		}, delay);
 	}
 
 	async function handleEnter() {
 		if (uiState?.data?.hoverable) {
-            await tick();
+			await tick();
 			const delay = uiState?.data?.delay ?? 0;
 			if (delay > 0) {
 				uiState.data.hoverTimeout = setTimeout(() => {
@@ -65,7 +72,7 @@
 				openPopover();
 			}
 
-            uiState.data.hovering = true;
+			uiState.data.hovering = true;
 		}
 	}
 
@@ -73,10 +80,10 @@
 		if (uiState?.data?.hoverable) {
 			if (uiState.data.hoverTimeout) {
 				clearTimeout(uiState.data.hoverTimeout);
-				uiState.data.hoverTimeout = null;
+				uiState.data.hoverTimeout = undefined;
 			}
 			closePopover(uiState?.data?.closeDelay ?? 150);
-            uiState.data.hovering = false;
+			uiState.data.hovering = false;
 		}
 	}
 </script>
@@ -85,8 +92,9 @@
 	bind:element
 	{...rest}
 	class={classProp}
+	{style}
 	onclick={() => {
-		if (uiState.data.open) closePopover();
+		if (uiState.data.open) closePopover(0);
 		else openPopover();
 		onclick?.();
 	}}
@@ -94,10 +102,10 @@
 	onmouseleave={handleLeave}
 	onfocus={handleEnter}
 	onblur={handleLeave}
-	aria-haspopup="dialog"
+	aria-haspopup={ariaHaspopup ?? 'dialog'}
 	aria-expanded={uiState.data?.open ? 'true' : 'false'}
 	aria-controls={`popover-${String(key)}-content`}
-	id={`popover-${String(key)}-controls`}
+	id={id ?? `popover-${String(key)}-controls`}
 >
 	{@render children?.()}
 </Button>

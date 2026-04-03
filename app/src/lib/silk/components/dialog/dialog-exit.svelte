@@ -1,17 +1,23 @@
 <script lang="ts">
-	import { states, UIState, useState } from '$lib/silk/internals/state.svelte.ts';
-	import { getContext, setContext } from 'svelte';
-	import type { DialogExitProps, DialogState } from ".";
-    import { Button, type ButtonProps } from "$lib/silk/components/button";
-    import { cn, type DefaultProps } from "$lib/silk/utils";
+	import { states } from '$lib/silk/internals/state.svelte.ts';
+	import { getContext, onMount } from 'svelte';
+	import type { DialogExitProps, DialogState } from '.';
+	import { Button } from '$lib/silk/components/button';
+	import { cn } from '$lib/silk/utils';
 
-    let { class: className, children, onclick, ...rest }: DialogExitProps = $props();
+	let { class: className, children, onclick, ...rest }: DialogExitProps = $props();
 
-    const key = getContext<string>('key');
-    const uiState = states[key].data as DialogState;
+	const key = getContext<string>('key');
+	const uiState = states[key].data as DialogState;
+	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>(undefined);
+
+	onMount(() => {
+		element?.focus();
+	});
 </script>
 
 <Button
+	bind:element
 	onclick={() => {
 		uiState.open = false;
 		onclick?.();

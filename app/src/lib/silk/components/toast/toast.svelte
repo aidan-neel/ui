@@ -46,14 +46,15 @@
 	aria-atomic="true"
 	class={cn(
 		'group relative flex w-full flex-col overflow-hidden',
-		'rounded-[var(--toast-radius)] border border-[var(--toast-border)]',
+		'rounded-[calc(var(--toast-radius)+0.15rem)] border border-[var(--toast-border)]',
 		'bg-[var(--toast-bg)] shadow-[var(--toast-shadow)] backdrop-blur-[14px]',
+		'ring-1 ring-black/4 sm:ring-0',
 		'text-foreground'
 	)}
 	onmouseenter={() => toast.id !== undefined && pauseToast(toast.id)}
 	onmouseleave={() => toast.id !== undefined && resumeToast(toast.id)}
 >
-	<div class="flex items-start gap-3 px-4 py-3.5">
+	<div class="flex items-start gap-3 px-4 py-4 sm:px-4 sm:py-3.5">
 		{#if Icon}
 			<div
 				class={cn(
@@ -67,7 +68,7 @@
 
 		<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 			<p
-				class="text-[0.875rem] font-medium leading-snug tracking-[-0.015em] text-foreground [font-family:var(--font-header),sans-serif]"
+				class="text-[0.875rem] font-medium leading-snug tracking-[-0.015em] text-foreground"
 			>
 				{toast.title}
 			</p>
@@ -114,7 +115,10 @@
 
 	{#if !toast.persistent && toast.duration}
 		<div
-			class={cn('absolute bottom-0 left-0 h-[2px] w-full origin-left opacity-40', progressColorClass)}
+			class={cn(
+				'absolute bottom-0 left-0 h-[2px] w-full origin-left opacity-40',
+				progressColorClass
+			)}
 			style="animation: silk-toast-progress {toast.duration}ms linear forwards; animation-play-state: {toast.paused
 				? 'paused'
 				: 'running'};"

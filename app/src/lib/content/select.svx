@@ -41,7 +41,7 @@
     let selected = $state<string>('');
 </script>\n
 <Select.Root bind:value={selected}>
-            <Select.Trigger class="w-[180px]" variant="outlined">Select a fruit</Select.Trigger>
+    <Select.Trigger class="w-[180px]" variant="outlined">Select a fruit</Select.Trigger>
     <Select.Content class="w-[180px]">
         <Select.Label>Fruits</Select.Label>
         <Select.Item value="apple">Apple</Select.Item>
@@ -50,6 +50,7 @@
         <Select.Item value="grape">Grape</Select.Item>
         <Select.Item value="pear">Pear</Select.Item>
     </Select.Content>
+</Select.Root>
 </Select.Root>`}>
     <Select.Root bind:value={t}>
         <Select.Trigger class="w-[180px]" variant="outlined">Select a fruit</Select.Trigger>

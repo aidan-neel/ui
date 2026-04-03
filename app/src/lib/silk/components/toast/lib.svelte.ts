@@ -13,7 +13,7 @@ export interface ToastUIState {
 export interface ToastAction {
 	label: string;
 	variant?: 'primary' | 'secondary' | 'ghost' | 'outlined';
-	callback: () => any;
+	callback: () => void;
 }
 
 export interface Toast {
@@ -41,10 +41,10 @@ type ToastInput = Omit<
 interface PromiseMessages<T> {
 	loading: string;
 	success: string | ((data: T) => string);
-	error: string | ((err: any) => string);
+	error: string | ((error: unknown) => string);
 	loadingDescription?: string;
 	successDescription?: string | ((data: T) => string);
-	errorDescription?: string | ((err: any) => string);
+	errorDescription?: string | ((error: unknown) => string);
 }
 
 export interface ToastFn {
@@ -60,6 +60,7 @@ export interface ToastFn {
 
 const toastUIState = new UIState<ToastUIState>({ toasts: [] }, 'toast');
 
+/** Clears the pending timeout for a toast when one exists. */
 function clearToastTimeout(id: number) {
 	const timeout = toastTimeouts.get(id);
 	if (!timeout) return;
@@ -67,6 +68,7 @@ function clearToastTimeout(id: number) {
 	toastTimeouts.delete(id);
 }
 
+/** Starts the exit lifecycle for a toast and removes it after the exit duration. */
 function dismissToast(id: number) {
 	if (!toastUIState.data) return;
 	const current = toastUIState.data.toasts.find((t) => t.id === id);
@@ -84,14 +86,13 @@ function dismissToast(id: number) {
 	);
 }
 
+/** Schedules automatic dismissal for a toast after the provided duration. */
 function scheduleToastRemoval(id: number, duration: number) {
 	clearToastTimeout(id);
-	toastTimeouts.set(
-		id,
-		setTimeout(() => dismissToast(id), duration)
-	);
+	toastTimeouts.set(id, setTimeout(() => dismissToast(id), duration));
 }
 
+/** Pauses a toast timer while the user is interacting with it. */
 function pauseToast(id: number) {
 	if (!toastUIState.data) return;
 	const current = toastUIState.data.toasts.find((t) => t.id === id);
@@ -102,6 +103,7 @@ function pauseToast(id: number) {
 	clearToastTimeout(id);
 }
 
+/** Resumes a paused toast timer using its remaining duration. */
 function resumeToast(id: number) {
 	if (!toastUIState.data) return;
 	const current = toastUIState.data.toasts.find((t) => t.id === id);
@@ -111,6 +113,7 @@ function resumeToast(id: number) {
 	scheduleToastRemoval(id, current.remaining ?? current.duration ?? 4200);
 }
 
+/** Updates a toast in place and reschedules dismissal when needed. */
 function updateToast(id: number, updates: Partial<Toast>) {
 	if (!toastUIState.data) return;
 	const current = toastUIState.data.toasts.find((t) => t.id === id);
@@ -124,6 +127,7 @@ function updateToast(id: number, updates: Partial<Toast>) {
 	}
 }
 
+/** Creates a toast instance, registers its actions, and returns the live object. */
 function createToast(toastData: ToastInput): Toast {
 	if (!toastUIState.data) return toastData as Toast;
 
@@ -159,6 +163,7 @@ function createToast(toastData: ToastInput): Toast {
 	return nextToast;
 }
 
+/** Wraps a promise with loading, success, and error toast states. */
 function toastPromise<T>(promise: Promise<T>, messages: PromiseMessages<T>): Toast {
 	const t = createToast({
 		title: messages.loading,
@@ -240,6 +245,7 @@ function getToastUIState(): UIState<ToastUIState> {
 	return getContext(STATE_KEY);
 }
 
+/** Stores the shared toast state in context for descendant components. */
 function setToastUIState(): UIState<ToastUIState> {
 	return setContext(STATE_KEY, toastUIState);
 }

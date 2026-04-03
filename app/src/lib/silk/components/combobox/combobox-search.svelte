@@ -1,39 +1,40 @@
 <script lang="ts">
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import { Button, type ButtonProps } from '$lib/silk/components/button';
-	import { getContext, onMount, type Snippet } from 'svelte';
+	import { getContext, tick } from 'svelte';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
 	import type { ComboboxItem, ComboboxSearchProps, ComboboxState } from '.';
-    import Search from "@lucide/svelte/icons/search";
-    import Fuse from 'fuse.js'
+	import Search from '@lucide/svelte/icons/search';
+	import Fuse from 'fuse.js';
 
-	const key = getContext("key") as string;
+	const key = getContext('key') as string;
 	const uiState = states[key].data as ComboboxState;
 
 	let element = $state<HTMLInputElement | undefined>();
 
-	const { children,  class: classProp, threshold = 0.5, placeholder = 'Search...', ...rest }: ComboboxSearchProps = $props();
+	const { threshold = 0.5, placeholder = 'Search...' }: ComboboxSearchProps = $props();
 
-    onMount(() => {
-        if (element) {
-            element.focus();
-        }
-    })
+	$effect(() => {
+		if (!uiState.open) return;
 
-    function handleInput() {
-        const itemsArray = Array.from(uiState.items); // ComboboxItem[]
+		void tick().then(() => {
+			element?.focus();
+			element?.select();
+		});
+	});
 
-        const namesArray = itemsArray.map(item => item.value);
+	function handleInput() {
+		const itemsArray = Array.from(uiState.items);
 
-        const fuse = new Fuse(namesArray, { threshold });
-        const results = fuse.search(uiState.searchContent);
+		const namesArray = itemsArray.map((item) => item.value);
 
-        const resultSet = new Set<ComboboxItem>(
-            results.map(r => itemsArray.find(item => item.value === r.item)!)
-        );
+		const fuse = new Fuse(namesArray, { threshold });
+		const results = fuse.search(uiState.searchContent);
 
-        uiState.results = resultSet;
-    }
+		const resultSet = new Set<ComboboxItem>(
+			results.map((r) => itemsArray.find((item) => item.value === r.item)!)
+		);
+
+		uiState.results = resultSet;
+	}
 </script>
 
 <div class="flex items-center border-b border-input gap-2 p-2 px-3 w-full">

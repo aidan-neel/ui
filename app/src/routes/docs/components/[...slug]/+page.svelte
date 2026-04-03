@@ -51,8 +51,8 @@
 <div class="flex flex-col gap-4 py-8">
 	<h1 class="h1">Installation</h1>
 	{#key Title}
-        <CodeBlock lang="shell" code={`bunx @aidan-neel/ui add ${Title.toLowerCase()}`} />
-    {/key}
+		<CodeBlock lang="shell" code={`bunx @aidan-neel/ui add ${Title.toLowerCase()}`} />
+	{/key}
 </div>
 
 <div class="flex-grow w-full pb-16">
@@ -60,7 +60,7 @@
 
 	{#key Title}
 		<div
-            tabindex="-1"
+			tabindex="-1"
 			class="mt-8 flex flex-row w-full items-center"
 			class:justify-between={prevComponent && nextComponent}
 			class:justify-end={!prevComponent && nextComponent}

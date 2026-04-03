@@ -1,6 +1,6 @@
-interface DefaultState {}
+export type UIStateShape = object;
 
-export class UIState<T extends DefaultState> {
+export class UIState<T extends UIStateShape> {
 	data = $state<T>({} as T);
 	key = $state<string>('');
 
@@ -9,13 +9,15 @@ export class UIState<T extends DefaultState> {
 		this.key = key;
 	}
 
+	/** Removes the registered state instance from the shared registry. */
 	destroy() {
 		delete states[this.key];
 		this.data = undefined as unknown as T;
 	}
 }
 
-export function useState<T extends DefaultState>(
+/** Returns a shared state bucket for a given key, creating it on first access. */
+export function useState<T extends UIStateShape>(
 	defaultValue: T,
 	key: string = Math.random().toString(36).substring(2)
 ) {
@@ -25,4 +27,4 @@ export function useState<T extends DefaultState>(
 	return states[key] as UIState<T>;
 }
 
-export const states = $state<Record<string, UIState<any>>>({});
+export const states = $state<Record<string, UIState<UIStateShape>>>({});

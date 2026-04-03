@@ -6,17 +6,17 @@
 	let {
 		checked = $bindable<boolean>(),
 		label,
-        description,
-        disabled,
-        variant = 'default',
+		description,
+		disabled,
+		variant = 'default',
 		class: classProp,
 		...rest
 	}: {
 		checked: boolean;
 		label?: string;
-        description?: string;
-        disabled?: boolean;
-        variant: 'default' | 'primary';
+		description?: string;
+		disabled?: boolean;
+		variant: 'default' | 'primary';
 		class?: string;
 	} = $props();
 </script>
@@ -25,25 +25,30 @@
 	{...rest}
 	class={cn(
 		classProp,
-		`${disabled ? 'opacity-60' : ''} group ${variant === 'primary' ? 'p-4 rounded-xl border focus-within:bg-secondary hover:bg-secondary' : ''} duration-200 ${variant === 'primary' && checked === true ? 'bg-primary/10 border-primary/30 focus-within:bg-primary/20 hover:bg-primary/20' : ''} flex flex-row items-start gap-3`
+		`${disabled ? 'opacity-60' : ''} group ${variant === 'primary' ? 'p-4 rounded-lg border focus-within:bg-secondary hover:bg-secondary' : ''} duration-200 ${variant === 'primary' && checked === true ? 'bg-primary/10 border-primary/30 focus-within:bg-primary/20 hover:bg-primary/20' : ''} flex flex-row items-start gap-3`
 	)}
 >
 	{#if disabled}
-		<input type="checkbox" class="peer absolute opacity-0" disabled aria-checked={checked} />
+		<input type="checkbox" class="peer absolute size-4 opacity-0" disabled aria-checked={checked} />
 	{:else}
-		<input type="checkbox" class="peer absolute opacity-0" bind:checked aria-checked={checked} />
+		<input
+			type="checkbox"
+			class="peer absolute size-4 opacity-0"
+			bind:checked
+			aria-checked={checked}
+		/>
 	{/if}
 	{#if checked}
 		<div
 			in:scaleFade={{ duration: 200 }}
-			class="flex h-4 w-4 items-center justify-center rounded-[var(--checkbox-radius)] bg-primary p-0 ring-offset-1 peer-focus-visible:ring-2 peer-focus-visible:ring-primary/30"
+			class="flex h-4 w-4 items-center justify-center rounded-[var(--checkbox-radius)] bg-primary p-0 ring-offset-2 transition-[box-shadow,transform] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		>
 			<Check size="12" class="text-foreground-btn" />
 		</div>
 	{:else}
 		<div
 			in:scaleFade={{ duration: 200 }}
-			class="flex h-4 w-4 items-center justify-center rounded-[var(--checkbox-radius)] border bg-popover p-0 duration-200 peer-hover:bg-secondary peer-focus-visible:bg-secondary"
+			class="flex h-4 w-4 items-center justify-center rounded-[var(--checkbox-radius)] border bg-popover p-0 duration-200 transition-[background-color,box-shadow,transform] peer-hover:bg-secondary peer-focus-visible:bg-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		></div>
 	{/if}
 	{#if label}

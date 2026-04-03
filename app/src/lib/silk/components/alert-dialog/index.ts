@@ -10,6 +10,7 @@ import Confirm from './alert-dialog-confirm.svelte';
 
 export type AlertDialogState = {
 	open: boolean;
+	triggerRef?: HTMLElement | null;
 };
 
 export type AlertDialogProps = {

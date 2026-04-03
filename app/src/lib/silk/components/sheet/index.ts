@@ -28,6 +28,7 @@ export type SheetCloseProps = {} & DefaultProps;
 
 export type SheetState = {
 	open: boolean;
+	triggerRef?: HTMLElement | null;
 };
 
 export { Root, Trigger, Title, Header, Footer, Description, Content, Close };

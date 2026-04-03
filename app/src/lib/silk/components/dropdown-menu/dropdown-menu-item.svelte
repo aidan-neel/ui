@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { Button, type ButtonProps } from '$lib/silk/components/button';
-	import { states } from '$lib/silk/internals/state.svelte.ts';
+	import { states, type UIState } from '$lib/silk/internals/state.svelte.ts';
 	import { cn } from '$lib/silk/utils';
 	import { getContext, setContext, type Snippet } from 'svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
 	import Check from '@lucide/svelte/icons/check';
 	import { flyAndScale } from '$lib/silk/internals/transition';
+	import type { PopoverState } from '$lib/silk/components/popover';
 
 	const key = getContext('key') as string;
 	const parent = getContext('parent') as string;
-	const uiState = states[key];
+	const uiState = states[key] as UIState<PopoverState>;
 
 	type Props = {
 		class: string;
 		children?: Snippet;
-		callback?: () => any;
+		callback?: () => void;
 	} & ButtonProps;
 
 	let { children, class: className, callback, ...rest }: Props = $props();
@@ -27,7 +27,7 @@
 		uiState.data.open = false;
 		setTimeout(() => {
 			if (parent) {
-				states[parent].data.open = false;
+				(states[parent].data as PopoverState).open = false;
 			}
 		}, 100);
 		callback?.();

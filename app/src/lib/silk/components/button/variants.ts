@@ -1,8 +1,7 @@
-import type { Snippet } from 'svelte';
 import { tv } from 'tailwind-variants';
 
 export const button = tv({
-	base: 'flex min-h-[var(--button-height)] items-center justify-center gap-[var(--button-gap)] whitespace-nowrap rounded-[var(--button-radius)] border border-transparent px-[var(--button-padding-x)] text-[length:var(--text-sm)] font-[var(--button-font-weight)] transition-[background-color,border-color,color,box-shadow,transform] duration-240 ease-[cubic-bezier(0.22,1,0.36,1)] hover:cursor-pointer [transform:translateZ(0)] [backface-visibility:hidden] focus-visible:translate-y-px focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0',
+	base: 'flex min-h-[var(--button-height)] hover:cursor-default items-center justify-center gap-[var(--button-gap)] whitespace-nowrap rounded-[var(--button-radius)] border border-transparent px-[var(--button-padding-x)] text-[length:var(--text-sm)] font-[var(--button-font-weight)] transition-[background-color,border-color,color,box-shadow,transform,filter] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] [transform:translateZ(0)] [backface-visibility:hidden] hover:brightness-[0.985] focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-[0_0_0_3px_var(--color-ring)] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 disabled:hover:brightness-100 [&_svg]:pointer-events-none [&_svg:not([class*="size-"])]:size-4 [&_svg]:shrink-0',
 	variants: {
 		variant: {
 			primary:

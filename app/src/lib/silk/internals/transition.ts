@@ -8,29 +8,21 @@ type FlyAndScaleParams = {
 	duration?: number;
 	durationVar?: string;
 	blur?: number;
+	xVar?: string;
+	blurVar?: string;
+	startVar?: string;
 };
-
-let minBlur = 1.5;
-let maxBlur = 3.5;
-let minDuration = 100;
-let maxDuration = 300;
-
-function calculateBlur(duration: number) {
-	duration = Math.max(minDuration, Math.min(duration, maxDuration));
-
-	let blur =
-		maxBlur - ((duration - minDuration) * (maxBlur - minBlur)) / (maxDuration - minDuration);
-
-	return blur;
-}
 
 type FlyNoOpacityParams = {
 	y?: number;
 	x?: number;
 	duration?: number;
 	durationVar?: string;
+	xVar?: string;
+	xMultiplier?: number;
 };
 
+/** Reads a CSS duration variable and normalizes it to milliseconds. */
 export function getCssDuration(node: Element, variableName: string, fallback: number) {
 	const raw = getComputedStyle(node).getPropertyValue(variableName).trim();
 	if (!raw) return fallback;
@@ -40,14 +32,26 @@ export function getCssDuration(node: Element, variableName: string, fallback: nu
 	return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+/** Reads a numeric CSS variable and falls back when it is unset or invalid. */
+export function getCssNumber(node: Element, variableName: string, fallback: number) {
+	const raw = getComputedStyle(node).getPropertyValue(variableName).trim();
+	if (!raw) return fallback;
+	const parsed = Number.parseFloat(raw);
+	return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+/** Applies a directional fly transition without changing opacity. */
 export const flyNoOpacity = (
 	node: Element,
-	params: FlyNoOpacityParams = { y: -6, x: 0, duration: 240 }
+	params: FlyNoOpacityParams = { y: 8, x: 0, duration: 240 }
 ): TransitionConfig => {
 	const style = getComputedStyle(node);
 	const transform = style.transform === 'none' ? '' : style.transform;
 	const duration =
 		params.duration ?? getCssDuration(node, params.durationVar ?? '--motion-duration-panel', 240);
+	const offsetX =
+		params.x ??
+		getCssNumber(node, params.xVar ?? '--motion-sheet-offset', 0) * (params.xMultiplier ?? 1);
 
 	const scaleConversion = (valueA: number, from: [number, number], to: [number, number]) => {
 		const [minA, maxA] = from;
@@ -69,7 +73,7 @@ export const flyNoOpacity = (
 		easing: quintOut,
 		css: (t) => {
 			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
-			const x = scaleConversion(t, [0, 1], [params.x ?? 0, 0]);
+			const x = scaleConversion(t, [0, 1], [offsetX, 0]);
 			return styleToString({
 				transform: `${transform} translate3d(${x}px, ${y}px, 0)`
 			});
@@ -79,12 +83,16 @@ export const flyNoOpacity = (
 
 export const flyAndScale = (
 	node: Element,
-	params: FlyAndScaleParams = { y: -6, x: 0, start: 0.985, duration: 240 }
+	params: FlyAndScaleParams = { y: 8, x: 0, start: 0.985, duration: 240 }
 ): TransitionConfig => {
 	const style = getComputedStyle(node);
 	const transform = style.transform === 'none' ? '' : style.transform;
 	const duration =
 		params.duration ?? getCssDuration(node, params.durationVar ?? '--motion-duration-panel', 240);
+	const offsetX = params.x ?? getCssNumber(node, params.xVar ?? '--motion-panel-x', 0);
+	const blur = params.blur ?? getCssNumber(node, params.blurVar ?? '--motion-panel-blur', 0);
+	const start =
+		params.start ?? getCssNumber(node, params.startVar ?? '--motion-panel-scale-start', 0.95);
 
 	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
 		const [minA, maxA] = scaleA;
@@ -108,11 +116,13 @@ export const flyAndScale = (
 		delay: 0,
 		css: (t) => {
 			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
-			const x = scaleConversion(t, [0, 1], [params.x ?? 0, 0]);
-			const scale = scaleConversion(t, [0, 1], [params.start ?? 0.95, 1]);
+			const x = scaleConversion(t, [0, 1], [offsetX, 0]);
+			const scale = scaleConversion(t, [0, 1], [start, 1]);
+			const filter = blur > 0 ? `blur(${scaleConversion(t, [0, 1], [blur, 0])}px)` : undefined;
 
 			return styleToString({
 				transform: `${transform} translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+				filter,
 				opacity: t
 			});
 		},
@@ -125,6 +135,7 @@ type ScaleFadeParams = {
 	duration?: number;
 };
 
+/** Combines a small scale-up with a fade-in for compact content. */
 export const scaleFade = (
 	node: Element,
 	params: ScaleFadeParams = { startScale: 0.85, duration: 250 }

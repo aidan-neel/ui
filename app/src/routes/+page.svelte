@@ -8,7 +8,7 @@
 	import { Button } from '$lib/silk/components/button';
 
 	const heroHeadline =
-		'Design-forward Svelte components with calmer defaults and room to make them yours.';
+		'Design-forward Svelte components with calmer defaults and more room to customize.';
 	const heroWords = heroHeadline.split(' ');
 
 	type RevealParams = {
@@ -258,7 +258,7 @@
 
 	<footer
 		class="fade-up relative z-[1] mx-auto mt-24 flex w-full max-w-[1400px] items-center justify-between gap-4 border-t border-border-strong/60 px-4 pt-5 md:px-8 max-md:flex-col max-md:items-start"
-		use:revealOnScroll={{ delay: 80, threshold: 0.2 }}
+		use:revealOnScroll={{ delay: 80, threshold: 0.01, rootMargin: '0px 0px 12% 0px' }}
 	>
 		<div>
 			<p class="m-0 font-semibold">Silk UI</p>
@@ -291,6 +291,8 @@
 		</div>
 	</footer>
 </div>
+
+<!--  -->
 
 <style>
 	.fade-up {

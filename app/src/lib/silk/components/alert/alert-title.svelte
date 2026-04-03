@@ -14,7 +14,7 @@
 
 <p
 	{...rest}
-	class={cn(classProp, `text font-medium tracking-[-0.02em] [font-family:var(--font-header),sans-serif]`)}
+	class={cn(classProp, `text font-medium tracking-[-0.02em]`)}
 >
 	{@render children?.()}
 </p>

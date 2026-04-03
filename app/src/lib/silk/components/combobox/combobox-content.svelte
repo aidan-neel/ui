@@ -8,18 +8,23 @@
 	import * as Popover from '$lib/silk/components/popover';
 	import { cn } from '$lib/silk/utils';
 
-	const key = getContext("key") as string;
+	const key = getContext('key') as string;
 	const uiState = states[key].data as ComboboxState;
 
 	let element: HTMLButtonElement | undefined = $state();
-    let lastOpen = $state<boolean>(uiState.open);
+	let lastOpen = $state<boolean>(uiState.open);
 	const { children, class: className, ...rest }: Popover.PopoverContentProps = $props();
 </script>
 
 <Popover.Content
 	{...rest}
+	role="listbox"
+	tabindex={-1}
 	data-ui="combobox-content"
-	class={cn(className, 'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-0 overflow-y-auto')}
+	class={cn(
+		className,
+		'bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-0 overflow-y-auto'
+	)}
 >
 	{@render children?.()}
 </Popover.Content>

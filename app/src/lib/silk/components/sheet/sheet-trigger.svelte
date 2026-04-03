@@ -1,19 +1,22 @@
 <script lang="ts">
-	import { states, UIState, useState } from '$lib/silk/internals/state.svelte.ts';
-	import { getContext, setContext } from 'svelte';
-	import type { SheetState, SheetTriggerProps } from ".";
-    import { Button, type ButtonProps } from "$lib/silk/components/button";
-    import { cn, type DefaultProps } from "$lib/silk/utils";
+	import { states } from '$lib/silk/internals/state.svelte.ts';
+	import { getContext } from 'svelte';
+	import type { SheetState, SheetTriggerProps } from '.';
+	import { Button } from '$lib/silk/components/button';
+	import { cn } from '$lib/silk/utils';
 
-    let { class: className, children, ...rest }: SheetTriggerProps = $props();
+	let { class: className, children, ...rest }: SheetTriggerProps = $props();
 
-    const key = getContext<string>('key');
-    const uiState = states[key].data as SheetState;
+	const key = getContext<string>('key');
+	const uiState = states[key].data as SheetState;
 </script>
 
 <Button
+	aria-haspopup="dialog"
+	aria-expanded={uiState.open}
+	aria-controls={`sheet-${key}`}
 	onclick={() => {
-		uiState.open = true;
+		uiState.open = !uiState.open;
 	}}
 	class={cn(className, ``)}
 	{...rest}

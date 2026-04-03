@@ -12,6 +12,7 @@ import type { ButtonProps } from '../button';
 
 export type DialogState = {
 	open: boolean;
+	triggerRef?: HTMLElement | null;
 };
 
 export type DialogTriggerProps = {} & ButtonProps;
@@ -20,12 +21,14 @@ export type DialogHeaderProps = {} & DefaultProps;
 export type DialogFooterProps = {} & DefaultProps;
 
 export type DialogConfirmProps = {
-	onclick?: () => any;
-} & DefaultProps & ButtonProps;
+	onclick?: () => void;
+} & DefaultProps &
+	ButtonProps;
 
 export type DialogExitProps = {
-	onclick?: () => any;
-} & DefaultProps & ButtonProps;
+	onclick?: () => void;
+} & DefaultProps &
+	ButtonProps;
 
 export type DialogDescriptionProps = {} & DefaultProps;
 

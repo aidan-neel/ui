@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { onDestroy, onMount, type Snippet } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
-	import { clickOutside, cn } from '$lib/silk/utils';
+	import { clickOutside, cn, positionFloatingPanel } from '$lib/silk/utils';
 	import { flyAndScale } from '$lib/silk/internals/transition';
 	import { getContext } from 'svelte';
-	import { computePosition, flip, type ReferenceElement } from '@floating-ui/dom';
+	import type { ReferenceElement } from '@floating-ui/dom';
 	import type { PopoverContentProps, PopoverState } from '.';
 
 	const {
@@ -14,6 +14,9 @@
 		portal = true,
 		refElement,
 		lockBody = false,
+		role = 'dialog',
+		tabindex = -1,
+		id,
 		...rest
 	}: PopoverContentProps = $props();
 
@@ -21,6 +24,7 @@
 	const uiState = states[key].data as PopoverState;
 
 	let popover = $state<HTMLElement | undefined>();
+	let clickOutsideCleanup: (() => void) | undefined;
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -30,15 +34,16 @@
 
 	function updatePosition() {
 		if (uiState && popover) {
-			computePosition(refElement ?? (uiState.buttonRef as ReferenceElement), popover, {
-				placement: refElement ? 'right-start' : uiState.placement,
-				middleware: [flip()]
-			}).then(({ x, y }) => {
-				Object.assign(popover!.style, {
-					left: `${x}px`,
-					top: `${y}px`
-				});
-			});
+			const triggerWidth = uiState.buttonRef?.getBoundingClientRect().width;
+			if (triggerWidth) {
+				popover.style.setProperty('--popover-trigger-width', `${triggerWidth}px`);
+			}
+
+			positionFloatingPanel(
+				refElement ?? (uiState.buttonRef as ReferenceElement),
+				popover,
+				refElement ? 'right-start' : uiState.placement
+			);
 		}
 	}
 
@@ -56,9 +61,14 @@
 		}
 
 		if (allowClickOutside && popover) {
-			clickOutside(popover, () => {
-				uiState.open = false;
-			});
+			const outside = clickOutside(
+				popover,
+				() => {
+					uiState.open = false;
+				},
+				uiState.buttonRef ? [uiState.buttonRef] : []
+			);
+			clickOutsideCleanup = outside.destroy;
 		}
 
 		const ro = new ResizeObserver(updatePosition);
@@ -90,6 +100,7 @@
 			document.removeEventListener('focusin', handleFocusIn);
 			document.removeEventListener('focusout', handleFocusOut);
 			ro.disconnect();
+			clickOutsideCleanup?.();
 
 			uiState.open = false;
 			uiState.popoverRef?.remove();
@@ -132,13 +143,9 @@
 </script>
 
 <div
-	{...rest}
-	class={cn('absolute left-0 top-0 w-max z-[110] flex items-center justify-center py-2')}
+	role="presentation"
+	class={cn('absolute left-0 top-0 z-[110] flex max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] items-center justify-center')}
 	bind:this={popover as HTMLElement}
-	role="dialog"
-	id={`popover-${String(key)}-content`}
-	aria-modal="false"
-	aria-labelledby={`popover-${String(key)}-title`}
 	onmouseenter={cancelClose}
 	onmouseleave={() => {
 		if (uiState?.hoverable) {
@@ -150,13 +157,19 @@
 	}}
 >
 	{#if uiState?.open}
+		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<div
 			{...rest}
+			id={id ?? `popover-${String(key)}-content`}
+			{role}
+			aria-modal="false"
+			aria-labelledby={`popover-${String(key)}-title`}
+			{tabindex}
 			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
 			data-ui="popover-content"
 			class={cn(
 				classProp,
-				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto`
+				`bg-[var(--color-panel)] text-[var(--color-panel-foreground)] border border-[var(--panel-border)] rounded-[var(--panel-radius)] shadow-[inset_0_1px_0_var(--panel-highlight),var(--panel-shadow)] p-[var(--panel-padding)] text-sm m-auto max-w-[min(var(--popover-available-width,calc(100vw-1rem)),calc(100vw-1rem))] max-h-[min(var(--popover-available-height,calc(100vh-1rem)),calc(100vh-1rem))] overflow-auto`
 			)}
 		>
 			{@render children?.()}

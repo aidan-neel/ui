@@ -17,13 +17,13 @@ export type ContextMenuProps = {} & DefaultProps;
 export type ContextMenuContentProps = {} & DefaultProps;
 
 export type ContextMenuItemProps = {
-	callback?: () => any;
+	callback?: () => void;
 	inset?: boolean;
 } & DefaultProps &
 	ButtonProps;
 
 export type ContextMenuCheckboxItemProps = {
-	callback?: () => any;
+	callback?: () => void;
 	value: string;
 	inset?: boolean;
 	checked?: boolean;

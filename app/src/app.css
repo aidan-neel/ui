@@ -21,9 +21,21 @@ body {
 	body {
 		background-color: var(--color-background);
 		background-image:
-			radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 36%),
-			radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, transparent 28%),
-			linear-gradient(180deg, color-mix(in srgb, var(--color-background) 94%, var(--color-primary) 4%) 0%, var(--color-background) 62%);
+			radial-gradient(
+				circle at 12% 0%,
+				color-mix(in srgb, var(--color-primary) 14%, transparent) 0%,
+				transparent 36%
+			),
+			radial-gradient(
+				circle at 88% 8%,
+				color-mix(in srgb, var(--color-primary) 8%, transparent) 0%,
+				transparent 28%
+			),
+			linear-gradient(
+				180deg,
+				color-mix(in srgb, var(--color-background) 94%, var(--color-primary) 4%) 0%,
+				var(--color-background) 62%
+			);
 		background-attachment: fixed;
 		color: var(--color-foreground);
 		font-family: var(--font-sans), sans-serif;
@@ -54,6 +66,22 @@ pre {
 	font-family: var(--font-header), sans-serif;
 	letter-spacing: -0.02em;
 	line-height: 1.1;
+}
+
+.docs-section-heading {
+	font-size: 1.5rem;
+	font-weight: 500;
+	letter-spacing: -0.03em;
+	line-height: 1.15;
+	color: var(--color-foreground);
+}
+
+.docs-subsection-heading {
+	font-size: 1.25rem;
+	font-weight: 500;
+	letter-spacing: -0.025em;
+	line-height: 1.2;
+	color: var(--color-foreground);
 }
 
 ::-webkit-scrollbar {
