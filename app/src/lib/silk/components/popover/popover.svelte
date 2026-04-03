@@ -3,14 +3,14 @@
 	import { useState, states, UIState } from '$lib/silk/internals/state.svelte.ts';
 	import type { PopoverProps, PopoverState } from '.';
 
-	const {
+	let {
 		class: classProp,
-		open = false,
+		open = $bindable(false),
 		stateName = 'popover',
 		placement = 'bottom',
 		children,
 		state_key,
-		state,
+		state: providedState,
 		hoverable,
 		delay = 0,
 		closeDelay = 150,
@@ -33,11 +33,12 @@
 			delay: 0,
 			closeDelay: 150
 		} as PopoverState,
-		state_key ?? state?.key ?? generatedKey
+		state_key ?? providedState?.key ?? generatedKey
 	);
 	// svelte-ignore state_referenced_locally
-	const key = $derived(state_key ?? state?.key ?? generatedKey);
-	const uiState = $derived(state ?? localState);
+	const key = $derived(state_key ?? providedState?.key ?? generatedKey);
+	const uiState = $derived(providedState ?? localState);
+	let syncedOpen = $state(open);
 
 	// svelte-ignore state_referenced_locally
 	setContext('key', key);
@@ -62,7 +63,6 @@
 			uiState.data.hoverable = hoverable ?? false;
 			uiState.data.delay = delay;
 			uiState.data.closeDelay = closeDelay;
-			uiState.data.open = open;
 		}
 	});
 
@@ -72,7 +72,17 @@
 			uiState.data.hoverable = hoverable ?? false;
 			uiState.data.delay = delay;
 			uiState.data.closeDelay = closeDelay;
-			uiState.data.open = open;
+			if (open !== syncedOpen) {
+				syncedOpen = open;
+				uiState.data.open = open;
+			}
+		}
+	});
+
+	$effect(() => {
+		if (uiState.data && uiState.data.open !== syncedOpen) {
+			syncedOpen = uiState.data.open;
+			open = uiState.data.open;
 		}
 	});
 

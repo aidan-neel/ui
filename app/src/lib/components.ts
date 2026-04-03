@@ -6,6 +6,7 @@ export const components = [
 	'button',
 	'card',
 	'checkbox',
+	'color-picker',
 	'combobox',
 	'command',
 	'context-menu',
@@ -20,7 +21,7 @@ export const components = [
 	'switch',
 	'textarea',
 	'toast',
-	'tooltip',
+	'tooltip'
 ].sort((a, b) => a.localeCompare(b));
 
 export const sanitizeComponent = (name: string) => {

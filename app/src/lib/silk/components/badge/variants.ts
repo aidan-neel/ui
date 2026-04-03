@@ -1,4 +1,3 @@
-import type { Snippet } from 'svelte';
 import { tv } from 'tailwind-variants';
 
 export const badge = tv({

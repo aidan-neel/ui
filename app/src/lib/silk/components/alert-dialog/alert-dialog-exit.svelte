@@ -1,21 +1,28 @@
 <script lang="ts">
-	import { states, UIState, useState } from '$lib/silk/internals/state.svelte.ts';
-	import { getContext, setContext } from 'svelte';
-	import type { AlertDialogState } from ".";
-    import { Button, type ButtonProps } from "$lib/silk/components/button";
-    import { cn, type DefaultProps } from "$lib/silk/utils";
+	import { states } from '$lib/silk/internals/state.svelte.ts';
+	import { getContext, onMount } from 'svelte';
+	import type { AlertDialogState } from '.';
+	import { Button, type ButtonProps } from '$lib/silk/components/button';
+	import { cn, type DefaultProps } from '$lib/silk/utils';
 
-    type Props = {
-        onclick?: () => any;
-    } & DefaultProps & ButtonProps;
+	type Props = {
+		onclick?: () => void;
+	} & DefaultProps &
+		ButtonProps;
 
-    let { class: className, children, onclick, ...rest }: Props = $props();
+	let { class: className, children, onclick, ...rest }: Props = $props();
 
-    const key = getContext<string>('key');
-    const uiState = states[key].data as AlertDialogState;
+	const key = getContext<string>('key');
+	const uiState = states[key].data as AlertDialogState;
+	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>(undefined);
+
+	onMount(() => {
+		element?.focus();
+	});
 </script>
 
 <Button
+	bind:element
 	onclick={() => {
 		uiState.open = false;
 		onclick?.();

@@ -1,29 +1,21 @@
 <script lang="ts">
-	import { states, UIState, useState } from '$lib/silk/internals/state.svelte.ts';
-	import { getContext, onMount, setContext } from 'svelte';
-	import type { AlertDialogState } from ".";
-    import { Button, type ButtonProps } from "$lib/silk/components/button";
-    import { cn, type DefaultProps } from "$lib/silk/utils";
+	import { states } from '$lib/silk/internals/state.svelte.ts';
+	import { getContext } from 'svelte';
+	import type { AlertDialogState } from '.';
+	import { Button, type ButtonProps } from '$lib/silk/components/button';
+	import { cn, type DefaultProps } from '$lib/silk/utils';
 
-    type Props = {
-        onclick?: () => any;
-    } & DefaultProps & ButtonProps;
+	type Props = {
+		onclick?: () => void;
+	} & DefaultProps &
+		ButtonProps;
 
-    let { class: className, children, onclick, ...rest }: Props = $props();
-
-    let btn = $state<HTMLButtonElement | HTMLAnchorElement | undefined>(undefined);
-    const key = getContext<string>('key');
-    const uiState = states[key].data as AlertDialogState;
-
-    onMount(() => {
-        if (btn) {
-            btn.focus();
-        }
-    })
+	let { class: className, children, onclick, ...rest }: Props = $props();
+	const key = getContext<string>('key');
+	const uiState = states[key].data as AlertDialogState;
 </script>
 
 <Button
-	bind:element={btn}
 	onclick={() => {
 		uiState.open = false;
 		onclick?.();

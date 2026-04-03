@@ -1,23 +1,30 @@
 <script lang="ts">
-	import { getContext } from "svelte";
-	import type { ContextMenuItemProps, ContextMenuState } from ".";
+	import { getContext } from 'svelte';
+	import type { ContextMenuItemProps, ContextMenuState } from '.';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
 	import { Button } from '$lib/silk/components/button';
-	import { cn } from "$lib/silk/utils";
+	import { cn } from '$lib/silk/utils';
 
-    const key = getContext<string>('key');
-    const parent = getContext<string>('parent');
-    const uiState = states[key].data as ContextMenuState;
+	const key = getContext<string>('key');
+	const parent = getContext<string>('parent');
+	const uiState = states[key].data as ContextMenuState;
 
-    let { class: className, children, callback, inset = false, ...rest }: ContextMenuItemProps = $props();
+	let {
+		class: className,
+		children,
+		callback,
+		inset = false,
+		...rest
+	}: ContextMenuItemProps = $props();
 </script>
 
 <Button
+	role="menuitem"
 	{...rest}
 	onclick={() => {
 		uiState.open = false;
 		if (parent) {
-			states[parent].data.open = false;
+			(states[parent].data as ContextMenuState).open = false;
 		}
 		callback?.();
 	}}

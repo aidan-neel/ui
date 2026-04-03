@@ -1,72 +1,171 @@
 import { type ClassValue, clsx } from 'clsx';
+import {
+	computePosition,
+	offset,
+	flip,
+	shift,
+	size,
+	type Placement,
+	type ReferenceElement
+} from '@floating-ui/dom';
 import type { Snippet } from 'svelte';
 import { twMerge } from 'tailwind-merge';
 
 export type DefaultProps = {
 	class?: string;
 	children?: Snippet;
-} & Partial<Record<`data-${string}`, string>>;
+} & Partial<Record<`data-${string}`, string | boolean | null>>;
 
+/** Merges class values and resolves Tailwind conflicts. */
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs.reverse()));
 }
 
-export function trapFocus(dialogEl: HTMLElement) {
+const FOCUSABLE_SELECTOR = [
+	'a[href]',
+	'area[href]',
+	'button:not([disabled])',
+	'input:not([disabled]):not([type="hidden"])',
+	'select:not([disabled])',
+	'textarea:not([disabled])',
+	'iframe',
+	'object',
+	'embed',
+	'[contenteditable="true"]',
+	'[tabindex]:not([tabindex="-1"])'
+].join(', ');
+
+/** Returns the visible, interactive descendants inside a container. */
+export function getFocusableElements(container: HTMLElement) {
+	return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((el) => {
+		if (el.hasAttribute('disabled')) return false;
+		if (el.getAttribute('aria-hidden') === 'true') return false;
+		return !(
+			el.offsetParent === null &&
+			getComputedStyle(el).position !== 'fixed' &&
+			getComputedStyle(el).position !== 'sticky'
+		);
+	});
+}
+
+/** Focuses the first focusable descendant when one exists. */
+export function focusFirstDescendant(container: HTMLElement) {
+	const first = getFocusableElements(container)[0];
+	first?.focus();
+	return first;
+}
+
+/** Keeps keyboard focus inside a container and restores the previous focus on cleanup. */
+export function trapFocus(dialogEl: HTMLElement, options?: { initialFocus?: HTMLElement | null }) {
 	if (!dialogEl) return;
+
+	const previouslyFocused =
+		document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
 	const handleKeydown = (e: KeyboardEvent) => {
 		if (e.key !== 'Tab') return;
 
-		const focusable = Array.from(
-			dialogEl.querySelectorAll<HTMLElement>(
-				'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
-			)
-		).filter((el) => !el.hasAttribute('disabled'));
+		const focusable = getFocusableElements(dialogEl);
 
 		if (focusable.length === 0) return;
 
 		const first = focusable[0];
 		const last = focusable[focusable.length - 1];
+		const active = document.activeElement as HTMLElement | null;
 
 		if (e.shiftKey) {
-			if (document.activeElement === first) {
+			if (!active || !dialogEl.contains(active) || active === first) {
 				e.preventDefault();
 				last.focus();
 			}
 		} else {
-			if (document.activeElement === last) {
+			if (!active || !dialogEl.contains(active) || active === last) {
 				e.preventDefault();
 				first.focus();
 			}
 		}
 	};
 
-	document.addEventListener('keydown', handleKeydown);
-	dialogEl.focus();
+	const handleFocusIn = (e: FocusEvent) => {
+		const target = e.target as Node | null;
+		if (!target || dialogEl.contains(target)) return;
+		options?.initialFocus?.focus();
+		focusFirstDescendant(dialogEl) ?? dialogEl.focus();
+	};
+
+	document.addEventListener('keydown', handleKeydown, true);
+	document.addEventListener('focusin', handleFocusIn, true);
+
+	queueMicrotask(() => {
+		options?.initialFocus?.focus();
+		focusFirstDescendant(dialogEl) ?? dialogEl.focus();
+	});
 
 	return () => {
-		document.removeEventListener('keydown', handleKeydown);
+		document.removeEventListener('keydown', handleKeydown, true);
+		document.removeEventListener('focusin', handleFocusIn, true);
+		previouslyFocused?.focus();
 	};
 }
 
-export function clickOutside(node: Node, callback: () => any, exclude: Node[] = []) {
+/** Runs a callback when a pointer event lands outside the node and any excluded nodes. */
+export function clickOutside(node: Node, callback: () => void, exclude: Node[] = []) {
 	const handleClick = (event: MouseEvent) => {
-		if (
-			node &&
-			!node.contains(event.target as Node) &&
-			!exclude.some((excludeNode) => excludeNode.contains(event.target as Node))
-		) {
+		const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+		const target = event.target as Node | null;
+		const isInsideNode = path.includes(node) || (target ? node.contains(target) : false);
+		const isInsideExcluded = exclude.some(
+			(excludeNode) => path.includes(excludeNode) || (target ? excludeNode.contains(target) : false)
+		);
+
+		if (!isInsideNode && !isInsideExcluded) {
 			callback();
 		}
 	};
 
 	setTimeout(() => {
-		document.addEventListener('click', handleClick, true);
+		document.addEventListener('click', handleClick);
 	}, 0);
 
 	return {
 		destroy() {
-			document.removeEventListener('click', handleClick, true);
+			document.removeEventListener('click', handleClick);
 		}
 	};
+}
+
+/** Positions a floating panel while keeping it inside the viewport bounds. */
+export function positionFloatingPanel(
+	reference: ReferenceElement,
+	floating: HTMLElement,
+	placement: Placement
+) {
+	return computePosition(reference, floating, {
+		placement,
+		middleware: [
+			offset(8),
+			flip({ padding: 8, crossAxis: true, fallbackAxisSideDirection: 'start' }),
+			shift({ padding: 8, crossAxis: true }),
+			size({
+				padding: 8,
+				apply({ availableWidth, availableHeight, elements }) {
+					elements.floating.style.maxWidth = `${Math.max(availableWidth, 0)}px`;
+					elements.floating.style.maxHeight = `${Math.max(availableHeight, 0)}px`;
+					elements.floating.style.setProperty(
+						'--popover-available-width',
+						`${Math.max(availableWidth, 0)}px`
+					);
+					elements.floating.style.setProperty(
+						'--popover-available-height',
+						`${Math.max(availableHeight, 0)}px`
+					);
+				}
+			})
+		]
+	}).then(({ x, y }) => {
+		Object.assign(floating.style, {
+			left: `${x}px`,
+			top: `${y}px`
+		});
+	});
 }

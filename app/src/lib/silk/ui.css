@@ -37,11 +37,13 @@
 	--color-surface-elevated: var(--color-card);
 	--color-panel: var(--color-popover);
 	--color-panel-foreground: var(--color-foreground);
+	--color-floating-panel: var(--color-popover);
+	--color-floating-panel-foreground: var(--color-foreground);
 	--color-tooltip: color-mix(in srgb, var(--color-foreground) 90%, black);
 	--color-tooltip-foreground: var(--color-foreground-opposite);
-	--color-field: var(--color-accent);
-	--color-field-hover: var(--color-secondary);
-	--color-field-focus: var(--color-popover);
+	--color-field: var(--color-background);
+	--color-field-hover: color-mix(in srgb, var(--color-background) 88%, var(--color-secondary));
+	--color-field-focus: var(--color-background);
 	--color-field-foreground: var(--color-foreground);
 	--color-field-placeholder: color-mix(in srgb, var(--color-foreground) 42%, transparent);
 
@@ -62,6 +64,11 @@
 	--motion-duration-tooltip: 140ms;
 	--motion-duration-toast-in: 440ms;
 	--motion-duration-toast-out: 340ms;
+	--motion-panel-x: 0px;
+	--motion-panel-blur: 1px;
+	--motion-panel-scale-start: 0.96;
+	--motion-sheet-offset: 132px;
+	--motion-overlay-blur: 1px;
 
 	--border-size: 1px;
 
@@ -168,6 +175,7 @@
 	--panel-padding: var(--space-panel);
 	--panel-padding-lg: var(--space-panel-lg);
 	--panel-border: color-mix(in srgb, var(--color-border-strong) 88%, transparent);
+	--floating-panel-border: var(--panel-border);
 	--panel-shadow: 0 6px 16px rgb(16 24 40 / 0.05);
 
 	--card-radius: var(--radius-panel);
@@ -186,9 +194,13 @@
 	--menu-item-radius: calc(var(--radius-control) - 0.05rem);
 	--menu-item-padding-x: var(--space-menu-item-x);
 	--menu-item-foreground: var(--color-foreground);
+	--floating-menu-item-foreground: var(--menu-item-foreground);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-secondary) 38%, transparent);
+	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
 	--menu-item-hover-border: color-mix(in srgb, var(--color-border-strong) 26%, transparent);
+	--floating-menu-item-hover-border: var(--menu-item-hover-border);
 	--menu-item-active-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	--floating-menu-item-active-bg: var(--menu-item-active-bg);
 	--menu-label-foreground: var(--color-foreground-muted);
 
 	--separator-color: color-mix(in srgb, var(--color-input) 58%, transparent);
@@ -226,12 +238,12 @@
 	--color-foreground-opposite: #ffffff;
 	--color-foreground: #f3f5f7;
 	--color-muted: #12161c;
-	--color-popover: #0f1318;
+	--color-popover: #131922;
 	--color-foreground-muted: #8f98a6;
 	--color-foreground-btn: #eef4ff;
-	--color-secondary: #11161c;
-	--color-card: #10141a;
-	--color-accent: #151b23;
+	--color-secondary: #151b23;
+	--color-card: #141b24;
+	--color-accent: #18202a;
 	--color-alternate: rgba(44, 44, 44, 1);
 	--color-success: rgba(70, 171, 97, 1);
 	--color-warning: rgba(255, 152, 0, 1);
@@ -246,6 +258,8 @@
 	--color-surface-elevated: var(--color-card);
 	--color-panel: var(--color-popover);
 	--color-panel-foreground: var(--color-foreground);
+	--color-floating-panel: var(--color-popover);
+	--color-floating-panel-foreground: var(--color-foreground);
 	--color-tooltip: color-mix(in srgb, white 92%, var(--color-background));
 	--color-tooltip-foreground: #0f1720;
 	--color-field: var(--color-secondary);
@@ -264,6 +278,8 @@
 	--panel-shadow: 0 10px 22px rgb(0 0 0 / 0.18);
 	--card-highlight: rgb(120 130 148 / 0.06);
 	--panel-highlight: rgb(120 130 148 / 0.07);
+	--floating-panel-border: color-mix(in srgb, var(--color-border-strong) 88%, transparent);
+	--floating-panel-highlight: var(--panel-highlight);
 	--button-primary-border: color-mix(in srgb, var(--color-primary) 76%, #7aa2ff);
 	--button-primary-hover-bg: color-mix(in srgb, var(--color-primary) 94%, white);
 	--button-success-border: color-mix(in srgb, var(--color-success) 78%, #78d092);
@@ -281,8 +297,12 @@
 		0 0.5px 3px rgba(0, 0, 0, 0), inset 0 1px 0 rgba(255, 255, 255, 0.03),
 		inset 0 -1px 2px rgba(0, 0, 0, 0.2);
 	--button-ghost-hover-bg: color-mix(in srgb, var(--color-accent) 58%, transparent);
+	--floating-menu-item-foreground: var(--color-foreground);
 	--menu-item-hover-bg: color-mix(in srgb, var(--color-secondary) 42%, transparent);
+	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
 	--menu-item-hover-border: color-mix(in srgb, var(--color-border-strong) 30%, transparent);
+	--floating-menu-item-hover-border: var(--menu-item-hover-border);
+	--floating-menu-item-active-bg: color-mix(in srgb, var(--color-primary) 10%, transparent);
 	--button-alternate-foreground: var(--color-foreground);
 	--button-destructive-foreground: var(--color-foreground);
 	--switch-thumb-bg: var(--color-foreground-opposite);

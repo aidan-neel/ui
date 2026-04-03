@@ -2,9 +2,9 @@
 	import type { Snippet } from 'svelte';
 	import CodeBlock from '$lib/components/docs/code-block.svelte';
 	import { cn } from '$lib/silk/utils';
-    import * as Tooltip from '$lib/silk/components/tooltip';
-    import Copy from "@lucide/svelte/icons/copy";
-    import Check from "@lucide/svelte/icons/check";
+	import * as Tooltip from '$lib/silk/components/tooltip';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
 	import { flyAndScale } from '$lib/silk/internals/transition';
 
 	let {
@@ -20,7 +20,7 @@
 		class?: string;
 	} = $props();
 
-    let copying = $state<boolean>(false);
+	let copying = $state<boolean>(false);
 </script>
 
 <div class="flex flex-col gap-3">
@@ -46,7 +46,7 @@
 		{...rest}
 		class={cn(
 			classProp,
-			`bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-xl border border-border/65 flex flex-col overflow-hidden max-w-full ${
+			`bg-[var(--card-bg)] border border-[var(--card-border)] rounded-[var(--card-radius)] shadow-[inset_0_1px_0_var(--card-highlight),var(--card-shadow)] w-full rounded-lg border border-border/65 flex flex-col overflow-hidden max-w-full ${
 				selectedTab === 1
 					? 'items-center justify-center min-h-[20rem] px-6 py-16 md:px-10 md:py-20 bg-card/82'
 					: 'items-start justify-start bg-card/82'

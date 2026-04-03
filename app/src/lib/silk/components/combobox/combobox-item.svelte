@@ -1,52 +1,54 @@
 <script lang="ts">
-    import { Button, type ButtonProps } from "$lib/silk/components/button";
+	import { Button, type ButtonProps } from '$lib/silk/components/button';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
 	import { cn } from '$lib/silk/utils';
 	import { getContext, onDestroy, onMount, setContext, tick, type Snippet } from 'svelte';
-	import type { HTMLAttributes } from "svelte/elements";
-    import Check from "@lucide/svelte/icons/check";
+	import type { HTMLAttributes } from 'svelte/elements';
+	import Check from '@lucide/svelte/icons/check';
 
-	import type { ComboboxItem, ComboboxState } from ".";
+	import type { ComboboxItem, ComboboxState } from '.';
 
-    const key = getContext('key') as string;
-    const parent = getContext('parent') as string;
-    const uiState = states[key].data as ComboboxState;
+	const key = getContext('key') as string;
+	const parent = getContext('parent') as string;
+	const uiState = states[key].data as ComboboxState;
 
-    type Props = {
-        class?: string;
-        value: string;
-        label: string;
-        callback?: () => void;
-    } & ButtonProps;
+	type Props = {
+		class?: string;
+		value: string;
+		label: string;
+		callback?: () => void;
+	} & ButtonProps;
 
-    let { label, value, class: className, callback, ...rest }: Props = $props();
-    let el = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
-    let item: ComboboxItem = $derived({
-        value: value,
-        label: label,
-        callback: callback,
-        ref: el
-    }) as ComboboxItem
+	let { label, value, class: className, callback, ...rest }: Props = $props();
+	let el = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
+	let item: ComboboxItem = $derived({
+		value: value,
+		label: label,
+		callback: callback,
+		ref: el
+	}) as ComboboxItem;
 
-    async function close() {
-        uiState.selected = item;
-        setTimeout(() => {
-            uiState.open = false;
-            uiState.searchContent = '';
-        }, 1)
-        callback?.();
-    }
+	async function close() {
+		uiState.selected = item;
+		uiState.open = false;
+		uiState.searchContent = '';
+		uiState.buttonRef?.focus();
+		callback?.();
+	}
 
-    onMount(() => {
-        if (!uiState.items.has(item)) {
-            uiState.items.add(item)
-        }
-    })
+	onMount(() => {
+		if (!uiState.items.has(item)) {
+			uiState.items.add(item);
+		}
+	});
 </script>
 
 {#if uiState.searchContent === ''}
 	<Button
 		bind:element={el}
+		id={`combobox-${key}-option-${value}`}
+		role="option"
+		aria-selected={uiState.selected?.value === item.value}
 		{...rest}
 		onclick={close}
 		class={cn(
@@ -67,6 +69,9 @@
 {:else}
 	<Button
 		bind:element={el}
+		id={`combobox-${key}-option-${value}`}
+		role="option"
+		aria-selected={uiState.selected?.value === item.value}
 		{...rest}
 		onclick={close}
 		class={cn(

@@ -7,13 +7,13 @@
 	<PageHeader title="Installation" description="How to initialize and install @aidan-neel/ui" compact={true} />
 
 	<section class="flex flex-col gap-1 mt-6">
-		<p class="text-2xl font-semibold">1. Create a Svelte project</p>
+		<p class="docs-section-heading">1. Create a Svelte project</p>
 		<p class="text-base py-4">Use the SvelteKit CLI to create a new project.</p>
 		<CodeBlock code={'npx sv create'} lang="shell" />
 	</section>
 
 	<section class="flex flex-col gap-1 mt-6">
-		<p class="text-2xl font-semibold">2. Install TailwindCSS</p>
+		<p class="docs-section-heading">2. Install TailwindCSS</p>
 		<p class="text-base py-4">
 			Use the Svelte CLI to install Tailwind, or use
 			<a
@@ -28,19 +28,19 @@
 	</section>
 
 	<section class="flex flex-col gap-1 mt-6">
-		<p class="text-2xl font-semibold">3. Initialize the CLI</p>
+		<p class="docs-section-heading">3. Initialize the CLI</p>
 		<p class="text-base py-2"></p>
 		<CodeBlock code={'npx @aidan-neel/ui init'} lang="shell" />
 	</section>
 
 	<section class="flex flex-col gap-1 mt-6">
-		<p class="text-2xl font-semibold">4. Add components using the CLI</p>
+		<p class="docs-section-heading">4. Add components using the CLI</p>
 		<p class="text-base py-2"></p>
 		<CodeBlock code={'npx @aidan-neel/ui add button'} lang="shell" />
 	</section>
 
 	<section class="flex flex-col gap-1 mt-6">
-		<p class="text-2xl font-semibold">5. All set!</p>
+		<p class="docs-section-heading">5. All set!</p>
 		<p class="text-base py-4">You can now start importing and using components.</p>
 		<CodeBlock
 			code={`<script>

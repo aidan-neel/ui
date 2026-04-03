@@ -22,7 +22,7 @@
 	</section>
 
 	<section class="flex flex-col gap-2 pt-8">
-		<p class="text-2xl font-semibold">Theme File</p>
+		<p class="docs-section-heading">Theme File</p>
 		<p class="text-base">
 			The fastest way to customize the whole system is to override the semantic tokens in a theme
 			file under <span class="bg-secondary p-0.5 text-sm border px-2 font-mono">ui/themes</span>.
@@ -62,7 +62,7 @@
 	</section>
 
 	<section class="flex flex-col gap-2 pt-8">
-		<p class="text-2xl font-semibold">Component Tokens</p>
+		<p class="docs-section-heading">Component Tokens</p>
 		<p class="text-base">
 			When you need more control, override component variables instead of rewriting the component.
 			These live in <span class="bg-secondary p-0.5 text-sm border px-2 font-mono">ui/ui.css</span>.
@@ -90,7 +90,7 @@
 	</section>
 
 	<section class="flex flex-col gap-2 pt-8">
-		<p class="text-2xl font-semibold">Per-Component Overrides</p>
+		<p class="docs-section-heading">Per-Component Overrides</p>
 		<p class="text-base">
 			Every major primitive exposes `data-ui`, and many controls also expose `data-variant` and
 			`data-size`. That gives you a clean way to target one family of components without

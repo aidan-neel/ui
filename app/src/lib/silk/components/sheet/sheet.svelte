@@ -6,17 +6,23 @@
 	let { open = $bindable(false), class: className, children }: SheetProps = $props();
 
 	const uiState = useState<SheetState>({
-		open
+		open,
+		triggerRef: null
 	});
+	let syncedOpen = $state(open);
 
 	$effect(() => {
-		if (uiState.data.open !== open) {
+		if (open !== syncedOpen) {
+			syncedOpen = open;
 			uiState.data.open = open;
 		}
 	});
 
 	$effect(() => {
-		open = uiState.data.open;
+		if (uiState.data.open !== syncedOpen) {
+			syncedOpen = uiState.data.open;
+			open = uiState.data.open;
+		}
 	});
 
 	setContext('key', uiState.key);

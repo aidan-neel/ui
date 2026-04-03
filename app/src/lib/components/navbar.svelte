@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { components, sanitizeComponent } from '$lib/components';
 	import Button from '$lib/silk/components/button';
@@ -36,6 +37,13 @@
 
 	const docsPages = [
 		{
+			title: 'Docs',
+			description: 'Browse the documentation hub',
+			href: '/docs',
+			icon: BookOpen,
+			keywords: 'docs documentation hub overview'
+		},
+		{
 			title: 'Introduction',
 			description: 'Overview and getting started with Silk UI',
 			href: '/docs/introduction',
@@ -57,6 +65,13 @@
 			keywords: 'docs theme tokens colors styling'
 		},
 		{
+			title: 'Styling',
+			description: 'Learn how to style and override Silk UI components',
+			href: '/docs/styling',
+			icon: Palette,
+			keywords: 'docs styling css overrides classes tokens'
+		},
+		{
 			title: 'Changelog',
 			description: 'Recent releases and updates',
 			href: '/docs/changelog',
@@ -69,6 +84,13 @@
 			href: '/themes',
 			icon: LayoutTemplate,
 			keywords: 'themes presets gallery showcase'
+		},
+		{
+			title: 'Theme Studio',
+			description: 'Build, preview, and export a custom theme',
+			href: '/themes/studio',
+			icon: LayoutTemplate,
+			keywords: 'themes studio editor preview export customize'
 		}
 	];
 
@@ -115,15 +137,18 @@
 	}`}
 >
 	<div
-		class="relative mx-auto flex h-16 w-full max-w-[1400px] items-center justify-between px-4 md:px-8"
+		class={`relative mx-auto flex h-16 w-full items-center justify-between px-4 md:px-8 ${
+			$page.url.pathname.startsWith('/themes/studio')
+				? 'max-w-none xl:px-10 2xl:px-12'
+				: 'max-w-[1400px]'
+		}`}
 	>
 		<Command.Root>
-
 			<div class="flex min-w-0 flex-row items-center gap-4 md:gap-6">
 				<a
 					href="/"
 					onclick={closeMobileMenu}
-					class="flex min-w-0 flex-row items-center gap-3 rounded-xl px-1 py-2 text-sm font-semibold tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
+					class="flex min-w-0 flex-row items-center gap-3 rounded-lg px-1 py-2 text-sm font-semibold tracking-tight text-foreground transition-colors duration-150 hover:text-foreground"
 				>
 					<Logo />
 					<span class="truncate">Silk UI</span>
@@ -136,15 +161,15 @@
 			</div>
 
 			<div class="flex flex-row items-center gap-1.5 md:gap-2">
-                <div class="hidden md:block">
-                    <Command.Trigger
-                        class="h-9 w-72 justify-between rounded-md px-2.5 text-sm text-foreground-muted shadow-sm"
-                        variant="outlined"
-                    >
-                        Search docs...
-                        <Shortcut shortcut="/">/</Shortcut>
-                    </Command.Trigger>
-                </div>
+				<div class="hidden md:block">
+					<Command.Trigger
+						class="h-9 w-72 justify-between rounded-md px-2.5 text-sm text-foreground-muted shadow-sm"
+						variant="outlined"
+					>
+						Search docs...
+						<Shortcut shortcut="/">/</Shortcut>
+					</Command.Trigger>
+				</div>
 				<Command.Trigger
 					class="inline-flex size-9 items-center justify-center rounded-lg md:hidden"
 					variant="ghost"
@@ -250,7 +275,10 @@
 	</div>
 
 	<Sheet.Root bind:open={mobileMenuOpen}>
-		<Sheet.Content side="left" class="w-[min(100vw,24rem)] max-w-[24rem] gap-0 p-0 md:hidden">
+		<Sheet.Content
+			side="left"
+			class="w-[min(100vw,24rem)] max-w-[24rem] gap-0 overflow-hidden p-0 md:hidden"
+		>
 			<div class="flex h-full flex-col">
 				<Sheet.Header class="border-b border-border/70 px-4 pb-4 pt-4">
 					<Sheet.Title>Browse Silk UI</Sheet.Title>
@@ -259,41 +287,43 @@
 					</Sheet.Description>
 				</Sheet.Header>
 
-				<div class="border-b border-border/60 px-4 py-4">
-					<div class="grid gap-1.5">
-						{#each navItems as item}
-							<Navbutton href={item.href} mobile onclick={closeMobileMenu}>
-								{item.label}
-							</Navbutton>
-						{/each}
+				<div class="min-h-0 flex-1 overflow-y-auto">
+					<div class="border-b border-border/60 px-4 py-4">
+						<div class="grid gap-1.5">
+							{#each navItems as item}
+								<Navbutton href={item.href} mobile onclick={closeMobileMenu}>
+									{item.label}
+								</Navbutton>
+							{/each}
+						</div>
 					</div>
-				</div>
 
-				<div class="min-h-0 flex-1 overflow-y-auto px-3 py-4">
-					<SideNavbar class="w-full pt-0" onNavigate={closeMobileMenu} />
-				</div>
+					<div class="px-3 py-4">
+						<SideNavbar class="w-full pt-0" onNavigate={closeMobileMenu} />
+					</div>
 
-				<div class="border-t border-border/60 px-4 py-4">
-					<div class="flex items-center gap-2">
-						<Button
-							class="h-10 flex-1 justify-center rounded-lg"
-							variant="outlined"
-							onclick={() => {
-								window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer');
-								closeMobileMenu();
-							}}
-						>
-							GitHub
-						</Button>
-						<Button
-							class="h-10 flex-1 justify-center rounded-lg"
-							variant="secondary"
-							onclick={() => {
-								toggleMode();
-							}}
-						>
-							{mode.current === 'dark' ? 'Dark mode' : 'Light mode'}
-						</Button>
+					<div class="border-t border-border/60 px-4 py-4">
+						<div class="flex items-center gap-2">
+							<Button
+								class="h-10 flex-1 justify-center rounded-lg"
+								variant="outlined"
+								onclick={() => {
+									window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer');
+									closeMobileMenu();
+								}}
+							>
+								GitHub
+							</Button>
+							<Button
+								class="h-10 flex-1 justify-center rounded-lg"
+								variant="secondary"
+								onclick={() => {
+									toggleMode();
+								}}
+							>
+								{mode.current === 'dark' ? 'Dark mode' : 'Light mode'}
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>

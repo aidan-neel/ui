@@ -26,7 +26,7 @@
 	}
 </script>
 
-<aside class={`${classProp} flex flex-col overflow-y-auto pb-8`}>
+<aside class={`${classProp} flex flex-col pb-8`}>
 	<div class="flex flex-col gap-5">
 		<section class="flex flex-col gap-1.5">
 			<h3

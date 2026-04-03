@@ -80,11 +80,13 @@
 </script>
 
 {#if toastState.data}
-	<div class="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-end p-4 sm:p-6">
+	<div
+		class="pointer-events-none fixed inset-x-0 bottom-0 z-200 flex justify-center px-4 pb-4 pt-6 sm:justify-end sm:p-6"
+	>
 		<div
 			role="region"
 			aria-label="Notifications"
-			class="pointer-events-auto relative w-full max-w-90"
+			class="pointer-events-auto relative w-full max-w-[min(100%,26rem)] sm:max-w-90"
 			style="height: {containerHeight}px; transition: height 0.46s cubic-bezier(0.22, 1, 0.36, 1);"
 			onmouseenter={() => (expanded = true)}
 			onmouseleave={() => (expanded = false)}

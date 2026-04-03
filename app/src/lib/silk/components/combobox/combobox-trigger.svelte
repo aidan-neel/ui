@@ -5,17 +5,29 @@
 	import { getContext, onMount } from 'svelte';
 	import { states } from '$lib/silk/internals/state.svelte.ts';
 	import type { ComboboxState } from '.';
-    import * as Popover from '$lib/silk/components/popover';
+	import * as Popover from '$lib/silk/components/popover';
 	import { cn } from '$lib/silk/utils';
-    import CaretSort from "@lucide/svelte/icons/chevrons-up-down"
+	import CaretSort from '@lucide/svelte/icons/chevrons-up-down';
 
-	const key = getContext("key") as string;
+	const key = getContext('key') as string;
 	const uiState = states[key].data as ComboboxState;
 
-	const { children, class: classProp, icon = true, ...rest }: Popover.PopoverTriggerProps = $props();
+	const {
+		children,
+		class: classProp,
+		icon = true,
+		...rest
+	}: Popover.PopoverTriggerProps = $props();
 </script>
 
-<Popover.Trigger {...rest} class={cn(classProp, `flex flex-row justify-between items-center px-3`)}>
+<Popover.Trigger
+	{...rest}
+	role="combobox"
+	aria-haspopup="listbox"
+	aria-controls={`popover-${String(key)}-content`}
+	aria-expanded={uiState.open}
+	class={cn(classProp, `flex flex-row justify-between items-center px-3`)}
+>
 	{#if uiState.selected?.label}
 		{uiState.selected?.label}
 	{:else}
