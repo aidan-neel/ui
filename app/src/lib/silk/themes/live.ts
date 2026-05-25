@@ -87,3 +87,73 @@ export function clearLiveThemeCss() {
 	const tag = document.getElementById(STYLE_ID);
 	tag?.remove();
 }
+
+const SAVED_THEMES_KEY = 'silk-saved-themes';
+
+export type SavedTheme = ThemeDraft & { id: string; savedAt: string };
+
+function randomId() {
+	if (browser && typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+		return `local-${crypto.randomUUID()}`;
+	}
+	return `local-${Math.random().toString(36).slice(2, 10)}${Date.now().toString(36)}`;
+}
+
+function backfillId<T extends ThemeDraft & { savedAt?: string; id?: string }>(
+	entry: T
+): SavedTheme {
+	return {
+		...(entry as unknown as ThemeDraft),
+		id: entry.id ?? randomId(),
+		savedAt: entry.savedAt ?? new Date().toISOString()
+	};
+}
+
+/** Returns all locally-saved custom themes, newest first. */
+export function getSavedThemes(): SavedTheme[] {
+	if (!browser) return [];
+	const stored = localStorage.getItem(SAVED_THEMES_KEY);
+	if (!stored) return [];
+	try {
+		const parsed = JSON.parse(stored) as Partial<SavedTheme>[];
+		if (!Array.isArray(parsed)) return [];
+		// Migrate any legacy entries that pre-date the `id` field.
+		let needsRewrite = false;
+		const migrated = parsed.map((entry) => {
+			if (!entry?.id) needsRewrite = true;
+			return backfillId(entry as ThemeDraft & { savedAt?: string; id?: string });
+		});
+		if (needsRewrite) {
+			localStorage.setItem(SAVED_THEMES_KEY, JSON.stringify(migrated));
+		}
+		return migrated.sort((a, b) => b.savedAt.localeCompare(a.savedAt));
+	} catch {
+		localStorage.removeItem(SAVED_THEMES_KEY);
+		return [];
+	}
+}
+
+/**
+ * Persists a theme as a brand-new local entry. Every save mints a fresh ID
+ * so name/slug collisions never overwrite an existing saved theme — pass the
+ * `id` of an existing entry to update it in place instead.
+ */
+export function saveLocalTheme(theme: ThemeDraft, existingId?: string): SavedTheme {
+	const entry: SavedTheme = {
+		...theme,
+		id: existingId ?? randomId(),
+		savedAt: new Date().toISOString()
+	};
+	if (!browser) return entry;
+	const current = getSavedThemes().filter((t) => t.id !== entry.id);
+	const next = [entry, ...current];
+	localStorage.setItem(SAVED_THEMES_KEY, JSON.stringify(next));
+	return entry;
+}
+
+/** Removes a saved theme by ID. */
+export function deleteLocalTheme(id: string) {
+	if (!browser) return;
+	const next = getSavedThemes().filter((t) => t.id !== id);
+	localStorage.setItem(SAVED_THEMES_KEY, JSON.stringify(next));
+}

@@ -40,10 +40,12 @@
 	}: Props = $props();
 	let syncedValue = $state(value ?? '');
 
-	// Sync the initial value prop into internal state immediately on mount
+	// Sync the initial value prop into internal state immediately on mount.
+	// Do NOT seed selectedLabel from the raw value — it would render as the
+	// slug until items mount and populate the labels Map. Leaving it empty lets
+	// the trigger fall back to its children (the user's display expression).
 	if (value && value !== '') {
 		uiState.data.value = value;
-		uiState.data.selectedLabel = value;
 	}
 
 	$effect(() => {
@@ -52,7 +54,7 @@
 			syncedValue = nextValue;
 			uiState.data.value = nextValue;
 			uiState.data.selectedLabel = nextValue
-				? (uiState.data.labels.get(nextValue) ?? nextValue)
+				? (uiState.data.labels.get(nextValue) ?? '')
 				: '';
 		}
 	});

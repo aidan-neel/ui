@@ -1,5 +1,8 @@
 import { t, type Static } from 'elysia';
 
+// `panel` and `modal` are tolerated as optional so older clients (and themes
+// authored before those tokens existed) still pass validation. They get
+// backfilled in `normalizePalette` before storage / serialization.
 export const paletteSchema = t.Object({
 	background: t.String(),
 	border: t.String(),
@@ -10,7 +13,8 @@ export const paletteSchema = t.Object({
 	foregroundOpposite: t.String(),
 	foreground: t.String(),
 	muted: t.String(),
-	popover: t.String(),
+	panel: t.Optional(t.String()),
+	modal: t.Optional(t.String()),
 	foregroundMuted: t.String(),
 	foregroundButton: t.String(),
 	secondary: t.String(),
@@ -36,12 +40,10 @@ export const motionSchema = t.Object({
 	overlayBlur: t.Number()
 });
 
-export const durationPresetSlugSchema = t.Union([
-	t.Literal('default'),
-	t.Literal('snappy'),
-	t.Literal('instant'),
-	t.Literal('smooth')
-]);
+// Free-form slug so new presets (crisp, swift, gentle, dramatic, glide, none,
+// or anything the user invents in the studio) round-trip without a registry
+// schema update.
+export const durationPresetSlugSchema = t.String({ minLength: 1 });
 
 const themeSharedFields = {
 	name: t.String({ minLength: 1 }),
@@ -67,6 +69,24 @@ export const themeDraftSchema = t.Object({
 	slug: t.String({ minLength: 1, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' }),
 	...themeSharedFields
 });
+
+export const themeUpdateSchema = t.Partial(themeDraftSchema);
+
+export const themeDeleteResponseSchema = t.Object({
+	success: t.Literal(true),
+	message: t.Literal('Successfully deleted theme.')
+});
+
+export const adminErrorSchema = t.Union([
+	t.Literal('Admin authentication is required.'),
+	t.Literal('Not found.')
+]);
+
+export const themeMutationConflictSchema = t.Union([
+	t.Literal('The default theme cannot be deleted.'),
+	t.Literal('The default theme cannot be edited.'),
+	t.Literal('A theme with this slug already exists, try another one.')
+]);
 
 export const themeRecordSchema = t.Object({
 	id: t.String(),

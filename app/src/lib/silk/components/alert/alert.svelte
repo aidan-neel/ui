@@ -1,12 +1,13 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { alert } from './variants';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import { alert, alertAccent, alertChip } from './variants';
 	import { cn } from '$lib/silk/utils';
 	import Check from '@lucide/svelte/icons/circle-check';
-	import X from '@lucide/svelte/icons/x';
+	import X from '@lucide/svelte/icons/circle-x';
 	import Warning from '@lucide/svelte/icons/triangle-alert';
 	import Info from '@lucide/svelte/icons/info';
+
+	type Variant = 'info' | 'error' | 'success' | 'warning';
 
 	let {
 		variant = 'info',
@@ -14,26 +15,22 @@
 		class: classProp,
 		...rest
 	}: {
-		variant?: 'info' | 'error' | 'success' | 'warning';
+		variant?: Variant;
 		children: Snippet;
 		class?: string;
 	} = $props();
+
+	const Icon = $derived(
+		variant === 'success' ? Check : variant === 'error' ? X : variant === 'warning' ? Warning : Info
+	);
 </script>
 
-<div role="alert" class={cn(classProp, alert({ variant: variant }))}>
-	{#if variant == 'info'}
-		<Info size="18" aria-hidden="true" class="mt-1 text-info" />
-	{/if}
-	{#if variant == 'success'}
-		<Check size="18" aria-hidden="true" class="mt-1 text-success" />
-	{/if}
-	{#if variant == 'error'}
-		<X size="18" aria-hidden="true" class="mt-1 text-error" />
-	{/if}
-	{#if variant == 'warning'}
-		<Warning size="18" aria-hidden="true" class="mt-1 text-warning" />
-	{/if}
-	<header class="flex flex-col">
+<div role="alert" {...rest} class={cn(classProp, alert())}>
+	<span class={alertAccent({ variant })} aria-hidden="true"></span>
+	<span class={alertChip({ variant })} aria-hidden="true">
+		<Icon size={13} strokeWidth={2.25} />
+	</span>
+	<div class="flex min-w-0 flex-1 flex-col gap-0.5 pt-px">
 		{@render children?.()}
-	</header>
+	</div>
 </div>

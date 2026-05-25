@@ -19,9 +19,7 @@
 	let { children, class: className, variant, ...rest }: Props = $props();
 	const selectedLabel = $derived(
 		uiState.data.value !== ''
-			? uiState.data.selectedLabel ||
-					uiState.data.labels.get(uiState.data.value) ||
-					uiState.data.value
+			? uiState.data.selectedLabel || uiState.data.labels.get(uiState.data.value) || ''
 			: ''
 	);
 	const widestLabel = $derived(
@@ -45,13 +43,15 @@
 	{...rest}
 >
 	<div class="relative min-w-0 flex-1 pr-2 text-left">
-		<span class="invisible block truncate">{widestLabel}</span>
-		<span class="absolute inset-0 truncate">
-			{#if uiState.data.value !== ''}
-				{selectedLabel}
-			{:else}
-				{@render children?.()}
-			{/if}
+		<span class="invisible block truncate leading-tight">{widestLabel}</span>
+		<span class="absolute inset-0 flex items-center">
+			<span class="block min-w-0 flex-1 truncate leading-tight">
+				{#if selectedLabel}
+					{selectedLabel}
+				{:else}
+					{@render children?.()}
+				{/if}
+			</span>
 		</span>
 	</div>
 	<ChevronDown aria-hidden="true" />

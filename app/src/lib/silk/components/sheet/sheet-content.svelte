@@ -56,7 +56,7 @@
 			data-ui="sheet-content"
 			class={cn(
 				className,
-				`bg-[var(--color-modal)] shadow-[var(--panel-shadow)] p-[var(--panel-padding-lg)] transition-all fixed top-0 z-50 m-auto flex h-[100dvh] w-full max-w-[25rem] flex-col overflow-y-auto overscroll-contain ${
+				`bg-[var(--color-background)] text-[var(--color-foreground)] shadow-[var(--panel-shadow)] p-[var(--panel-padding-lg)] transition-all fixed top-0 z-50 m-auto flex h-[100dvh] w-full max-w-[25rem] flex-col overflow-y-auto overscroll-contain ${
 					isLeft ? 'left-0 border-r border-border' : 'right-0 border-l border-border'
 				}`
 			)}

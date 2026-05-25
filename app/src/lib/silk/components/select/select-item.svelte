@@ -13,7 +13,13 @@
 		value: string;
 	} & ButtonProps;
 
-	let { children, class: className, value, ...rest }: Props = $props();
+	let {
+		children,
+		class: className,
+		value,
+		onclick: userOnclick,
+		...rest
+	}: Props = $props();
 	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
 
 	$effect(() => {
@@ -39,14 +45,15 @@
 	id={`select-${key}-option-${value}`}
 	role="option"
 	aria-selected={uiState.data.value === value}
+	{...rest}
 	onclick={() => {
 		uiState.data.value = value;
 		uiState.data.selectedLabel =
 			element?.textContent?.trim() || uiState.data.labels.get(value) || value;
 		uiState.data.open = false;
 		uiState.data.buttonRef?.focus();
+		userOnclick?.();
 	}}
-	{...rest}
 	class={cn(
 		className,
 		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] [transition-duration:var(--motion-duration-menu)] hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] font-medium hover:cursor-default px-2 items-center justify-between text-left'

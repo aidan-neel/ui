@@ -155,7 +155,7 @@ t.exit();`;
                 { label: 'View', variant: 'success', callback: () => {} },
                 { label: 'Undo', variant: 'warning', callback: () => {} },
                 { label: 'Dismiss', variant: 'ghost', callback: () => {} }
-		]},
+			]
         })}>
             With Action
         </Button>
@@ -166,7 +166,7 @@ t.exit();`;
             actions: [
                 { label: 'Delete', variant: 'error', callback: () => {} },
                 { label: 'Cancel', variant: 'secondary', callback: () => {} }
-		]},
+			]
         })}>
             Action Variants
         </Button>

@@ -21,8 +21,19 @@
 	const key = getContext<string>('key');
 	const uiState = states[key] as UIState<ModalState>;
 	let element = $state<HTMLElement>();
+	let portalEl = $state<HTMLDivElement>();
 
 	let cleanup: (() => void) | undefined;
+
+	// Portal the modal to <body> so its z-index escapes ancestor stacking
+	// contexts (e.g. flex items with z-index, transformed parents, etc.).
+	$effect(() => {
+		if (!portalEl || typeof document === 'undefined') return;
+		document.body.appendChild(portalEl);
+		return () => {
+			portalEl?.remove();
+		};
+	});
 
 	$effect(() => {
 		if (typeof document === 'undefined') return;
@@ -41,7 +52,7 @@
 </script>
 
 {#if uiState.data.open}
-	<div class="fixed inset-0 z-[115]">
+	<div bind:this={portalEl} class="fixed inset-0 z-[115]">
 		<div
 			transition:fade={{ duration: 150, easing: cubicOut }}
 			class={cn(
@@ -55,7 +66,7 @@
 			class={cn(
 				contentClass,
 				className,
-				'bg-[var(--color-modal)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-outlined duration-200 transition-all flex flex-col fixed top-1/2 left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[min(30rem,calc(100dvh-1.5rem))]'
+				'bg-[var(--color-background)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-outlined duration-200 transition-all flex flex-col fixed top-[47%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[calc(100dvh-2rem)]'
 			)}
 			use:clickOutside={() => {
 				if (allowClickOutside) {

@@ -17,7 +17,13 @@
 		callback?: () => void;
 	} & ButtonProps;
 
-	let { children, class: className, callback, ...rest }: Props = $props();
+	let {
+		children,
+		class: className,
+		callback,
+		onclick: userOnclick,
+		...rest
+	}: Props = $props();
 </script>
 
 <Button
@@ -31,10 +37,11 @@
 			}
 		}, 100);
 		callback?.();
+		userOnclick?.();
 	}}
 	class={cn(
 		className,
-		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] duration-150 hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] duration-50 hover:cursor-default items-center justify-between text-left'
+		'min-h-[var(--menu-item-height)] px-[var(--menu-item-padding-x)] rounded-[var(--radius-lg)] text-[var(--menu-item-foreground)] border border-transparent transition-[background-color,border-color,color,box-shadow] [transition-duration:var(--motion-duration-hover)] hover:bg-[var(--menu-item-hover-bg)] data-[active=true]:bg-[var(--menu-item-hover-bg)] data-[selected=true]:bg-[var(--menu-item-active-bg)] w-full text-[14px] hover:cursor-default flex-row items-center justify-between gap-3 text-left'
 	)}
 	variant={'ghost'}
 >

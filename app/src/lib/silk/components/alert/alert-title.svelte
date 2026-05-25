@@ -14,7 +14,10 @@
 
 <p
 	{...rest}
-	class={cn(classProp, `text font-medium tracking-[-0.02em]`)}
+	class={cn(
+		classProp,
+		`m-0 text-[0.86rem] font-semibold leading-tight tracking-[-0.01em] text-foreground`
+	)}
 >
 	{@render children?.()}
 </p>

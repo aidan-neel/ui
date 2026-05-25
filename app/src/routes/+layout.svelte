@@ -9,7 +9,9 @@
 	import type { Snippet } from 'svelte';
 	import { dev } from '$app/environment';
 
-	const { children }: { children: Snippet } = $props();
+	import type { LayoutData } from './$types';
+
+	const { children, data }: { children: Snippet; data: LayoutData } = $props();
 
 	onMount(() => {
 		hydrateLiveThemeCss();
@@ -23,7 +25,7 @@
 <ModeWatcher />
 <Toaster />
 <main class="flex w-full flex-row justify-center">
-	<Navbar />
+	<Navbar popularThemes={data?.popularThemes ?? []} starCount={data?.starCount ?? null} />
 </main>
 
 {@render children?.()}

@@ -15,6 +15,7 @@
 	import Sun from '@lucide/svelte/icons/sun';
 	import { toggleMode, mode } from 'mode-watcher';
 	import * as Command from '$lib/silk/components/command';
+	import * as DropdownMenu from '$lib/silk/components/dropdown-menu';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import Component from '@lucide/svelte/icons/component';
 	import Download from '@lucide/svelte/icons/download';
@@ -23,16 +24,48 @@
 	import History from '@lucide/svelte/icons/history';
 	import LayoutTemplate from '@lucide/svelte/icons/layout-template';
 	import Palette from '@lucide/svelte/icons/palette';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import * as Sheet from '$lib/silk/components/sheet';
+	import { applyLiveThemeCss } from '$lib/silk/themes/live';
+	import { themeToCss, type ThemeDraft } from '$lib/silk/themes/presets';
+	import { toast } from '$lib/silk/components/toast';
+
+	type PopularTheme = ThemeDraft & { id?: string; createdAt?: string; updatedAt?: string };
+
+	const {
+		popularThemes = [],
+		starCount = null
+	}: { popularThemes?: PopularTheme[]; starCount?: number | null } = $props();
+
+	function formatStarCount(n: number | null): string {
+		if (n === null || Number.isNaN(n)) return 'Star';
+		if (n >= 1000) {
+			const k = n / 1000;
+			return `${k >= 10 ? Math.round(k) : k.toFixed(1)}k`;
+		}
+		return String(n);
+	}
 
 	let scrolled = $state(false);
 	let mobileMenuOpen = $state(false);
+	const isStudio = $derived($page.url.pathname.startsWith('/themes/studio'));
+
+	function applyPopularTheme(theme: PopularTheme) {
+		applyLiveThemeCss(themeToCss(theme as ThemeDraft));
+		toast({
+			title: `${theme.name} applied`,
+			description: 'Live tokens updated across the app.',
+			duration: 1800,
+			type: 'success'
+		});
+	}
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
 		{ href: '/docs/introduction', label: 'Docs' },
 		{ href: '/docs/components', label: 'Components' },
-		{ href: '/themes', label: 'Themes' }
+		{ href: '/themes', label: 'Themes' },
+		{ href: '/themes/studio', label: 'Studio' }
 	];
 
 	const docsPages = [
@@ -133,14 +166,16 @@
 
 <nav
 	class={`fixed inset-x-0 top-0 z-20 transition-[background-color,backdrop-filter] duration-200 ${
-		scrolled ? 'bg-background/58 backdrop-blur-[14px]' : 'bg-transparent'
+		isStudio
+			? 'border-b border-border bg-background'
+			: scrolled
+				? 'bg-background/58 backdrop-blur-[14px]'
+				: 'bg-transparent'
 	}`}
 >
 	<div
-		class={`relative mx-auto flex h-16 w-full items-center justify-between px-4 md:px-8 ${
-			$page.url.pathname.startsWith('/themes/studio')
-				? 'max-w-none xl:px-10 2xl:px-12'
-				: 'max-w-[1600px]'
+		class={`relative mx-auto flex h-16 w-full items-center justify-between ${
+			isStudio ? 'max-w-none px-4' : 'max-w-[1600px] px-4 md:px-8'
 		}`}
 	>
 		<Command.Root>
@@ -168,7 +203,7 @@
 			<div class="flex flex-row items-center gap-1.5 md:gap-2">
 				<div class="hidden md:block">
 					<Command.Trigger
-						class="h-9 w-72 justify-between rounded-md px-2.5 text-sm text-foreground-muted"
+						class="h-8 w-60 justify-between rounded-md px-2 text-[0.78rem] text-foreground-muted"
 						variant="outlined"
 					>
 						Search docs...
@@ -213,18 +248,18 @@
 				</Button>
 
 				<Button
-					class="hidden h-9 gap-1.5 rounded-lg px-2.5 sm:inline-flex"
+					class="hidden h-8 gap-1.5 rounded-lg px-2 sm:inline-flex"
 					variant="primary"
 					onclick={() =>
 						window.open('https://github.com/aidan-neel/ui', '_blank', 'noopener,noreferrer')}
 					aria-label="Star Silk UI on GitHub"
 				>
-					<svg viewBox="0 0 24 24" aria-hidden="true" class="size-3.5 fill-current">
+					<svg viewBox="0 0 24 24" aria-hidden="true" class="size-3 fill-current">
 						<path
 							d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
 						/>
 					</svg>
-					<span class="text-xs font-medium">Star · 8.4k</span>
+					<span class="text-[0.72rem] font-medium">Star · {formatStarCount(starCount)}</span>
 				</Button>
 			</div>
 

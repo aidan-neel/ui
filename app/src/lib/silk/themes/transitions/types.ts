@@ -15,6 +15,12 @@ export type ThemeMotion = {
 	panelScaleStart: number;
 	sheetOffset: number;
 	overlayBlur: number;
+	/** Optional 3D depth — perspective in px. 0 disables (default). */
+	panelPerspective?: number;
+	/** Tilt on entry, in degrees (negative = top tilts away). Only applied when panelPerspective > 0. */
+	panelRotateX?: number;
+	/** Opacity at the start of the enter transition (0–1). Defaults to 0. */
+	panelOpacityStart?: number;
 };
 
 export type ThemeTransitionPreset = {

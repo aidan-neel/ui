@@ -398,6 +398,9 @@ export function themeToCss(theme: ThemeDraft) {
 \t--motion-panel-scale-start: ${motion.panelScaleStart};
 \t--motion-sheet-offset: ${motion.sheetOffset}px;
 \t--motion-overlay-blur: ${motion.overlayBlur}px;
+\t--motion-panel-perspective: ${motion.panelPerspective ?? 0};
+\t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
+\t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.light.primary} 76%, #1237b9)` : 'transparent'};
 \t--text-xs: 12px;
 \t--text-sm: 14px;
@@ -427,6 +430,9 @@ ${panelTokensToCss(theme, 'light')}
 \t--motion-panel-scale-start: ${motion.panelScaleStart};
 \t--motion-sheet-offset: ${motion.sheetOffset}px;
 \t--motion-overlay-blur: ${motion.overlayBlur}px;
+\t--motion-panel-perspective: ${motion.panelPerspective ?? 0};
+\t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
+\t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.dark.primary} 76%, #7aa2ff)` : 'transparent'};
 ${paletteToCss(theme.dark)}
 ${panelTokensToCss(theme, 'dark')}

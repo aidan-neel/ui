@@ -12,6 +12,12 @@ type FlyAndScaleParams = {
 	yVar?: string;
 	blurVar?: string;
 	startVar?: string;
+	perspective?: number;
+	rotateX?: number;
+	opacityStart?: number;
+	perspectiveVar?: string;
+	rotateXVar?: string;
+	opacityStartVar?: string;
 };
 
 type FlyNoOpacityParams = {
@@ -98,6 +104,17 @@ export const flyAndScale = (
 	const start =
 		params.start ?? getCssNumber(node, params.startVar ?? '--motion-panel-scale-start', 0.95);
 
+	// Optional 3D + opacity tweaks — all default to "off" so themes that don't
+	// opt in keep the original flat behavior.
+	const perspective =
+		params.perspective ??
+		getCssNumber(node, params.perspectiveVar ?? '--motion-panel-perspective', 0);
+	const rotateX =
+		params.rotateX ?? getCssNumber(node, params.rotateXVar ?? '--motion-panel-rotate-x', 0);
+	const opacityStart =
+		params.opacityStart ??
+		getCssNumber(node, params.opacityStartVar ?? '--motion-panel-opacity-start', 0);
+
 	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
 		const [minA, maxA] = scaleA;
 		const [minB, maxB] = scaleB;
@@ -123,11 +140,17 @@ export const flyAndScale = (
 			const x = scaleConversion(t, [0, 1], [offsetX, 0]);
 			const scale = scaleConversion(t, [0, 1], [start, 1]);
 			const filter = blur > 0 ? `blur(${scaleConversion(t, [0, 1], [blur, 0])}px)` : undefined;
+			const opacity = scaleConversion(t, [0, 1], [opacityStart, 1]);
+			const perspectivePart = perspective > 0 ? `perspective(${perspective}px) ` : '';
+			const rotatePart =
+				perspective > 0 && rotateX !== 0
+					? `rotateX(${scaleConversion(t, [0, 1], [rotateX, 0])}deg) `
+					: '';
 
 			return styleToString({
-				transform: `${transform} translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+				transform: `${transform} ${perspectivePart}${rotatePart}translate3d(${x}px, ${y}px, 0) scale(${scale})`,
 				filter,
-				opacity: t
+				opacity
 			});
 		},
 		easing: quintOut

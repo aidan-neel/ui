@@ -18,7 +18,7 @@
 	data-ui="dialog-content"
 	class={cn(
 		className,
-		`bg-[var(--color-modal)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)]`
+		` text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)]`
 	)}
 	{...rest}
 >

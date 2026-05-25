@@ -1,19 +1,32 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { mode } from 'mode-watcher';
+	import { mode, setMode } from 'mode-watcher';
 	import { Badge } from '$lib/silk/components/badge';
 	import { Button } from '$lib/silk/components/button';
 	import { Input } from '$lib/silk/components/input';
-	import { Textarea } from '$lib/silk/components/textarea';
-	import * as Select from '$lib/silk/components/select';
 	import { Switch } from '$lib/silk/components/switch';
+	import { Checkbox } from '$lib/silk/components/checkbox';
+	import { Skeleton } from '$lib/silk/components/skeleton';
+	import { ColorPicker, type ColorOption } from '$lib/silk/components/color-picker';
+	import * as Select from '$lib/silk/components/select';
+	import * as Tabs from '$lib/silk/components/tabs';
+	import * as DropdownMenu from '$lib/silk/components/dropdown-menu';
+	import * as Alert from '$lib/silk/components/alert';
+	import * as Tooltip from '$lib/silk/components/tooltip';
+	import * as Breadcrumb from '$lib/silk/components/breadcrumb';
+	import * as Dialog from '$lib/silk/components/dialog';
+	import * as Command from '$lib/silk/components/command';
 	import { toast } from '$lib/silk/components/toast';
 	import {
 		applyLiveThemeCss,
 		getStoredLiveThemeCss,
 		loadThemeStudioState,
-		saveThemeStudioState
+		saveThemeStudioState,
+		getSavedThemes,
+		saveLocalTheme,
+		deleteLocalTheme,
+		type SavedTheme
 	} from '$lib/silk/themes/live';
 	import {
 		type ThemePalette,
@@ -25,15 +38,45 @@
 		type ThemeBasePalette,
 		type ThemeDraft
 	} from '$lib/silk/themes/presets';
-	import {
-		getTransitionPreset,
-		transitionPresets,
-		type ThemeMotion,
-		type ThemeTransitionPresetSlug
-	} from '$lib/silk/themes/transitions';
+	import { transitionPresets, type ThemeTransitionPresetSlug } from '$lib/silk/themes/transitions';
 	import { builtInThemePresets } from '$lib/silk/themes/builtin-presets';
-	import StudioSidebar from '$lib/components/themes/studio-sidebar.svelte';
-	import type { ColorOption } from '$lib/silk/components/color-picker';
+
+	import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+	import RotateCw from '@lucide/svelte/icons/rotate-cw';
+	import Shuffle from '@lucide/svelte/icons/shuffle';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
+	import Moon from '@lucide/svelte/icons/moon';
+	import Sun from '@lucide/svelte/icons/sun';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import Send from '@lucide/svelte/icons/send';
+	import Sparkles from '@lucide/svelte/icons/sparkles';
+	import Layers from '@lucide/svelte/icons/layers-3';
+	import Bell from '@lucide/svelte/icons/bell';
+	import CreditCard from '@lucide/svelte/icons/credit-card';
+	import Settings from '@lucide/svelte/icons/settings';
+	import TrendingUp from '@lucide/svelte/icons/trending-up';
+	import Users from '@lucide/svelte/icons/users';
+	import Search from '@lucide/svelte/icons/search';
+	import Plus from '@lucide/svelte/icons/plus';
+	import Inbox from '@lucide/svelte/icons/inbox';
+	import FileText from '@lucide/svelte/icons/file-text';
+	import Pencil from '@lucide/svelte/icons/pencil';
+	import Info from '@lucide/svelte/icons/info';
+	import Slash from '@lucide/svelte/icons/slash';
+	import Save from '@lucide/svelte/icons/save';
+	import Sliders from '@lucide/svelte/icons/sliders-horizontal';
+	import X from '@lucide/svelte/icons/x';
+	import Trash from '@lucide/svelte/icons/trash-2';
+	import ArrowDown from '@lucide/svelte/icons/arrow-down';
+	import ArrowUp from '@lucide/svelte/icons/arrow-up';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import Maximize from '@lucide/svelte/icons/maximize-2';
+	import Minimize from '@lucide/svelte/icons/minimize-2';
+	import Layers2 from '@lucide/svelte/icons/layers-2';
+	import Wind from '@lucide/svelte/icons/wind';
+	import Equal from '@lucide/svelte/icons/equal';
+
 	import type { PageData } from './$types';
 
 	const { data = { themes: builtInThemePresets } as PageData }: { data?: PageData } = $props();
@@ -41,7 +84,6 @@
 	type FontOption = { label: string; value: string; group: 'Sans Serif' | 'Serif' | 'Mono' };
 	type RadiusOption = { label: string; value: string };
 	type BasePaletteKey = keyof ThemeBasePalette;
-	type PaletteKey = keyof ThemePalette;
 	type StudioSnapshot = {
 		selectedPresetSlug: string;
 		editorTheme: ThemeDraft;
@@ -72,7 +114,7 @@
 	];
 
 	const radiusOptions: RadiusOption[] = [
-		{ label: 'Compact', value: '0.34rem' },
+		{ label: 'Sharp', value: '0.34rem' },
 		{ label: 'Balanced', value: '0.45rem' },
 		{ label: 'Soft', value: '0.58rem' },
 		{ label: 'Rounded', value: '0.72rem' }
@@ -178,9 +220,6 @@
 		{ label: 'Sky', value: '#38bdf8' },
 		{ label: 'Slate', value: '#94a3b8' }
 	];
-
-	// lightPrimaryOptions and darkPrimaryOptions share labels in the same order — used for cross-mode sync
-
 	const lightBorderOptions: ColorOption[] = [
 		{ label: 'Slate', value: '#e2e8f0' },
 		{ label: 'Gray', value: '#e5e7eb' },
@@ -263,59 +302,6 @@
 		);
 	}
 
-	async function publishTheme() {
-		const cleanedName = editorName.trim();
-		const slug = slugifyThemeName(cleanedName);
-		if (!cleanedName || !slug) {
-			toast({
-				title: 'Theme name required',
-				description: 'Add a valid theme name before publishing.',
-				duration: 2500,
-				type: 'error'
-			});
-			return;
-		}
-		const payload: ThemeDraft = {
-			...cloneTheme(editorTheme),
-			name: cleanedName,
-			slug,
-			description:
-				editorTheme.description?.trim() || 'A custom theme published from the Silk UI Theme Studio.'
-		};
-		isPublishing = true;
-		try {
-			const response = await fetch('/api/themes', {
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify(payload)
-			});
-			const responseText = await response.text();
-			if (!response.ok) throw new Error(responseText || 'Failed to publish theme.');
-			if (!themesCatalog.some((theme) => theme.slug === payload.slug)) {
-				themesCatalog = [payload, ...themesCatalog];
-			}
-			selectedPresetSlug = payload.slug;
-			toast({
-				title: 'Theme published',
-				description: `${payload.name} is now in the catalog.`,
-				duration: 2400,
-				type: 'success'
-			});
-		} catch (publishError) {
-			toast({
-				title: 'Publish failed',
-				description:
-					publishError instanceof Error
-						? publishError.message
-						: 'Unable to publish this theme right now.',
-				duration: 3000,
-				type: 'error'
-			});
-		} finally {
-			isPublishing = false;
-		}
-	}
-
 	function applyStudioState(state: StudioSnapshot) {
 		selectedPresetSlug = state.selectedPresetSlug;
 		editorTheme = cloneTheme(state.editorTheme);
@@ -334,11 +320,15 @@
 
 	function loadPreset(theme: ThemeDraft, notify = true) {
 		applyStudioState(createStudioState(theme));
+		// Loaded preset = the new "clean" reference for dirty tracking.
+		queueMicrotask(() => {
+			lastSavedSignature = JSON.stringify(captureStudioSnapshot());
+		});
 		if (notify) {
 			toast({
 				title: `${theme.name} loaded`,
-				description: 'The preset is now applied across the site.',
-				duration: 2200,
+				description: 'Preset applied across the studio.',
+				duration: 2000,
 				type: 'success'
 			});
 		}
@@ -363,41 +353,43 @@
 		});
 	}
 
-	function updatePaletteToken(mode: 'light' | 'dark', key: 'border', nextValue: string) {
-		const base = mode === 'light' ? lightBasePalette : darkBasePalette;
-		syncBasePalette(mode, { ...base, border: nextValue });
-	}
-
-	function applyBasePalette(mode: 'light' | 'dark') {
-		syncBasePalette(mode, mode === 'light' ? lightBasePalette : darkBasePalette);
-		toast({
-			title: `${mode === 'light' ? 'Light' : 'Dark'} palette generated`,
-			description: 'Semantic tokens regenerated from base colors.',
-			duration: 2200,
-			type: 'success'
+	function updatePrimaryColor(sourcMode: 'light' | 'dark', hex: string) {
+		const srcOpts = sourcMode === 'light' ? lightPrimaryOptions : darkPrimaryOptions;
+		const dstOpts = sourcMode === 'light' ? darkPrimaryOptions : lightPrimaryOptions;
+		const idx = srcOpts.findIndex((o) => o.value.toLowerCase() === hex.toLowerCase());
+		syncBasePalette(sourcMode, {
+			...(sourcMode === 'light' ? lightBasePalette : darkBasePalette),
+			primary: hex
 		});
+		if (idx !== -1 && dstOpts[idx]) {
+			const opposite: 'light' | 'dark' = sourcMode === 'light' ? 'dark' : 'light';
+			syncBasePalette(opposite, {
+				...(opposite === 'light' ? lightBasePalette : darkBasePalette),
+				primary: dstOpts[idx].value
+			});
+		}
 	}
 
 	async function copyGeneratedCss() {
 		await navigator.clipboard.writeText(generatedCss);
 		copiedCss = true;
-		setTimeout(() => (copiedCss = false), 1800);
+		setTimeout(() => (copiedCss = false), 1600);
 		toast({
 			title: 'Copied CSS',
-			description: 'Generated theme CSS copied to your clipboard.',
-			duration: 1800,
+			description: 'Theme CSS is on your clipboard.',
+			duration: 1600,
 			type: 'success'
 		});
 	}
 
 	async function copyTypeScriptPreset() {
 		await navigator.clipboard.writeText(generatedTypeScriptPreset);
-		copiedTypeScriptPreset = true;
-		setTimeout(() => (copiedTypeScriptPreset = false), 1800);
+		copiedTs = true;
+		setTimeout(() => (copiedTs = false), 1600);
 		toast({
 			title: 'Copied TypeScript preset',
-			description: 'Preset module copied to your clipboard.',
-			duration: 1800,
+			description: 'Preset module is on your clipboard.',
+			duration: 1600,
 			type: 'success'
 		});
 	}
@@ -431,17 +423,8 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	function updateEditorName(value: string) {
-		editorName = value;
-	}
-
 	function updateRadius(next: string) {
 		editorTheme.radiusBase = next;
-		selectedPresetSlug = 'custom';
-	}
-
-	function updatePrimaryButtonOutline(next: boolean) {
-		editorTheme.primaryButtonOutline = next;
 		selectedPresetSlug = 'custom';
 	}
 
@@ -451,78 +434,29 @@
 		selectedPresetSlug = 'custom';
 	}
 
-	function updateMotion<K extends keyof ThemeMotion>(key: K, nextValue: ThemeMotion[K]) {
-		editorTheme.motion = { ...editorTheme.motion, [key]: nextValue };
-		selectedPresetSlug = 'custom';
-	}
-
-	function updatePrimaryColor(sourcMode: 'light' | 'dark', hex: string) {
-		const srcOpts = sourcMode === 'light' ? lightPrimaryOptions : darkPrimaryOptions;
-		const dstOpts = sourcMode === 'light' ? darkPrimaryOptions : lightPrimaryOptions;
-		const idx = srcOpts.findIndex((o) => o.value.toLowerCase() === hex.toLowerCase());
-		// Always update the source mode
-		syncBasePalette(sourcMode, {
-			...(sourcMode === 'light' ? lightBasePalette : darkBasePalette),
-			primary: hex
-		});
-		// If there's a paired color, update the opposite mode too
-		if (idx !== -1 && dstOpts[idx]) {
-			const opposite: 'light' | 'dark' = sourcMode === 'light' ? 'dark' : 'light';
-			syncBasePalette(opposite, {
-				...(opposite === 'light' ? lightBasePalette : darkBasePalette),
-				primary: dstOpts[idx].value
-			});
-		}
-	}
-
 	function shuffleTheme() {
 		function pick<T>(arr: T[]): T {
 			return arr[Math.floor(Math.random() * arr.length)];
 		}
-
-		// Pick a paired primary (same index in light/dark options)
 		const primaryIdx = Math.floor(Math.random() * lightPrimaryOptions.length);
-		const lightPrimary = lightPrimaryOptions[primaryIdx].value;
-		const darkPrimary = darkPrimaryOptions[primaryIdx].value;
-
-		// Pick background / card tones from presets
-		const lightBg = pick(lightBackgroundOptions).value;
-		const lightSurface = pick(lightSurfaceOptions).value;
-		const darkBg = pick(darkBackgroundOptions).value;
-		const darkSurface = pick(darkSurfaceOptions).value;
-
-		// Keep text neutral (don't randomize — keeps readability)
-		const lightText = pick(lightTextOptions).value;
-		const darkText = pick(darkTextOptions).value;
-
-		// Optionally randomize border
-		const lightSecondary = pick(lightSecondaryOptions).value;
-		const lightBorder = pick(lightBorderOptions).value;
-		const darkBorder = pick(darkBorderOptions).value;
-		const darkSecondary = pick(darkSecondaryOptions).value;
-
-		// Randomize radius & motion
-		const radius = pick(radiusOptions).value;
-		const duration = pick(transitionPresets).slug;
-
-		// Apply both palettes atomically
 		const newLightBase: ThemeBasePalette = {
-			background: lightBg,
-			card: lightSurface,
-			text: lightText,
-			primary: lightPrimary,
-			secondary: lightSecondary,
-			border: lightBorder
+			background: pick(lightBackgroundOptions).value,
+			card: pick(lightSurfaceOptions).value,
+			text: pick(lightTextOptions).value,
+			primary: lightPrimaryOptions[primaryIdx].value,
+			secondary: pick(lightSecondaryOptions).value,
+			border: pick(lightBorderOptions).value
 		};
 		const newDarkBase: ThemeBasePalette = {
-			background: darkBg,
-			card: darkSurface,
-			text: darkText,
-			primary: darkPrimary,
-			secondary: darkSecondary,
-			border: darkBorder
+			background: pick(darkBackgroundOptions).value,
+			card: pick(darkSurfaceOptions).value,
+			text: pick(darkTextOptions).value,
+			primary: darkPrimaryOptions[primaryIdx].value,
+			secondary: pick(darkSecondaryOptions).value,
+			border: pick(darkBorderOptions).value
 		};
-
+		const radius = pick(radiusOptions).value;
+		const duration = pick(transitionPresets).slug;
 		lightBasePalette = newLightBase;
 		darkBasePalette = newDarkBase;
 		editorTheme.light = generatePaletteFromBase(newLightBase, 'light');
@@ -530,15 +464,6 @@
 		editorTheme.radiusBase = radius;
 		editorTheme.durationPreset = duration;
 		editorTheme.motion = resolveThemeMotion(duration);
-		selectedPresetSlug = 'custom';
-	}
-
-	function updateRawToken(tokenMode: 'light' | 'dark', key: PaletteKey, value: string) {
-		if (tokenMode === 'light') {
-			editorTheme.light = { ...editorTheme.light, [key]: value };
-		} else {
-			editorTheme.dark = { ...editorTheme.dark, [key]: value };
-		}
 		selectedPresetSlug = 'custom';
 	}
 
@@ -570,6 +495,70 @@
 		applySnapshot(next);
 	}
 
+	function openPublishDialog() {
+		publishName = editorName.trim() || editorTheme.name;
+		publishDescription = editorTheme.description?.trim() ?? '';
+		publishPublisher = editorTheme.publisher?.trim() ?? '';
+		publishDialogOpen = true;
+	}
+
+	async function publishTheme() {
+		const cleanedName = publishName.trim();
+		const slug = slugifyThemeName(cleanedName);
+		if (!cleanedName || !slug) {
+			toast({
+				title: 'Theme name required',
+				description: 'Add a valid theme name before publishing.',
+				duration: 2400,
+				type: 'error'
+			});
+			return;
+		}
+		const payload: ThemeDraft = {
+			...cloneTheme(editorTheme),
+			name: cleanedName,
+			slug,
+			description:
+				publishDescription.trim() ||
+				'A custom theme published from the Silk UI Theme Studio.',
+			publisher: publishPublisher.trim() || undefined
+		};
+		isPublishing = true;
+		try {
+			const response = await fetch('/api/themes', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify(payload)
+			});
+			const responseText = await response.text();
+			if (!response.ok) throw new Error(responseText || 'Failed to publish.');
+			if (!themesCatalog.some((theme) => theme.slug === payload.slug)) {
+				themesCatalog = [payload, ...themesCatalog];
+			}
+			selectedPresetSlug = payload.slug;
+			editorName = cleanedName;
+			editorTheme.name = cleanedName;
+			editorTheme.description = payload.description;
+			editorTheme.publisher = payload.publisher;
+			publishDialogOpen = false;
+			toast({
+				title: 'Theme published',
+				description: `${payload.name} is in the catalog.`,
+				duration: 2200,
+				type: 'success'
+			});
+		} catch (err) {
+			toast({
+				title: 'Publish failed',
+				description: err instanceof Error ? err.message : 'Could not publish this theme.',
+				duration: 3000,
+				type: 'error'
+			});
+		} finally {
+			isPublishing = false;
+		}
+	}
+
 	const getInitialThemesCatalog = () => {
 		const themes = Array.isArray(data?.themes) ? data.themes : [];
 		return themes.length
@@ -584,7 +573,7 @@
 	let editorTheme = $state(cloneTheme(defaultTheme));
 	let editorName = $state(defaultTheme.name);
 	let copiedCss = $state(false);
-	let copiedTypeScriptPreset = $state(false);
+	let copiedTs = $state(false);
 	let isPublishing = $state(false);
 	let headerFontSelection = $state(getFontLabel(defaultTheme.fontHeader));
 	let bodyFontSelection = $state(getFontLabel(defaultTheme.fontSans));
@@ -596,6 +585,7 @@
 	let ignoreHistory = $state(false);
 	let lastSnapshot = $state<StudioSnapshot>(createStudioState(defaultTheme));
 	let lastSnapshotSignature = $state(JSON.stringify(createStudioState(defaultTheme)));
+	let inspectorTab = $state('colors');
 
 	const generatedCss = $derived(
 		themeToCss({
@@ -615,12 +605,7 @@
 	);
 
 	const activePreset = $derived(
-		themesCatalog.find((theme) => theme.slug === selectedPresetSlug) ?? {
-			...defaultTheme,
-			slug: 'custom',
-			name: 'Custom',
-			description: 'A generated theme draft based on your current base colors and guided controls.'
-		}
+		themesCatalog.find((theme) => theme.slug === selectedPresetSlug) ?? null
 	);
 
 	const colorMode = $derived<'light' | 'dark'>(mode.current === 'dark' ? 'dark' : 'light');
@@ -635,10 +620,11 @@
 		}
 		lastSnapshot = captureStudioSnapshot();
 		lastSnapshotSignature = JSON.stringify(lastSnapshot);
+		lastSavedSignature = lastSnapshotSignature;
 		hydrated = true;
-		// Preload the active fonts so they're immediately available
 		preloadFont(editorTheme.fontHeader);
 		preloadFont(editorTheme.fontSans);
+		refreshSavedThemes();
 	});
 
 	$effect(() => {
@@ -681,343 +667,2477 @@
 		lastSnapshot = currentSnapshot;
 		lastSnapshotSignature = signature;
 	});
+
+	const tabs = [
+		{ id: 'colors', label: 'Colors' },
+		{ id: 'type', label: 'Type' },
+		{ id: 'shape', label: 'Shape' },
+		{ id: 'presets', label: 'Presets' }
+	] as const;
+
+	// Interactive state for the canvas playground
+	const activeMotionDescription = $derived(
+		transitionPresets.find((p) => p.slug === editorTheme.durationPreset)?.description ?? ''
+	);
+
+	let playgroundTab = $state('overview');
+	let pgInputName = $state('Aidan');
+	let pgInputEmail = $state('aidan@silk-ui.dev');
+	let pgNotifications = $state(true);
+	let pgEmailDigest = $state(false);
+	let pgTwoFactor = $state(true);
+	let pgAcceptTerms = $state(true);
+	let pgRole = $state('designer');
+	let pgProgress = $state(64);
+
+	let screenTab = $state('dashboard');
+	let newProjectOpen = $state(false);
+	let newProjectName = $state('');
+	let newProjectTeam = $state('design');
+	let selectedMailId = $state(1);
+
+	let publishDialogOpen = $state(false);
+	let publishName = $state('');
+	let publishDescription = $state('');
+	let publishPublisher = $state('');
+
+	let advancedColorsOpen = $state(false);
+	let advancedColorsMode = $state<'light' | 'dark'>('light');
+
+	type PaletteField = keyof ThemePalette;
+	type PaletteGroup = { title: string; fields: { key: PaletteField; label: string }[] };
+	const paletteGroups: PaletteGroup[] = [
+		{
+			title: 'Surfaces',
+			fields: [
+				{ key: 'background', label: 'Background' },
+				{ key: 'panel', label: 'Panel' },
+				{ key: 'modal', label: 'Modal' },
+				{ key: 'card', label: 'Card' },
+				{ key: 'muted', label: 'Muted' }
+			]
+		},
+		{
+			title: 'Foreground',
+			fields: [
+				{ key: 'foreground', label: 'Foreground' },
+				{ key: 'foregroundOpposite', label: 'Foreground opposite' },
+				{ key: 'foregroundMuted', label: 'Foreground muted' },
+				{ key: 'foregroundButton', label: 'Foreground button' }
+			]
+		},
+		{
+			title: 'Brand',
+			fields: [
+				{ key: 'primary', label: 'Primary' },
+				{ key: 'secondary', label: 'Secondary' },
+				{ key: 'accent', label: 'Accent' },
+				{ key: 'alternate', label: 'Alternate' },
+				{ key: 'info', label: 'Info' }
+			]
+		},
+		{
+			title: 'Status',
+			fields: [
+				{ key: 'success', label: 'Success' },
+				{ key: 'warning', label: 'Warning' },
+				{ key: 'error', label: 'Error' },
+				{ key: 'destructive', label: 'Destructive' }
+			]
+		},
+		{
+			title: 'Lines & system',
+			fields: [
+				{ key: 'border', label: 'Border' },
+				{ key: 'borderStrong', label: 'Border strong' },
+				{ key: 'input', label: 'Input' },
+				{ key: 'overlay', label: 'Overlay' },
+				{ key: 'ring', label: 'Ring' }
+			]
+		}
+	];
+
+	function updatePaletteField(mode: 'light' | 'dark', field: PaletteField, value: string) {
+		editorTheme[mode] = { ...editorTheme[mode], [field]: value };
+		selectedPresetSlug = 'custom';
+	}
+
+	function openAdvancedColors() {
+		advancedColorsMode = colorMode;
+		advancedColorsOpen = true;
+	}
+
+	let advancedMotionOpen = $state(false);
+
+	type MotionDurationField = {
+		key:
+			| 'hoverDuration'
+			| 'menuDuration'
+			| 'panelDuration'
+			| 'sheetDuration'
+			| 'overlayDuration'
+			| 'tooltipDuration'
+			| 'toastInDuration'
+			| 'toastOutDuration';
+		label: string;
+		hint: string;
+		max: number;
+	};
+	type MotionNumberField = {
+		key:
+			| 'panelX'
+			| 'panelY'
+			| 'panelBlur'
+			| 'panelScaleStart'
+			| 'sheetOffset'
+			| 'overlayBlur'
+			| 'panelPerspective'
+			| 'panelRotateX'
+			| 'panelOpacityStart';
+		label: string;
+		hint: string;
+		min: number;
+		max: number;
+		step: number;
+		unit?: string;
+		format?: (value: number) => string;
+		experimental?: boolean;
+	};
+	const motionDurationFields: MotionDurationField[] = [
+		{ key: 'hoverDuration', label: 'Hover', hint: 'Buttons, links, ghost state', max: 500 },
+		{ key: 'menuDuration', label: 'Menu', hint: 'Dropdowns, select items', max: 500 },
+		{ key: 'panelDuration', label: 'Panel', hint: 'Popovers, dialogs', max: 700 },
+		{ key: 'sheetDuration', label: 'Sheet', hint: 'Side sheets, drawers', max: 800 },
+		{ key: 'overlayDuration', label: 'Overlay', hint: 'Modal backdrop fade', max: 500 },
+		{ key: 'tooltipDuration', label: 'Tooltip', hint: 'Hover hints', max: 400 },
+		{ key: 'toastInDuration', label: 'Toast in', hint: 'Notification entry', max: 900 },
+		{ key: 'toastOutDuration', label: 'Toast out', hint: 'Notification exit', max: 900 }
+	];
+	const motionNumberFields: MotionNumberField[] = [
+		{
+			key: 'panelX',
+			label: 'Panel X offset',
+			hint: 'Horizontal lift on entry',
+			min: -40,
+			max: 40,
+			step: 1,
+			unit: 'px'
+		},
+		{
+			key: 'panelY',
+			label: 'Panel Y offset',
+			hint: 'Vertical lift on entry',
+			min: -40,
+			max: 40,
+			step: 1,
+			unit: 'px'
+		},
+		{
+			key: 'panelBlur',
+			label: 'Panel blur',
+			hint: 'Backdrop blur',
+			min: 0,
+			max: 24,
+			step: 1,
+			unit: 'px'
+		},
+		{
+			key: 'panelScaleStart',
+			label: 'Panel start scale',
+			hint: 'Initial scale on enter',
+			min: 0.9,
+			max: 1,
+			step: 0.005,
+			format: (v) => v.toFixed(3)
+		},
+		{
+			key: 'sheetOffset',
+			label: 'Sheet offset',
+			hint: 'Slide distance',
+			min: 0,
+			max: 240,
+			step: 4,
+			unit: 'px'
+		},
+		{
+			key: 'overlayBlur',
+			label: 'Overlay blur',
+			hint: 'Modal backdrop blur',
+			min: 0,
+			max: 24,
+			step: 1,
+			unit: 'px'
+		},
+		{
+			key: 'panelPerspective',
+			label: 'Perspective',
+			hint: '3D depth. 0 = flat. Try 600–1200 for subtle tilt.',
+			min: 0,
+			max: 2000,
+			step: 50,
+			unit: 'px',
+			experimental: true
+		},
+		{
+			key: 'panelRotateX',
+			label: 'Rotate X',
+			hint: 'Entry tilt in degrees. Needs perspective > 0.',
+			min: -20,
+			max: 20,
+			step: 1,
+			unit: '°',
+			experimental: true
+		},
+		{
+			key: 'panelOpacityStart',
+			label: 'Opacity start',
+			hint: '0 = fade from invisible, 1 = no fade.',
+			min: 0,
+			max: 1,
+			step: 0.05,
+			format: (v) => v.toFixed(2),
+			experimental: true
+		}
+	];
+
+	function durationToMs(value: string) {
+		const parsed = Number.parseFloat(value);
+		return Number.isFinite(parsed) ? parsed : 0;
+	}
+
+	function updateMotionDuration(key: MotionDurationField['key'], rawValue: string | number) {
+		const ms = typeof rawValue === 'number' ? rawValue : Number.parseFloat(rawValue);
+		if (!Number.isFinite(ms)) return;
+		editorTheme.motion = { ...editorTheme.motion, [key]: `${Math.round(ms)}ms` };
+		selectedPresetSlug = 'custom';
+	}
+
+	function updateMotionNumber(key: MotionNumberField['key'], rawValue: string | number) {
+		const parsed = typeof rawValue === 'number' ? rawValue : Number.parseFloat(rawValue);
+		if (!Number.isFinite(parsed)) return;
+		editorTheme.motion = { ...editorTheme.motion, [key]: parsed };
+		selectedPresetSlug = 'custom';
+	}
+
+	function openAdvancedMotion() {
+		advancedMotionOpen = true;
+	}
+
+	type TransitionShape = {
+		slug: string;
+		name: string;
+		description: string;
+		icon: typeof ArrowDown;
+		motion: {
+			panelX: number;
+			panelY: number;
+			panelScaleStart: number;
+			panelBlur: number;
+			panelPerspective?: number;
+			panelRotateX?: number;
+		};
+	};
+	const transitionShapes: TransitionShape[] = [
+		{
+			slug: 'subtle',
+			name: 'Subtle',
+			description: 'Gentle lift — Silk default.',
+			icon: ArrowDown,
+			motion: { panelX: 0, panelY: 5, panelScaleStart: 0.99, panelBlur: 0, panelPerspective: 0, panelRotateX: 0 }
+		},
+		{
+			slug: 'lift',
+			name: 'Lift',
+			description: 'Bigger rise with a soft blur.',
+			icon: ArrowUp,
+			motion: { panelX: 0, panelY: 12, panelScaleStart: 0.97, panelBlur: 2, panelPerspective: 0, panelRotateX: 0 }
+		},
+		{
+			slug: 'depth',
+			name: 'Depth',
+			description: '3D tilt — perspective + rotateX. Experimental.',
+			icon: Layers2,
+			motion: { panelX: 0, panelY: 6, panelScaleStart: 0.985, panelBlur: 0, panelPerspective: 800, panelRotateX: -10 }
+		},
+		{
+			slug: 'slide',
+			name: 'Slide',
+			description: 'Enters from the right.',
+			icon: ArrowRight,
+			motion: { panelX: 14, panelY: 0, panelScaleStart: 1, panelBlur: 0 }
+		},
+		{
+			slug: 'scale',
+			name: 'Scale',
+			description: 'Grows in from smaller.',
+			icon: Maximize,
+			motion: { panelX: 0, panelY: 0, panelScaleStart: 0.94, panelBlur: 0 }
+		},
+		{
+			slug: 'pop',
+			name: 'Pop',
+			description: 'Shrinks down from larger.',
+			icon: Minimize,
+			motion: { panelX: 0, panelY: 0, panelScaleStart: 1.06, panelBlur: 0 }
+		},
+		{
+			slug: 'glide',
+			name: 'Glide',
+			description: 'Lift with backdrop blur.',
+			icon: Wind,
+			motion: { panelX: 0, panelY: 8, panelScaleStart: 0.98, panelBlur: 4 }
+		},
+		{
+			slug: 'stack',
+			name: 'Stack',
+			description: 'Sits in place, fades only.',
+			icon: Layers2,
+			motion: { panelX: 0, panelY: 0, panelScaleStart: 1, panelBlur: 0 }
+		}
+	];
+
+	function approxEqual(a: number, b: number, eps = 0.005) {
+		return Math.abs(a - b) < eps;
+	}
+
+	const activeTransitionShape = $derived(
+		transitionShapes.find(
+			(shape) =>
+				approxEqual(shape.motion.panelX, editorTheme.motion.panelX) &&
+				approxEqual(shape.motion.panelY, editorTheme.motion.panelY) &&
+				approxEqual(shape.motion.panelScaleStart, editorTheme.motion.panelScaleStart) &&
+				approxEqual(shape.motion.panelBlur, editorTheme.motion.panelBlur) &&
+				approxEqual(shape.motion.panelPerspective ?? 0, editorTheme.motion.panelPerspective ?? 0) &&
+				approxEqual(shape.motion.panelRotateX ?? 0, editorTheme.motion.panelRotateX ?? 0)
+		) ?? null
+	);
+
+	function applyTransitionShape(shape: TransitionShape) {
+		editorTheme.motion = {
+			...editorTheme.motion,
+			panelX: shape.motion.panelX,
+			panelY: shape.motion.panelY,
+			panelScaleStart: shape.motion.panelScaleStart,
+			panelBlur: shape.motion.panelBlur,
+			panelPerspective: shape.motion.panelPerspective ?? 0,
+			panelRotateX: shape.motion.panelRotateX ?? 0
+		};
+		selectedPresetSlug = 'custom';
+	}
+
+	function resetMotionToPreset() {
+		editorTheme.motion = resolveThemeMotion(editorTheme.durationPreset);
+		selectedPresetSlug = editorTheme.durationPreset;
+		toast({
+			title: 'Motion reset',
+			description: 'Restored values from the selected preset.',
+			duration: 1800,
+			type: 'success'
+		});
+	}
+
+	let savedThemes = $state<SavedTheme[]>([]);
+	let activeSavedThemeId = $state<string | null>(null);
+
+	// Toolbar Select.Item values for saved themes use their unique `id` (with a
+	// `local:` prefix) so two saved themes with the same name don't collide.
+	const selectedSelectValue = $derived(
+		activeSavedThemeId
+			? `local:${activeSavedThemeId}`
+			: selectedPresetSlug
+	);
+
+	const activeSavedTheme = $derived(
+		activeSavedThemeId ? (savedThemes.find((t) => t.id === activeSavedThemeId) ?? null) : null
+	);
+
+	let lastSavedSignature = $state('');
+	let saveAlertOpen = $state(false);
+	let pendingThemeLoad = $state<ThemeDraft | null>(null);
+
+	const isDirty = $derived(
+		hydrated && lastSavedSignature !== '' && lastSavedSignature !== lastSnapshotSignature
+	);
+
+	function markStateClean() {
+		lastSavedSignature = JSON.stringify(captureStudioSnapshot());
+	}
+
+	function refreshSavedThemes() {
+		savedThemes = getSavedThemes();
+	}
+
+	function saveCurrentThemeLocally() {
+		const name = editorName.trim() || 'Untitled theme';
+		const slug = slugifyThemeName(name) || 'custom-theme';
+		const payload: ThemeDraft = {
+			...cloneTheme(editorTheme),
+			motion: resolveThemeMotion(editorTheme.durationPreset, editorTheme.motion),
+			name,
+			slug
+		};
+		// If the user is currently viewing a saved theme, overwrite that entry
+		// in place; otherwise mint a brand-new entry with a fresh ID.
+		const saved = saveLocalTheme(payload, activeSavedThemeId ?? undefined);
+		activeSavedThemeId = saved.id;
+		refreshSavedThemes();
+		queueMicrotask(markStateClean);
+		toast({
+			title: `${name} saved locally`,
+			description: 'Available anytime from the preset picker.',
+			duration: 2000,
+			type: 'success'
+		});
+	}
+
+	function loadSavedTheme(theme: SavedTheme) {
+		activeSavedThemeId = theme.id;
+		loadPreset(theme);
+	}
+
+	let removeSavedTarget = $state<SavedTheme | null>(null);
+
+	function requestDeleteSavedTheme(theme: SavedTheme, event: Event) {
+		event.stopPropagation();
+		removeSavedTarget = theme;
+	}
+
+	function cancelDeleteSavedTheme() {
+		removeSavedTarget = null;
+	}
+
+	function confirmDeleteSavedTheme() {
+		const theme = removeSavedTarget;
+		removeSavedTarget = null;
+		if (!theme) return;
+		deleteLocalTheme(theme.id);
+		if (activeSavedThemeId === theme.id) activeSavedThemeId = null;
+		refreshSavedThemes();
+		toast({
+			title: `${theme.name} removed`,
+			description: 'Removed from your local library.',
+			duration: 1600,
+			type: 'success'
+		});
+	}
+
+	let pendingLoadSavedId = $state<string | null>(null);
+
+	function attemptLoadPreset(theme: ThemeDraft, fromSavedId: string | null = null) {
+		// Same theme already active? skip.
+		if (fromSavedId) {
+			if (fromSavedId === activeSavedThemeId) return;
+		} else if (theme.slug === selectedPresetSlug && !activeSavedThemeId) {
+			return;
+		}
+		if (isDirty) {
+			pendingThemeLoad = cloneTheme(theme);
+			pendingLoadSavedId = fromSavedId;
+			saveAlertOpen = true;
+			return;
+		}
+		if (fromSavedId) {
+			activeSavedThemeId = fromSavedId;
+			loadPreset(theme);
+		} else {
+			activeSavedThemeId = null;
+			loadPreset(theme);
+		}
+	}
+
+	function applyPendingLoad() {
+		const pending = pendingThemeLoad;
+		const savedId = pendingLoadSavedId;
+		pendingThemeLoad = null;
+		pendingLoadSavedId = null;
+		saveAlertOpen = false;
+		if (!pending) return;
+		if (savedId) {
+			activeSavedThemeId = savedId;
+		} else {
+			activeSavedThemeId = null;
+		}
+		loadPreset(pending);
+	}
+
+	function saveAndContinue() {
+		saveCurrentThemeLocally();
+		applyPendingLoad();
+	}
+
+	function discardAndContinue() {
+		applyPendingLoad();
+	}
+
+	function cancelPendingLoad() {
+		pendingThemeLoad = null;
+		saveAlertOpen = false;
+	}
+
+	const mailMessages = [
+		{
+			id: 1,
+			sender: 'Maya Chen',
+			initials: 'MC',
+			subject: 'v2.5 release notes — needs your review',
+			preview:
+				"I've put together the draft for v2.5. Could you take a look before EOD? I've flagged the breaking changes.",
+			time: '10:42 AM',
+			unread: true,
+			tag: 'design'
+		},
+		{
+			id: 2,
+			sender: 'Leo Park',
+			initials: 'LP',
+			subject: 'Quick question about the migration',
+			preview:
+				"The codemod handles 90% of the cases but I'm seeing some edge cases around nested providers.",
+			time: '9:18 AM',
+			unread: true,
+			tag: 'engineering'
+		},
+		{
+			id: 3,
+			sender: 'GitHub',
+			initials: 'GH',
+			subject: 'PR #482 has new comments',
+			preview: 'Aidan opened a pull request: "refactor toolbar to use shared components".',
+			time: 'Yesterday',
+			unread: false,
+			tag: 'system'
+		},
+		{
+			id: 4,
+			sender: 'Sofia Reyes',
+			initials: 'SR',
+			subject: 'Customer feedback digest — week 18',
+			preview:
+				'12 new responses, NPS holding at 64. Top theme: people want dark mode in the dashboard.',
+			time: 'Tue',
+			unread: false,
+			tag: 'product'
+		},
+		{
+			id: 5,
+			sender: 'Stripe',
+			initials: 'St',
+			subject: 'Your invoice is ready',
+			preview: 'Invoice INV-00042 for $1,240.00 USD is ready to view.',
+			time: 'Mon',
+			unread: false,
+			tag: 'billing'
+		}
+	];
+
+	const screenOptions = [
+		{ id: 'dashboard', label: 'Dashboard' },
+		{ id: 'settings', label: 'Settings' },
+		{ id: 'mail', label: 'Mail' }
+	] as const;
+
+	const tagToTone: Record<string, string> = {
+		design: 'var(--color-info)',
+		engineering: 'var(--color-success)',
+		product: 'var(--color-warning)',
+		billing: 'var(--color-destructive)',
+		system: 'var(--color-foreground-muted)'
+	};
+
+	const selectedMail = $derived(
+		mailMessages.find((m) => m.id === selectedMailId) ?? mailMessages[0]
+	);
+
+	function createProject() {
+		const name = newProjectName.trim();
+		if (!name) {
+			toast({
+				title: 'Project name required',
+				description: 'Give your project a name before creating it.',
+				duration: 2400,
+				type: 'error'
+			});
+			return;
+		}
+		toast({
+			title: 'Project created',
+			description: `${name} is ready in ${newProjectTeam}.`,
+			duration: 2400,
+			type: 'success'
+		});
+		newProjectName = '';
+		newProjectOpen = false;
+	}
 </script>
 
 <svelte:head>
-	<title>Silk UI Theme Studio</title>
+	<title>Silk · Theme Studio</title>
 	<meta
 		name="description"
-		content="Build, preview, and export Silk UI themes from a dedicated full-width studio workspace."
+		content="Design, preview, and publish Silk UI themes with live tokens and instant export."
 	/>
 </svelte:head>
 
-<!-- Full-height layout: floating left sidebar | canvas -->
-<div class="flex h-[calc(100vh-4rem)] pt-16">
-	<!-- Left sidebar (floating) -->
-	<div class="w-72 shrink-0 p-3">
-		<div
-			class="flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-border bg-card shadow-[var(--outline-shadow)]"
-		>
-			<StudioSidebar
-				{editorName}
-				{editorTheme}
-				{colorMode}
-				{headerFontSelection}
-				{bodyFontSelection}
-				{radiusOptions}
-				{transitionPresets}
-				{fontOptions}
-				{themesCatalog}
-				{lightBasePalette}
-				{darkBasePalette}
-				{lightBackgroundOptions}
-				{lightSurfaceOptions}
-				{lightSecondaryOptions}
-				{lightTextOptions}
-				{lightPrimaryOptions}
-				{lightBorderOptions}
-				{darkBackgroundOptions}
-				{darkSurfaceOptions}
-				{darkSecondaryOptions}
-				{darkTextOptions}
-				{darkPrimaryOptions}
-				{darkBorderOptions}
-				{copiedCss}
-				{copiedTypeScriptPreset}
-				{isPublishing}
-				undoDisabled={undoStack.length === 0}
-				redoDisabled={redoStack.length === 0}
-				{loadPreset}
-				{updateEditorName}
-				{updateRadius}
-				{updateDurationPreset}
-				{updateMotion}
-				{updateHeaderFont}
-				{updateBodyFont}
-				{updateBasePalette}
-				{updatePrimaryColor}
-				{updatePaletteToken}
-				{updateRawToken}
-				{shuffleTheme}
-				{undoHistory}
-				{redoHistory}
-				{copyGeneratedCss}
-				{copyTypeScriptPreset}
-				{publishTheme}
-			/>
-		</div>
-	</div>
-
-	<!-- Canvas -->
-	<div
-		class="min-w-0 flex-1 overflow-y-auto"
-		style={`--font-header:${editorTheme.fontHeader}; --font-sans:${editorTheme.fontSans}; --font-mono:${editorTheme.fontMono};`}
+<div
+	class="studio-shell mt-16 flex h-[calc(100vh-4rem)] flex-col bg-background"
+	style={`--font-header:${editorTheme.fontHeader}; --font-sans:${editorTheme.fontSans}; --font-mono:${editorTheme.fontMono};`}
+>
+	<!-- ─────────────────────────  TOOLBAR  ───────────────────────── -->
+	<header
+		class="z-10 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background px-4"
 	>
-		<div class="p-6">
-			<div class="grid auto-rows-max gap-4 xl:grid-cols-3">
-				<!-- Card: Sign-up form -->
-				<section
-					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
+		<!-- Left cluster: theme identity -->
+		<div class="flex min-w-0 items-center gap-2">
+			<span
+				class="grid size-8 place-items-center rounded-lg bg-primary text-foreground-opposite shadow-[inset_0_1px_0_rgb(255_255_255_/_0.15)]"
+				aria-hidden="true"
+			>
+				<Sparkles size={14} />
+			</span>
+			<div class="flex min-w-0 flex-col leading-none">
+				<span class="text-[0.78rem] font-medium text-foreground-muted"
+					>Theme Studio</span
 				>
-					<p
-						class="text-lg font-semibold tracking-tight text-foreground"
-						style="font-family: var(--font-header);"
+				<span
+					class="truncate text-[0.95rem] font-semibold tracking-tight text-foreground"
+					style="font-family: var(--font-header);"
+					aria-label="Theme name"
+				>
+					{editorName}
+				</span>
+			</div>
+		</div>
+
+		<span class="h-6 w-px bg-border" aria-hidden="true"></span>
+
+		<!-- Preset select -->
+		<div class="hidden md:block">
+			<Select.Root value={selectedSelectValue}>
+				<Select.Trigger class="h-8 min-w-[10rem] gap-1.5 text-[0.82rem]" variant="outlined">
+					{activeSavedTheme?.name ?? activePreset?.name ?? 'Custom'}
+				</Select.Trigger>
+				<Select.Content class="max-h-72 overflow-y-auto">
+					{#if savedThemes.length > 0}
+						<Select.Label class="">Custom</Select.Label>
+						{#each savedThemes as preset (preset.id)}
+							<Select.Item
+								value={`local:${preset.id}`}
+								onclick={() => attemptLoadPreset(preset, preset.id)}
+							>
+								<span class="flex w-full items-center gap-2 text-left">
+									<span
+										class="size-3 rounded-full ring-1 ring-border"
+										style={`background:${preset.light.primary};`}
+									></span>
+									<span class="flex-1 truncate">{preset.name}</span>
+								</span>
+							</Select.Item>
+						{/each}
+						<Select.Label class="">Catalog</Select.Label>
+					{/if}
+					{#each themesCatalog.slice(0, 7) as preset (preset.slug)}
+						<Select.Item value={preset.slug} onclick={() => attemptLoadPreset(preset)}>
+							<span class="flex w-full items-center gap-2 text-left">
+								<span
+									class="size-3 rounded-full ring-1 ring-border"
+									style={`background:${preset.light.primary};`}
+								></span>
+								<span class="flex-1 truncate">{preset.name}</span>
+							</span>
+						</Select.Item>
+					{/each}
+				</Select.Content>
+			</Select.Root>
+		</div>
+
+		<!-- Spacer -->
+		<div class="flex-1"></div>
+
+		<!-- Right cluster: actions -->
+		<div class="flex items-center gap-1">
+			<Button
+				variant="ghost"
+				size="icon"
+				class="size-8"
+				onclick={undoHistory}
+				disabled={undoStack.length === 0}
+				aria-label="Undo"
+			>
+				<RotateCcw size={14} />
+			</Button>
+			<Button
+				variant="ghost"
+				size="icon"
+				class="size-8"
+				onclick={redoHistory}
+				disabled={redoStack.length === 0}
+				aria-label="Redo"
+			>
+				<RotateCw size={14} />
+			</Button>
+
+			<span class="mx-1 h-5 w-px bg-border" aria-hidden="true"></span>
+
+			<Button
+				variant="ghost"
+				size="sm"
+				class="h-8 gap-1.5 text-[0.78rem]"
+				onclick={shuffleTheme}
+			>
+				<Shuffle size={13} />
+				<span class="max-md:hidden">Shuffle</span>
+			</Button>
+
+			<Button
+				variant="ghost"
+				size="sm"
+				class="h-8 gap-1.5 text-[0.78rem]"
+				onclick={saveCurrentThemeLocally}
+			>
+				<Save size={13} />
+				<span class="max-md:hidden">Save</span>
+			</Button>
+
+			<Button
+				variant="ghost"
+				size="icon"
+				class="size-8"
+				onclick={() => setMode(colorMode === 'dark' ? 'light' : 'dark')}
+				aria-label="Toggle color mode"
+			>
+				{#if colorMode === 'dark'}
+					<Moon size={14} />
+				{:else}
+					<Sun size={14} />
+				{/if}
+			</Button>
+
+			<span class="mx-1 h-5 w-px bg-border" aria-hidden="true"></span>
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger
+					variant="outlined"
+					size="sm"
+					class="h-8 gap-1.5 text-[0.78rem]"
+					aria-label="Export menu"
+				>
+					Export
+					<ChevronDown size={12} />
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content class="min-w-[14rem]">
+					<DropdownMenu.Item onclick={copyGeneratedCss}>
+						{#if copiedCss}
+							<Check size={14} />
+						{:else}
+							<Copy size={14} />
+						{/if}
+						<span>Copy CSS</span>
+					</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={copyTypeScriptPreset}>
+						{#if copiedTs}
+							<Check size={14} />
+						{:else}
+							<Copy size={14} />
+						{/if}
+						<span>Copy TypeScript preset</span>
+					</DropdownMenu.Item>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+
+			<Dialog.Root bind:open={publishDialogOpen}>
+				<Button
+					variant="primary"
+					size="sm"
+					class="h-8 gap-1.5 text-[0.78rem]"
+					onclick={openPublishDialog}
+				>
+					<Send size={12} />
+					Publish
+				</Button>
+				<Dialog.Content
+					class="w-full max-w-[min(30rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+				>
+					<div
+						class="flex shrink-0 items-start justify-between px-5 py-4"
 					>
-						Create your account
-					</p>
-					<p class="mt-1 text-sm text-foreground-muted">
-						Join thousands of teams already using Silk.
-					</p>
-					<div class="mt-5 space-y-3">
-						<Input label="Full name" placeholder="Alex Johnson" variant="outlined" />
+						<div class="flex flex-col gap-1">
+							<Dialog.Title>Publish theme</Dialog.Title>
+							<Dialog.Description>
+								Add the details people will see when browsing the registry.
+							</Dialog.Description>
+						</div>
+						<Dialog.Exit
+							variant="ghost"
+							size="icon"
+							class="size-8 shrink-0"
+							aria-label="Close"
+						>
+							<svg
+								viewBox="0 0 16 16"
+								aria-hidden="true"
+								class="size-3.5 fill-none stroke-current"
+								stroke-width="1.5"
+							>
+								<path d="M3 3l10 10M13 3L3 13" stroke-linecap="round" />
+							</svg>
+						</Dialog.Exit>
+					</div>
+					<div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
 						<Input
-							label="Email address"
-							placeholder="alex@company.com"
-							type="email"
+							label="Theme name"
 							variant="outlined"
+							placeholder="e.g. Soft Aurora"
+							bind:value={publishName}
 						/>
-						<div class="space-y-1.5">
-							<span class="text-sm font-medium text-foreground">Role</span>
-							<Select.Root value="" class="">
-								<Select.Trigger class="w-full" variant="outlined">Select a role</Select.Trigger>
-								<Select.Content class="">
-									<Select.Item value="engineer">Engineer</Select.Item>
-									<Select.Item value="designer">Designer</Select.Item>
-									<Select.Item value="product">Product Manager</Select.Item>
-									<Select.Item value="founder">Founder</Select.Item>
+						<div class="flex flex-col gap-1.5">
+							<label
+								for="publish-description"
+								class="text-[0.78rem] font-medium text-foreground"
+							>
+								Description
+							</label>
+							<textarea
+								id="publish-description"
+								rows="3"
+								placeholder="What makes this theme special? Who should use it?"
+								bind:value={publishDescription}
+								class="min-h-[5rem] resize-y rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 py-2 text-[0.86rem] leading-relaxed text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground-muted focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
+							></textarea>
+							<span class="text-[0.7rem] text-foreground-muted">
+								Optional · if blank we publish with "A custom theme published from the Silk UI
+								Theme Studio."
+							</span>
+						</div>
+						<Input
+							label="Publisher"
+							variant="outlined"
+							placeholder="Your name or handle"
+							bind:value={publishPublisher}
+						/>
+						<div
+							class="flex flex-col gap-1 rounded-[var(--radius-md)] border border-border/70 bg-secondary/40 px-3 py-2.5 text-[0.74rem] text-foreground-muted"
+						>
+							<span>
+								Slug: <span class="font-mono text-foreground"
+									>{slugifyThemeName(publishName) || 'custom-theme'}</span
+								>
+							</span>
+							<span>This is the unique id used in the registry URL.</span>
+						</div>
+					</div>
+					<div
+						class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
+					>
+						<Dialog.Exit variant="ghost" size="sm" class="h-8 text-[0.8rem]">
+							Cancel
+						</Dialog.Exit>
+						<Button
+							variant="primary"
+							size="sm"
+							class="h-8 gap-1.5 text-[0.8rem]"
+							onclick={publishTheme}
+							disabled={isPublishing || !publishName.trim()}
+						>
+							<Send size={12} />
+							{isPublishing ? 'Publishing…' : 'Publish theme'}
+						</Button>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+		</div>
+	</header>
+
+	<!-- ───────────────────────  WORKSPACE  ─────────────────────── -->
+	<div class="flex min-h-0 flex-1 max-lg:flex-col">
+		<!-- ───── CANVAS ───── -->
+		<main class="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+			<!-- Scrollable canvas body — single continuous surface, sections divided by hairlines -->
+			<div class="min-h-0 flex-1 overflow-y-auto">
+				<div class="mx-auto w-full max-w-[860px]">
+					<!-- ─── Page header ─── -->
+					<header class="flex flex-col gap-3 border-b border-border/60 px-6 py-7 md:px-8">
+						<Breadcrumb.Root class="text-[0.78rem]">
+							<Breadcrumb.Item href="/themes/studio">Home</Breadcrumb.Item>
+							<Breadcrumb.Separator><Slash size={12} /></Breadcrumb.Separator>
+							<Breadcrumb.Item href="/themes/studio">Workspace</Breadcrumb.Item>
+							<Breadcrumb.Separator><Slash size={12} /></Breadcrumb.Separator>
+							<Breadcrumb.Item>Playground</Breadcrumb.Item>
+						</Breadcrumb.Root>
+
+						<div class="flex items-start justify-between gap-3">
+							<div class="flex items-center gap-3">
+								<div class="flex -space-x-2">
+									<span
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-primary/15 text-[0.78rem] font-semibold text-primary"
+										>AN</span
+									>
+									<span
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] font-semibold text-foreground-muted"
+										>MC</span
+									>
+									<span
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-secondary text-[0.78rem] font-semibold text-foreground-muted"
+										>LK</span
+									>
+									<span
+										class="grid size-9 place-items-center rounded-full border-2 border-card bg-background text-[0.7rem] font-semibold text-foreground-muted"
+										>+4</span
+									>
+								</div>
+								<div>
+									<h2
+										class="m-0 text-[1.5rem] font-medium leading-tight tracking-tight"
+										style="font-family: var(--font-header);"
+									>
+										Welcome back, {pgInputName}
+									</h2>
+									<p class="m-0 mt-0.5 text-[0.85rem] text-foreground-muted">
+										Here's what's happening in your workspace today.
+									</p>
+								</div>
+							</div>
+							<div class="flex items-center gap-1.5">
+								<Tooltip.Root>
+									<Tooltip.Trigger>
+										<Button variant="ghost" size="icon" class="size-9" aria-label="Inbox">
+											<Inbox size={15} />
+										</Button>
+									</Tooltip.Trigger>
+									<Tooltip.Content>Inbox · 3 new</Tooltip.Content>
+								</Tooltip.Root>
+
+								<Command.Root>
+									<Command.Trigger
+										variant="outlined"
+										size="sm"
+										class="h-9 gap-1.5 text-[0.82rem]"
+										aria-label="Open command palette"
+									>
+										<Search size={13} />
+										<span>Search</span>
+									</Command.Trigger>
+									<Command.Content>
+										<Command.Search placeholder="Search projects, people, commands…" />
+										<Command.Results>
+											<Command.Group heading="Quick actions">
+												<Command.Item
+													name="new project create"
+													callback={() => (newProjectOpen = true)}
+												>
+													<Plus class="text-foreground-muted" />
+													<span>New project</span>
+												</Command.Item>
+												<Command.Item
+													name="invite member team"
+													callback={() =>
+														toast({
+															title: 'Invite sent',
+															description: 'Email invitation queued.',
+															duration: 2000,
+															type: 'success'
+														})}
+												>
+													<Users class="text-foreground-muted" />
+													<span>Invite member</span>
+												</Command.Item>
+												<Command.Item
+													name="open settings preferences"
+													callback={() => (screenTab = 'settings')}
+												>
+													<Settings class="text-foreground-muted" />
+													<span>Open settings</span>
+												</Command.Item>
+												<Command.Item
+													name="open inbox mail"
+													callback={() => (screenTab = 'mail')}
+												>
+													<Inbox class="text-foreground-muted" />
+													<span>Open mail</span>
+												</Command.Item>
+											</Command.Group>
+											<Command.Separator />
+											<Command.Group heading="Navigation">
+												{#each screenOptions as opt}
+													<Command.Item
+														name={`go to ${opt.label}`}
+														callback={() => (screenTab = opt.id)}
+													>
+														<Layers class="text-foreground-muted" />
+														<span>Go to {opt.label}</span>
+													</Command.Item>
+												{/each}
+											</Command.Group>
+										</Command.Results>
+									</Command.Content>
+								</Command.Root>
+
+								<Dialog.Root bind:open={newProjectOpen}>
+									<Dialog.Trigger size="sm" class="h-9 gap-1.5 text-[0.82rem]">
+										<Plus size={13} />
+										New project
+									</Dialog.Trigger>
+									<Dialog.Content
+										class="w-full max-w-[min(28rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+									>
+										<div
+											class="flex shrink-0 items-start justify-between px-5 py-4"
+										>
+											<div class="flex flex-col gap-1">
+												<Dialog.Title>Create a new project</Dialog.Title>
+												<Dialog.Description>
+													Give your project a name and pick the team it belongs to.
+												</Dialog.Description>
+											</div>
+											<Dialog.Exit
+												variant="ghost"
+												size="icon"
+												class="size-8 shrink-0"
+												aria-label="Close"
+											>
+												<svg
+													viewBox="0 0 16 16"
+													aria-hidden="true"
+													class="size-3.5 fill-none stroke-current"
+													stroke-width="1.5"
+												>
+													<path d="M3 3l10 10M13 3L3 13" stroke-linecap="round" />
+												</svg>
+											</Dialog.Exit>
+										</div>
+										<div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
+											<Input
+												label="Project name"
+												variant="outlined"
+												placeholder="e.g. Marketing site refresh"
+												bind:value={newProjectName}
+											/>
+											<div class="flex flex-col gap-1.5">
+												<span class="text-[0.78rem] font-medium">Team</span>
+												<Select.Root value={newProjectTeam}>
+													<Select.Trigger class="w-full" variant="outlined">
+														{newProjectTeam.charAt(0).toUpperCase() + newProjectTeam.slice(1)}
+													</Select.Trigger>
+													<Select.Content>
+														{#each [{ v: 'design', l: 'Design' }, { v: 'engineering', l: 'Engineering' }, { v: 'product', l: 'Product' }, { v: 'marketing', l: 'Marketing' }] as t}
+															<Select.Item
+																value={t.v}
+																onclick={() => (newProjectTeam = t.v)}
+															>
+																{t.l}
+															</Select.Item>
+														{/each}
+													</Select.Content>
+												</Select.Root>
+											</div>
+										</div>
+										<div
+											class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
+										>
+											<Dialog.Exit variant="ghost" size="sm" class="h-8 text-[0.8rem]">
+												Cancel
+											</Dialog.Exit>
+											<Dialog.Confirm
+												size="sm"
+												class="h-8 text-[0.8rem]"
+												onclick={createProject}
+											>
+												<Plus size={13} />
+												Create project
+											</Dialog.Confirm>
+										</div>
+									</Dialog.Content>
+								</Dialog.Root>
+							</div>
+						</div>
+					</header>
+
+					<!-- ─── Screen tabs ─── -->
+					<div
+						class="flex items-center justify-between gap-3 border-b border-border/60 px-6 py-4 md:px-8"
+					>
+						<Tabs.Root bind:value={screenTab}>
+							<Tabs.List>
+								{#each screenOptions as opt}
+									<Tabs.Trigger value={opt.id}>{opt.label}</Tabs.Trigger>
+								{/each}
+							</Tabs.List>
+						</Tabs.Root>
+						<span class="text-[0.72rem] text-foreground-muted max-md:hidden">
+							Swap example screens to preview your theme across surfaces.
+						</span>
+					</div>
+
+					<div class="divide-y divide-border/60">
+						{#if screenTab === 'dashboard'}
+
+					<!-- ─── KPI strip ─── -->
+					<section class="grid grid-cols-3 gap-3 px-6 py-7 md:px-8 max-sm:grid-cols-1">
+						{#each [{ label: 'Revenue', value: '$48.2k', delta: '+12%' }, { label: 'Active users', value: '1,840', delta: '+8%' }, { label: 'Churn rate', value: '1.2%', delta: '−0.4%' }] as stat}
+							<div class="flex flex-col gap-1">
+								<p class="m-0 text-[0.78rem] text-foreground-muted">{stat.label}</p>
+								<p
+									class="m-0 text-[1.6rem] font-semibold tracking-tight"
+									style="font-family: var(--font-header);"
+								>
+									{stat.value}
+								</p>
+								<div class="mt-0.5 flex items-center gap-1.5">
+									<span
+										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] font-medium text-[var(--color-success)]"
+									>
+										<TrendingUp size={11} />
+										{stat.delta}
+									</span>
+									<span class="text-[0.7rem] text-foreground-muted">vs last month</span>
+								</div>
+							</div>
+						{/each}
+					</section>
+
+					<!-- ─── Tabs with sliding indicator (live) ─── -->
+					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+						<div class="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
+							<div>
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Tabs</p>
+								<p
+									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									style="font-family: var(--font-header);"
+								>
+									Project activity
+								</p>
+							</div>
+							<Tabs.Root bind:value={playgroundTab}>
+								<Tabs.List>
+									<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+									<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+									<Tabs.Trigger value="files">Files</Tabs.Trigger>
+								</Tabs.List>
+							</Tabs.Root>
+						</div>
+						<div class="text-[0.86rem] text-foreground-muted">
+							{#if playgroundTab === 'overview'}
+								<p class="m-0">
+									<span class="text-foreground">All systems operational.</span> The pipeline finished
+									in 42s with 0 regressions and a 99.4% cache hit rate.
+								</p>
+							{:else if playgroundTab === 'activity'}
+								<div class="flex flex-col gap-2">
+									{#each [{ who: 'Maya', what: 'merged main into release-2.5', when: '2m' }, { who: 'Aidan', what: 'opened PR #482 · refactor toolbar', when: '14m' }, { who: 'Leo', what: 'commented on issue #311', when: '1h' }] as item}
+										<div class="flex items-center gap-2">
+											<span class="size-1.5 rounded-full bg-[var(--color-info)]"></span>
+											<span class="text-foreground">{item.who}</span>
+											<span>{item.what}</span>
+											<span class="ml-auto text-[0.7rem]">{item.when}</span>
+										</div>
+									{/each}
+								</div>
+							{:else}
+								<div class="flex flex-col gap-2">
+									{#each ['silk-ui-roadmap.md', 'design-tokens.json', 'brand-guidelines.fig'] as file}
+										<div class="flex items-center gap-2">
+											<FileText size={13} />
+											<span class="text-foreground">{file}</span>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						</div>
+					</section>
+
+					<!-- ─── Form section ─── -->
+					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+						<div>
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Form</p>
+							<p
+								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								style="font-family: var(--font-header);"
+							>
+								Account settings
+							</p>
+						</div>
+
+						<div class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+							<Input
+								label="Full name"
+								placeholder="Alex Johnson"
+								variant="outlined"
+								bind:value={pgInputName}
+							/>
+							<Input
+								label="Email"
+								type="email"
+								placeholder="alex@company.com"
+								variant="outlined"
+								bind:value={pgInputEmail}
+							/>
+						</div>
+
+						<div class="flex flex-col gap-1.5">
+							<span class="text-[0.78rem] font-medium">Role</span>
+							<Select.Root value={pgRole}>
+								<Select.Trigger class="w-full" variant="outlined">
+									{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
+								</Select.Trigger>
+								<Select.Content>
+									{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r}
+										<Select.Item value={r.v} onclick={() => (pgRole = r.v)}>{r.l}</Select.Item>
+									{/each}
 								</Select.Content>
 							</Select.Root>
 						</div>
-					</div>
-					<Button class="mt-5 w-full">Create Account</Button>
-					<p class="mt-3 text-center text-sm text-foreground-muted">
-						Already have an account? <a
-							href="/themes/studio"
-							class="text-primary underline-offset-4 hover:underline">Sign in</a
-						>
-					</p>
-				</section>
 
-				<!-- Card: Typography -->
-				<section
-					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
-				>
-					<div class="flex items-start justify-between gap-3">
+						<div class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border">
+							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+								<div class="flex items-center gap-2">
+									<Bell size={14} class="text-foreground-muted" />
+									<span class="text-[0.86rem]">Push notifications</span>
+								</div>
+								<Switch bind:switched={pgNotifications} aria-label="Toggle notifications" />
+							</div>
+							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+								<div class="flex items-center gap-2">
+									<FileText size={14} class="text-foreground-muted" />
+									<span class="text-[0.86rem]">Weekly email digest</span>
+								</div>
+								<Switch bind:switched={pgEmailDigest} aria-label="Toggle email digest" />
+							</div>
+							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+								<div class="flex items-center gap-2">
+									<Settings size={14} class="text-foreground-muted" />
+									<span class="text-[0.86rem]">Two-factor auth</span>
+								</div>
+								<Switch bind:switched={pgTwoFactor} aria-label="Toggle two-factor" />
+							</div>
+						</div>
+
+						<Checkbox
+							bind:checked={pgAcceptTerms}
+							label="I agree to the terms of service"
+							description="You can revoke access at any time from the settings page."
+						/>
+
+						<div class="flex items-center justify-end gap-2">
+							<Button variant="ghost" size="sm">Cancel</Button>
+							<Button size="sm">
+								<Pencil size={13} />
+								Save changes
+							</Button>
+						</div>
+					</section>
+
+					<!-- ─── Buttons + Badges showcase ─── -->
+					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 						<div>
-							<Badge variant="secondary" class="mb-3">Typography</Badge>
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Variants</p>
 							<p
-								class="text-2xl font-bold leading-tight tracking-tight text-foreground"
+								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
 								style="font-family: var(--font-header);"
 							>
-								The quick brown fox
+								Buttons & badges
 							</p>
 						</div>
-					</div>
-					<p class="mt-3 text-sm leading-relaxed text-foreground">
-						Build interfaces people love. Silk UI gives your team a shared language — from colors
-						and spacing to motion and typography.
-					</p>
-					<p class="mt-3 text-sm text-foreground-muted">
-						Supporting body text in a muted tone, used for captions, descriptions, and secondary
-						information throughout the interface.
-					</p>
-					<div class="mt-4 flex flex-wrap items-center gap-2">
-						<Badge>Primary</Badge>
-						<Badge variant="secondary">Secondary</Badge>
-						<Badge variant="outlined">Outlined</Badge>
-						<Badge variant="flat">Flat</Badge>
-					</div>
-					<div class="mt-4 space-y-1 border-t border-border pt-4">
-						{#each ['Geist · sans-serif', 'Inter · system', 'Fraunces · serif'] as sample}
-							<p class="text-sm text-foreground-muted">{sample}</p>
-						{/each}
-					</div>
-				</section>
 
-				<!-- Card: Stats -->
-				<section
-					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
-				>
-					<div class="flex items-center justify-between gap-3">
-						<p
-							class="text-lg font-semibold tracking-tight text-foreground"
-							style="font-family: var(--font-header);"
-						>
-							Monthly Overview
-						</p>
-						<Badge variant="secondary">Oct 2024</Badge>
-					</div>
-					<div class="mt-5 grid grid-cols-2 gap-3">
-						{#each [['Revenue', '$48,200', '+12%'], ['Customers', '1,840', '+8%'], ['Churn Rate', '1.2%', '−0.4%'], ['MRR Growth', '18%', '+3%']] as [label, value, delta]}
-							<div class="rounded-[var(--radius-md)] bg-secondary/40 p-3">
-								<p class="text-sm text-foreground-muted">{label}</p>
-								<p
-									class="mt-1 text-xl font-semibold tracking-tight text-foreground"
-									style="font-family: var(--font-header);"
-								>
-									{value}
-								</p>
-								<p class="mt-0.5 text-sm text-primary">{delta}</p>
-							</div>
-						{/each}
-					</div>
-					<div class="mt-4 space-y-2.5">
-						{#each [['Q1 Target', '82%'], ['Q2 Target', '67%'], ['Q3 Target', '91%']] as [label, pct]}
-							<div>
-								<div class="mb-1.5 flex items-center justify-between text-sm">
-									<span class="text-foreground-muted">{label}</span>
-									<span class="font-medium text-foreground">{pct}</span>
-								</div>
-								<div class="h-1.5 overflow-hidden rounded-full bg-secondary/50">
-									<div
-										class="h-full rounded-full bg-primary transition-all"
-										style="width:{pct};"
-									></div>
-								</div>
-							</div>
-						{/each}
-					</div>
-				</section>
+						<div class="flex flex-wrap items-center gap-2">
+							<Button>Primary</Button>
+							<Button variant="secondary">Secondary</Button>
+							<Button variant="outlined">Outlined</Button>
+							<Button variant="ghost">Ghost</Button>
+							<Button variant="flat">Flat</Button>
+							<Button variant="destructive">Destructive</Button>
+						</div>
+						<div class="flex flex-wrap items-center gap-2">
+							<Button variant="success">Success</Button>
+							<Button variant="warning">Warning</Button>
+							<Button variant="error">Error</Button>
+							<Button disabled>Disabled</Button>
+							<Button size="sm">Small</Button>
+							<Button size="lg">Large</Button>
+						</div>
 
-				<!-- Card: Buttons (full width) -->
-				<section
-					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)] xl:col-span-3"
-				>
-					<p class="mb-4 text-sm font-medium text-foreground-muted">Button variants</p>
-					<div class="flex flex-wrap items-center gap-3">
-						<Button>Primary</Button>
-						<Button variant="success">Success</Button>
-						<Button variant="warning">Warning</Button>
-						<Button variant="error">Error</Button>
-						<Button variant="destructive">Destructive</Button>
-						<Button variant="secondary">Secondary</Button>
-						<Button variant="outlined">Outlined</Button>
-						<Button variant="ghost">Ghost</Button>
-						<Button variant="flat">Flat</Button>
-						<div class="h-5 w-px bg-border/60"></div>
-						<Button class="rounded-full">Pill</Button>
-						<Button variant="outlined" class="rounded-full border-border">Pill outlined</Button>
-						<div class="h-5 w-px bg-border/60"></div>
-						<Button disabled>Disabled</Button>
-					</div>
-					<p class="mb-4 mt-6 text-sm font-medium text-foreground-muted">Input variants</p>
-					<div class="grid gap-3 sm:grid-cols-3">
-						<Input placeholder="Default input" />
-						<Input placeholder="Outlined input" variant="outlined" />
-						<Input placeholder="Secondary input" variant="secondary" />
-					</div>
-					<p class="mb-4 mt-6 text-sm font-medium text-foreground-muted">Status colors</p>
-					<div class="grid gap-3 sm:grid-cols-5">
-						{#each [['Info', 'var(--color-info)'], ['Success', 'var(--color-success)'], ['Warning', 'var(--color-warning)'], ['Error', 'var(--color-error)'], ['Destructive', 'var(--color-destructive)']] as [label, color]}
-							<div class="rounded-[var(--radius-md)] border border-border bg-background p-3">
-								<div class="flex items-center gap-2">
-									<span class="size-3 rounded-full" style={`background:${color};`}></span>
-									<p class="text-sm font-medium text-foreground">{label}</p>
-								</div>
-								<p class="mt-2 font-mono text-[11px] text-foreground-muted">{color}</p>
-							</div>
-						{/each}
-					</div>
-				</section>
+						<div class="flex flex-wrap items-center gap-1.5">
+							<Badge>Primary</Badge>
+							<Badge variant="secondary">Secondary</Badge>
+							<Badge variant="outlined">Outlined</Badge>
+							<Badge variant="flat">Flat</Badge>
+							<Badge variant="ghost">Ghost</Badge>
+							<Badge variant="destructive">Destructive</Badge>
+							<Badge variant="alternate">Alternate</Badge>
+						</div>
+					</section>
 
-				<!-- Card: Notifications -->
-				<section
-					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
-				>
-					<div class="flex items-center justify-between gap-3">
-						<p
-							class="text-lg font-semibold tracking-tight text-foreground"
-							style="font-family: var(--font-header);"
-						>
-							Notifications
-						</p>
-						<Badge variant="secondary">3 new</Badge>
-					</div>
-					<div class="mt-4 space-y-1">
-						{#each [{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'Just now', dot: 'var(--color-success)' }, { title: 'New team member', desc: 'Maya Chen joined the workspace', time: '4m ago', dot: 'var(--color-info)' }, { title: 'Billing warning', desc: 'Payment method expires in 2 days', time: '1h ago', dot: 'var(--color-warning)' }, { title: 'Theme publish failed', desc: 'Slug already exists in the catalog', time: 'Yesterday', dot: 'var(--color-destructive)' }] as item}
-							<div
-								class="flex items-start gap-3 rounded-[var(--radius-md)] px-3 py-2.5 transition-colors hover:bg-secondary/30"
+					<!-- ─── Alerts ─── -->
+					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+						<div>
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Feedback</p>
+							<p
+								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								style="font-family: var(--font-header);"
 							>
-								<div
-									class="mt-1.5 size-2 shrink-0 rounded-full"
-									style={`background:${item.dot};`}
-								></div>
-								<div class="min-w-0 flex-1">
-									<p class="truncate text-sm font-medium text-foreground">{item.title}</p>
-									<p class="mt-0.5 truncate text-sm text-foreground-muted">{item.desc}</p>
-								</div>
-								<p class="shrink-0 text-sm text-foreground-muted">{item.time}</p>
-							</div>
-						{/each}
-					</div>
-				</section>
+								Alerts
+							</p>
+						</div>
+						<div class="grid grid-cols-2 gap-2.5 max-md:grid-cols-1">
+							<Alert.Root variant="info">
+								<Alert.Title>Heads up</Alert.Title>
+								<Alert.Description>A new release just rolled out to staging.</Alert.Description>
+							</Alert.Root>
+							<Alert.Root variant="success">
+								<Alert.Title>Saved</Alert.Title>
+								<Alert.Description>Your changes are in good shape.</Alert.Description>
+							</Alert.Root>
+							<Alert.Root variant="warning">
+								<Alert.Title>Almost out of credit</Alert.Title>
+								<Alert.Description>Add a card before usage caps out.</Alert.Description>
+							</Alert.Root>
+							<Alert.Root variant="error">
+								<Alert.Title>Build failed</Alert.Title>
+								<Alert.Description>Type-check returned 4 errors.</Alert.Description>
+							</Alert.Root>
+						</div>
+					</section>
 
-				<!-- Card: Settings form -->
-				<section
-					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
-				>
-					<p
-						class="text-lg font-semibold tracking-tight text-foreground"
-						style="font-family: var(--font-header);"
-					>
-						Workspace settings
-					</p>
-					<div class="mt-5 space-y-5">
-						<Input label="Workspace name" placeholder="Acme Inc." variant="outlined" />
-						<div class="space-y-3">
-							{#each [{ label: 'Email notifications', desc: 'Receive updates about your account' }, { label: 'Two-factor auth', desc: 'Add an extra layer of security' }, { label: 'Public profile', desc: 'Let others find your workspace' }] as item}
-								<div
-									class="flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-border bg-background/60 px-4 py-3"
-								>
-									<div>
-										<p class="text-sm font-medium text-foreground">{item.label}</p>
-										<p class="text-sm text-foreground-muted">{item.desc}</p>
+					<!-- ─── Progress + Skeleton ─── -->
+					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+						<div>
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Progress</p>
+							<p
+								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								style="font-family: var(--font-header);"
+							>
+								Storage usage
+							</p>
+						</div>
+
+						<div class="flex flex-col gap-2.5">
+							{#each [{ label: 'Documents', pct: pgProgress }, { label: 'Images', pct: 38 }, { label: 'Builds', pct: 12 }] as bar}
+								<div>
+									<div class="mb-1 flex items-center justify-between text-[0.78rem]">
+										<span class="text-foreground-muted">{bar.label}</span>
+										<span class="font-medium">{bar.pct}%</span>
 									</div>
-									<Switch />
+									<div class="h-1.5 overflow-hidden rounded-full bg-secondary">
+										<div
+											class="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
+											style="width:{bar.pct}%;"
+										></div>
+									</div>
 								</div>
 							{/each}
 						</div>
-						<Button variant="outlined" class="w-full">Save changes</Button>
+
+						<div class="flex items-center gap-2">
+							<Button
+								size="sm"
+								variant="outlined"
+								onclick={() => (pgProgress = Math.max(0, pgProgress - 8))}>−</Button
+							>
+							<Button
+								size="sm"
+								variant="outlined"
+								onclick={() => (pgProgress = Math.min(100, pgProgress + 8))}>+</Button
+							>
+							<span class="ml-2 text-[0.78rem] text-foreground-muted">Adjust documents</span>
+						</div>
+
+						<div class="flex flex-col gap-2 pt-1">
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Skeleton</p>
+							<Skeleton class="h-3 w-full" />
+							<Skeleton class="h-3 w-[80%]" />
+							<Skeleton class="h-3 w-[60%]" />
+						</div>
+					</section>
+
+					<!-- ─── Notifications ─── -->
+					<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
+						<div class="flex items-center justify-between">
+							<div>
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Activity</p>
+								<p
+									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									style="font-family: var(--font-header);"
+								>
+									Notifications
+								</p>
+							</div>
+							<Badge variant="ghost" class="px-1.5 text-[0.66rem]">3 new</Badge>
+						</div>
+						<div class="flex flex-col">
+							{#each [{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'now', dot: 'var(--color-success)' }, { title: 'New team member', desc: 'Maya joined the workspace', time: '4m ago', dot: 'var(--color-info)' }, { title: 'Card expires soon', desc: 'Update your payment method', time: '1h ago', dot: 'var(--color-warning)' }, { title: 'Build failed', desc: 'Type-check returned 4 errors', time: 'yesterday', dot: 'var(--color-destructive)' }] as item}
+								<div
+									class="flex items-start gap-2.5 rounded-md px-1.5 py-2 transition-colors hover:bg-secondary/40"
+								>
+									<span
+										class="mt-1.5 size-1.5 shrink-0 rounded-full"
+										style={`background:${item.dot};`}
+									></span>
+									<div class="min-w-0 flex-1">
+										<p class="m-0 truncate text-[0.84rem] font-medium">{item.title}</p>
+										<p class="m-0 mt-0.5 truncate text-[0.76rem] text-foreground-muted">
+											{item.desc}
+										</p>
+									</div>
+									<span class="shrink-0 text-[0.72rem] text-foreground-muted">{item.time}</span>
+								</div>
+							{/each}
+						</div>
+					</section>
+
+					<!-- ─── Command teaser + Tooltip ─── -->
+					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+						<div>
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Command</p>
+							<p
+								class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+								style="font-family: var(--font-header);"
+							>
+								Quick actions
+							</p>
+						</div>
+
+						<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border">
+							<div class="flex items-center gap-2 border-b border-border px-3 py-2">
+								<Search size={14} class="text-foreground-muted" />
+								<span class="flex-1 text-[0.84rem] text-foreground-muted">Type a command…</span>
+								<kbd
+									class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted"
+									>⌘K</kbd
+								>
+							</div>
+							<div class="flex flex-col p-1.5">
+								{#each [{ icon: Plus, label: 'Create project' }, { icon: Users, label: 'Invite member' }, { icon: CreditCard, label: 'Upgrade plan' }, { icon: Settings, label: 'Open settings' }] as item}
+									<button
+										class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[0.84rem] transition-colors hover:bg-secondary/60"
+									>
+										<item.icon size={13} class="text-foreground-muted" />
+										<span>{item.label}</span>
+										<span class="ml-auto text-[0.7rem] text-foreground-muted">↵</span>
+									</button>
+								{/each}
+							</div>
+						</div>
+
+						<div class="flex items-center gap-2">
+							<Tooltip.Root>
+								<Tooltip.Trigger>
+									<Button variant="outlined" size="sm" class="h-8 gap-1.5 text-[0.78rem]">
+										<Info size={12} />
+										<span>Hover me</span>
+									</Button>
+								</Tooltip.Trigger>
+								<Tooltip.Content>This is a Silk tooltip.</Tooltip.Content>
+							</Tooltip.Root>
+							<span class="text-[0.76rem] text-foreground-muted"
+								>Tooltip uses the same motion preset</span
+							>
+						</div>
+					</section>
+
+					<!-- ─── Typography preview ─── -->
+					<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
+						<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Typography</p>
+						<h3
+							class="m-0 text-[2rem] font-medium leading-[1.05] tracking-tight"
+							style="font-family: var(--font-header);"
+						>
+							The quick brown fox jumps over the lazy dog.
+						</h3>
+						<p class="m-0 text-[0.95rem] leading-relaxed text-foreground">
+							Body text — Silk applies the body font here. Switch fonts in the inspector to see them
+							in action.
+							<a href="/docs/introduction" class="text-primary underline-offset-2 hover:underline"
+								>Inline links</a
+							>
+							respect the primary token.
+						</p>
+						<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">
+							Muted secondary text — used for descriptions and helper copy.
+						</p>
+						<p class="m-0 font-mono text-[0.82rem] text-foreground-muted">
+							const tokens = $derived(themeToCss(draft));
+						</p>
+					</section>
+					{:else if screenTab === 'settings'}
+						<!-- ─── Settings: General ─── -->
+						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+							<div>
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">General</p>
+								<p
+									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									style="font-family: var(--font-header);"
+								>
+									Profile
+								</p>
+							</div>
+							<div class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+								<Input
+									label="Display name"
+									variant="outlined"
+									bind:value={pgInputName}
+								/>
+								<Input
+									label="Email"
+									type="email"
+									variant="outlined"
+									bind:value={pgInputEmail}
+								/>
+							</div>
+							<div class="flex flex-col gap-1.5">
+								<span class="text-[0.78rem] font-medium">Default role</span>
+								<Select.Root value={pgRole}>
+									<Select.Trigger class="w-full" variant="outlined">
+										{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
+									</Select.Trigger>
+									<Select.Content>
+										{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r}
+											<Select.Item value={r.v} onclick={() => (pgRole = r.v)}
+												>{r.l}</Select.Item
+											>
+										{/each}
+									</Select.Content>
+								</Select.Root>
+							</div>
+						</section>
+
+						<!-- ─── Settings: Preferences ─── -->
+						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+							<div>
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Preferences</p>
+								<p
+									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									style="font-family: var(--font-header);"
+								>
+									Notifications & security
+								</p>
+							</div>
+							<div
+								class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
+							>
+								<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+									<div class="flex items-center gap-2">
+										<Bell size={14} class="text-foreground-muted" />
+										<div class="flex flex-col">
+											<span class="text-[0.86rem]">Push notifications</span>
+											<span class="text-[0.72rem] text-foreground-muted"
+												>Get notified about mentions and replies.</span
+											>
+										</div>
+									</div>
+									<Switch bind:switched={pgNotifications} aria-label="Toggle notifications" />
+								</div>
+								<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+									<div class="flex items-center gap-2">
+										<FileText size={14} class="text-foreground-muted" />
+										<div class="flex flex-col">
+											<span class="text-[0.86rem]">Weekly email digest</span>
+											<span class="text-[0.72rem] text-foreground-muted"
+												>A Monday summary of activity in your workspace.</span
+											>
+										</div>
+									</div>
+									<Switch bind:switched={pgEmailDigest} aria-label="Toggle email digest" />
+								</div>
+								<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+									<div class="flex items-center gap-2">
+										<Settings size={14} class="text-foreground-muted" />
+										<div class="flex flex-col">
+											<span class="text-[0.86rem]">Two-factor auth</span>
+											<span class="text-[0.72rem] text-foreground-muted"
+												>Add an extra layer of sign-in security.</span
+											>
+										</div>
+									</div>
+									<Switch bind:switched={pgTwoFactor} aria-label="Toggle two-factor" />
+								</div>
+							</div>
+							<Checkbox
+								bind:checked={pgAcceptTerms}
+								label="I agree to the terms of service"
+								description="You can revoke access at any time from the settings page."
+							/>
+							<div class="flex items-center justify-end gap-2">
+								<Button variant="ghost" size="sm">Cancel</Button>
+								<Button size="sm">
+									<Pencil size={13} />
+									Save changes
+								</Button>
+							</div>
+						</section>
+
+						<!-- ─── Settings: Danger zone ─── -->
+						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+							<div>
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Danger zone</p>
+								<p
+									class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+									style="font-family: var(--font-header);"
+								>
+									Workspace lifecycle
+								</p>
+							</div>
+							<Alert.Root variant="warning">
+								<Alert.Title>Archive workspace</Alert.Title>
+								<Alert.Description>
+									Members lose access until you unarchive. You can do this at any time.
+								</Alert.Description>
+							</Alert.Root>
+							<Alert.Root variant="error">
+								<Alert.Title>Delete workspace</Alert.Title>
+								<Alert.Description>
+									Permanent — your projects, comments, and data will be removed.
+								</Alert.Description>
+							</Alert.Root>
+							<div class="flex items-center justify-end gap-2">
+								<Button variant="outlined" size="sm">Archive</Button>
+								<Button variant="destructive" size="sm">Delete workspace</Button>
+							</div>
+						</section>
+					{:else if screenTab === 'mail'}
+						<!-- ─── Mail: Inbox list ─── -->
+						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+							<div class="flex items-center justify-between">
+								<div>
+									<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Inbox</p>
+									<p
+										class="m-0 mt-0.5 text-[1.05rem] font-medium tracking-tight"
+										style="font-family: var(--font-header);"
+									>
+										{mailMessages.filter((m) => m.unread).length} unread
+									</p>
+								</div>
+								<Badge variant="outlined" class="text-[0.7rem]">5 messages</Badge>
+							</div>
+							<div
+								class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
+							>
+								{#each mailMessages as msg}
+									{@const active = msg.id === selectedMailId}
+									<button
+										type="button"
+										onclick={() => (selectedMailId = msg.id)}
+										class={`flex items-start gap-3 px-3 py-3 text-left transition-colors ${active ? 'bg-secondary/60' : 'hover:bg-secondary/40'}`}
+									>
+										<span
+											class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] font-semibold text-foreground"
+											>{msg.initials}</span
+										>
+										<div class="min-w-0 flex-1">
+											<div class="flex items-center justify-between gap-2">
+												<span class="truncate text-[0.84rem] font-medium">{msg.sender}</span>
+												<span class="shrink-0 text-[0.7rem] text-foreground-muted"
+													>{msg.time}</span
+												>
+											</div>
+											<p class="m-0 mt-0.5 truncate text-[0.8rem]">
+												{msg.subject}
+											</p>
+											<p class="m-0 mt-0.5 truncate text-[0.74rem] text-foreground-muted">
+												{msg.preview}
+											</p>
+										</div>
+										{#if msg.unread}
+											<span
+												class="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary"
+												aria-label="Unread"
+											></span>
+										{/if}
+									</button>
+								{/each}
+							</div>
+						</section>
+
+						<!-- ─── Mail: Open message ─── -->
+						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+							<div class="flex items-start justify-between gap-3">
+								<div class="flex items-center gap-3">
+									<span
+										class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] font-semibold text-primary"
+										>{selectedMail.initials}</span
+									>
+									<div>
+										<p class="m-0 text-[0.92rem] font-medium">{selectedMail.sender}</p>
+										<p class="m-0 mt-0.5 text-[0.74rem] text-foreground-muted">
+											to me · {selectedMail.time}
+										</p>
+									</div>
+								</div>
+								<div class="flex items-center gap-1.5">
+									<span
+										class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[0.68rem] text-foreground-muted"
+									>
+										<span
+											class="size-1.5 rounded-full"
+											style={`background:${tagToTone[selectedMail.tag] ?? 'var(--color-foreground-muted)'};`}
+										></span>
+										{selectedMail.tag}
+									</span>
+								</div>
+							</div>
+							<h3
+								class="m-0 text-[1.2rem] font-medium leading-tight tracking-tight"
+								style="font-family: var(--font-header);"
+							>
+								{selectedMail.subject}
+							</h3>
+							<p class="m-0 text-[0.92rem] leading-relaxed text-foreground">
+								{selectedMail.preview}
+							</p>
+							<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">
+								Reply if you have any questions. Otherwise this thread will close automatically in 7
+								days.
+							</p>
+							<div class="flex flex-wrap items-center gap-2">
+								<Button size="sm">
+									<Send size={13} />
+									Reply
+								</Button>
+								<Button variant="outlined" size="sm">Forward</Button>
+								<Button variant="ghost" size="sm">Mark unread</Button>
+								<Button variant="ghost" size="sm" class="text-[var(--color-destructive)]">
+									Delete
+								</Button>
+							</div>
+						</section>
+					{/if}
+				</div>
+			</div>
+		</div>
+		</main>
+
+		<!-- ───── INSPECTOR ───── -->
+		<aside
+			class="flex w-[20rem] shrink-0 flex-col overflow-hidden border-l border-border bg-background max-lg:w-full max-lg:border-l-0 max-lg:border-t"
+		>
+			<Tabs.Root bind:value={inspectorTab} class="flex h-full flex-col">
+				<div class="flex justify-center border-b border-border p-2.5">
+					<Tabs.List class="grid w-full grid-cols-4">
+						{#each tabs as t}
+							<Tabs.Trigger value={t.id} class="text-[0.76rem]">
+								{t.label}
+							</Tabs.Trigger>
+						{/each}
+					</Tabs.List>
+				</div>
+
+				<div class="min-h-0 flex-1 overflow-y-auto">
+					<!-- COLORS TAB -->
+					<Tabs.Content value="colors" class="flex flex-col gap-4 p-3.5">
+						{#snippet colorRow(label: string, value: string, opts: ColorOption[], onChange: (v: string) => void)}
+							<div class="flex items-center justify-between gap-2">
+								<span class="text-[0.74rem] text-foreground-muted">{label}</span>
+								<ColorPicker
+									class="w-[170px]"
+									value={value}
+									options={opts}
+									onValueChange={onChange}
+								/>
+							</div>
+						{/snippet}
+
+						<section class="flex flex-col gap-2.5">
+							<div class="flex items-center justify-between">
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+									Light mode
+								</p>
+								<span class="text-[0.65rem] text-foreground-muted/70">6 tokens</span>
+							</div>
+							{@render colorRow('Background', lightBasePalette.background, lightBackgroundOptions, (v) => updateBasePalette('light', 'background', v))}
+							{@render colorRow('Surface', lightBasePalette.card, lightSurfaceOptions, (v) => updateBasePalette('light', 'card', v))}
+							{@render colorRow('Secondary', lightBasePalette.secondary, lightSecondaryOptions, (v) => updateBasePalette('light', 'secondary', v))}
+							{@render colorRow('Text', lightBasePalette.text, lightTextOptions, (v) => updateBasePalette('light', 'text', v))}
+							{@render colorRow('Primary', lightBasePalette.primary, lightPrimaryOptions, (v) => updatePrimaryColor('light', v))}
+							{@render colorRow('Border', lightBasePalette.border, lightBorderOptions, (v) => updateBasePalette('light', 'border', v))}
+						</section>
+
+						<div class="border-t border-border"></div>
+
+						<section class="flex flex-col gap-2.5">
+							<div class="flex items-center justify-between">
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+									Dark mode
+								</p>
+								<span class="text-[0.65rem] text-foreground-muted/70">6 tokens</span>
+							</div>
+							{@render colorRow('Background', darkBasePalette.background, darkBackgroundOptions, (v) => updateBasePalette('dark', 'background', v))}
+							{@render colorRow('Surface', darkBasePalette.card, darkSurfaceOptions, (v) => updateBasePalette('dark', 'card', v))}
+							{@render colorRow('Secondary', darkBasePalette.secondary, darkSecondaryOptions, (v) => updateBasePalette('dark', 'secondary', v))}
+							{@render colorRow('Text', darkBasePalette.text, darkTextOptions, (v) => updateBasePalette('dark', 'text', v))}
+							{@render colorRow('Primary', darkBasePalette.primary, darkPrimaryOptions, (v) => updatePrimaryColor('dark', v))}
+							{@render colorRow('Border', darkBasePalette.border, darkBorderOptions, (v) => updateBasePalette('dark', 'border', v))}
+						</section>
+
+						<div class="border-t border-border"></div>
+
+						<Button
+							variant="outlined"
+							size="sm"
+							class="h-8 gap-1.5 text-[0.78rem]"
+							onclick={openAdvancedColors}
+						>
+							<Sliders size={13} />
+							All color options
+						</Button>
+					</Tabs.Content>
+
+					<!-- TYPE TAB -->
+					<Tabs.Content value="type" class="flex flex-col gap-4 p-3.5">
+						<section class="flex flex-col gap-2">
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+								Header font
+							</p>
+							<Select.Root value={headerFontSelection}>
+								<Select.Trigger class="h-9 w-full" variant="outlined">
+									{headerFontSelection}
+								</Select.Trigger>
+								<Select.Content class="max-h-72 overflow-y-auto">
+									{#each fontOptions as font}
+										<Select.Item
+											value={font.label}
+											onclick={() => updateHeaderFont(font.label)}
+										>
+											<span style={`font-family:${font.value};`} class="text-left">
+												{font.label}
+											</span>
+										</Select.Item>
+									{/each}
+								</Select.Content>
+							</Select.Root>
+						</section>
+
+						<section class="flex flex-col gap-2">
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+								Body font
+							</p>
+							<Select.Root value={bodyFontSelection}>
+								<Select.Trigger class="h-9 w-full" variant="outlined">
+									{bodyFontSelection}
+								</Select.Trigger>
+								<Select.Content class="max-h-72 overflow-y-auto">
+									{#each fontOptions as font}
+										<Select.Item
+											value={font.label}
+											onclick={() => updateBodyFont(font.label)}
+										>
+											<span style={`font-family:${font.value};`} class="text-left">
+												{font.label}
+											</span>
+										</Select.Item>
+									{/each}
+								</Select.Content>
+							</Select.Root>
+						</section>
+
+						<div class="border-t border-border"></div>
+
+						<section class="flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3">
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+								Preview
+							</p>
+							<p class="m-0 text-[1.4rem] font-medium leading-tight tracking-tight" style="font-family: var(--font-header);">
+								The quick brown fox jumps.
+							</p>
+							<p class="m-0 text-[0.86rem] leading-[1.55] text-foreground-muted">
+								Body text in {bodyFontSelection}. A calmer base that adapts to your product's tone.
+							</p>
+							<p class="m-0 font-mono text-[0.72rem] text-foreground-muted">
+								{editorTheme.fontMono.split(',')[0].replaceAll('"', '')} · monospace
+							</p>
+						</section>
+					</Tabs.Content>
+
+					<!-- SHAPE TAB -->
+					<Tabs.Content value="shape" class="flex flex-col gap-4 p-3.5">
+						<section class="flex flex-col gap-2">
+							<div class="flex items-baseline justify-between">
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Radius</p>
+								<span
+									class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground"
+								>
+									{Number.parseFloat(editorTheme.radiusBase).toFixed(2)}rem
+								</span>
+							</div>
+							<div class="grid grid-cols-4 gap-1.5">
+								{#each radiusOptions as opt}
+									<button
+										type="button"
+										onclick={() => updateRadius(opt.value)}
+										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.68rem] transition-colors ${editorTheme.radiusBase === opt.value ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
+									>
+										<span
+											class="block size-6 border border-current"
+											style={`border-radius:${opt.value};`}
+											aria-hidden="true"
+										></span>
+										<span>{opt.label}</span>
+									</button>
+								{/each}
+							</div>
+							<input
+								type="range"
+								min="0.14"
+								max="1.2"
+								step="0.01"
+								value={Number.parseFloat(editorTheme.radiusBase) || 0.45}
+								oninput={(e) =>
+									updateRadius(
+										`${Number.parseFloat((e.currentTarget as HTMLInputElement).value).toFixed(2)}rem`
+									)}
+								class="silk-range mt-1"
+							/>
+							<span class="text-[0.66rem] text-foreground-muted">
+								Drag to fine-tune between presets.
+							</span>
+						</section>
+
+						<div class="border-t border-border"></div>
+
+						<section class="flex flex-col gap-2">
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">Motion preset</p>
+							<div class="grid grid-cols-3 gap-1.5">
+								{#each transitionPresets as preset}
+									{@const active = editorTheme.durationPreset === preset.slug}
+									{@const speedDots =
+										preset.slug === 'none' || preset.slug === 'instant'
+											? 4
+											: preset.slug === 'swift' || preset.slug === 'snappy'
+												? 3
+											: preset.slug === 'crisp' || preset.slug === 'default'
+												? 2
+												: 1}
+									<button
+										type="button"
+										onclick={() => updateDurationPreset(preset.slug)}
+										title={preset.description ?? preset.name}
+										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.72rem] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
+									>
+										<span class="flex items-center gap-0.5" aria-hidden="true">
+											{#each Array(4) as _, i}
+												<span
+													class={`size-1 rounded-full ${i < speedDots ? (active ? 'bg-primary' : 'bg-foreground-muted') : 'bg-border'}`}
+												></span>
+											{/each}
+										</span>
+										<span class="font-medium {active ? 'text-foreground' : ''}">{preset.name}</span>
+									</button>
+								{/each}
+							</div>
+							{#if activeMotionDescription}
+								<p class="m-0 text-[0.72rem] text-foreground-muted">{activeMotionDescription}</p>
+							{/if}
+						</section>
+
+						<div class="border-t border-border"></div>
+
+						<section class="flex flex-col gap-2">
+							<div class="flex items-baseline justify-between">
+								<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+									Transition preset
+								</p>
+								<span class="text-[0.65rem] text-foreground-muted/70">
+									{activeTransitionShape?.name ?? 'Custom'}
+								</span>
+							</div>
+							<div class="grid grid-cols-3 gap-1.5">
+								{#each transitionShapes as shape (shape.slug)}
+									{@const active = activeTransitionShape?.slug === shape.slug}
+									<button
+										type="button"
+										onclick={() => applyTransitionShape(shape)}
+										title={shape.description}
+										class={`flex flex-col items-center gap-1.5 rounded-lg border p-2 text-[0.7rem] transition-colors ${active ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-background/40 text-foreground-muted hover:border-border-strong'}`}
+									>
+										<span
+											class={`grid size-6 place-items-center rounded-md ${active ? 'bg-primary/15 text-primary' : 'bg-secondary/60'}`}
+											aria-hidden="true"
+										>
+											<shape.icon size={12} />
+										</span>
+										<span class={`font-medium ${active ? 'text-foreground' : ''}`}>
+											{shape.name}
+										</span>
+									</button>
+								{/each}
+							</div>
+							{#if activeTransitionShape}
+								<p class="m-0 text-[0.72rem] text-foreground-muted">
+									{activeTransitionShape.description}
+								</p>
+							{:else}
+								<p class="m-0 text-[0.72rem] text-foreground-muted">
+									Custom transform — fine-tune with All motion options.
+								</p>
+							{/if}
+							<Button
+								variant="outlined"
+								size="sm"
+								class="h-8 gap-1.5 text-[0.78rem]"
+								onclick={openAdvancedMotion}
+							>
+								<Sliders size={13} />
+								All motion options
+							</Button>
+						</section>
+					</Tabs.Content>
+
+					<!-- PRESETS TAB -->
+					<Tabs.Content value="presets" class="flex flex-col gap-3.5 p-3.5">
+						{#if savedThemes.length > 0}
+							<section class="flex flex-col gap-2">
+								<div class="flex items-center justify-between">
+									<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+										Saved locally
+									</p>
+									<span class="text-[0.65rem] text-foreground-muted/70"
+										>{savedThemes.length}
+										{savedThemes.length === 1 ? 'theme' : 'themes'}</span
+									>
+								</div>
+								<div class="flex flex-col gap-1">
+									{#each savedThemes as preset (preset.id)}
+										<div
+											class={`group relative flex items-center gap-2.5 rounded-lg border p-2 text-left transition-colors ${activeSavedThemeId === preset.id ? 'border-primary bg-primary/8' : 'border-border bg-background/40 hover:border-border-strong'}`}
+										>
+											<button
+												type="button"
+												onclick={() => attemptLoadPreset(preset, preset.id)}
+												class="absolute inset-0"
+												aria-label={`Load ${preset.name}`}
+											></button>
+											<div class="relative flex gap-0.5">
+												<span
+													class="size-5 rounded-md ring-1 ring-border/60"
+													style={`background:${preset.light.background};`}
+												></span>
+												<span
+													class="size-5 rounded-md ring-1 ring-border/60"
+													style={`background:${preset.light.primary};`}
+												></span>
+												<span
+													class="size-5 rounded-md ring-1 ring-border/60"
+													style={`background:${preset.dark.background};`}
+												></span>
+												<span
+													class="size-5 rounded-md ring-1 ring-border/60"
+													style={`background:${preset.dark.primary};`}
+												></span>
+											</div>
+											<div class="relative min-w-0 flex-1">
+												<p class="m-0 truncate text-[0.8rem] font-medium">{preset.name}</p>
+												<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
+													Saved {new Date(preset.savedAt).toLocaleDateString(undefined, {
+														month: 'short',
+														day: 'numeric'
+													})}
+												</p>
+											</div>
+											<button
+												type="button"
+												onclick={(e) => requestDeleteSavedTheme(preset, e)}
+												aria-label={`Remove ${preset.name}`}
+												class="relative grid size-7 place-items-center rounded-md text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
+											>
+												<Trash size={12} />
+											</button>
+										</div>
+									{/each}
+								</div>
+							</section>
+						{/if}
+
+						<section class="flex flex-col gap-2">
+							<p class="m-0 text-[0.78rem] font-medium text-foreground-muted">
+								Catalog
+							</p>
+							<div class="flex flex-col gap-1">
+								{#each themesCatalog as preset}
+									<button
+										type="button"
+										onclick={() => attemptLoadPreset(preset)}
+										class={`group flex items-center gap-2.5 rounded-lg border p-2 text-left transition-colors ${selectedPresetSlug === preset.slug ? 'border-primary bg-primary/8' : 'border-border bg-background/40 hover:border-border-strong'}`}
+									>
+										<div class="flex gap-0.5">
+											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.light.background};`}></span>
+											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.light.primary};`}></span>
+											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.dark.background};`}></span>
+											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.dark.primary};`}></span>
+										</div>
+										<div class="min-w-0 flex-1">
+											<p class="m-0 truncate text-[0.8rem] font-medium">{preset.name}</p>
+											<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
+												{preset.description ?? 'Custom theme preset'}
+											</p>
+										</div>
+										{#if selectedPresetSlug === preset.slug}
+											<Check size={14} class="shrink-0 text-primary" />
+										{/if}
+									</button>
+								{/each}
+							</div>
+						</section>
+					</Tabs.Content>
+				</div>
+			</Tabs.Root>
+		</aside>
+	</div>
+
+	<!-- ─── All colors dialog ─── -->
+	<Dialog.Root bind:open={advancedColorsOpen}>
+		<Dialog.Content
+			class="w-full max-w-[min(42rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+		>
+			<div
+				class="flex shrink-0 items-start justify-between px-5 py-4"
+			>
+				<div class="flex flex-col gap-1">
+					<Dialog.Title>All color tokens</Dialog.Title>
+					<Dialog.Description>
+						Override every palette token individually for light and dark mode.
+					</Dialog.Description>
+				</div>
+				<Dialog.Exit
+					variant="ghost"
+					size="icon"
+					class="size-8 shrink-0"
+					aria-label="Close"
+				>
+					<X size={14} />
+				</Dialog.Exit>
+			</div>
+
+			<Tabs.Root bind:value={advancedColorsMode}>
+				<div class="flex shrink-0 items-center justify-between border-b border-border px-5 py-3">
+					<Tabs.List>
+						<Tabs.Trigger value="light">Light</Tabs.Trigger>
+						<Tabs.Trigger value="dark">Dark</Tabs.Trigger>
+					</Tabs.List>
+					<span class="text-[0.7rem] text-foreground-muted">
+						{paletteGroups.reduce((n, g) => n + g.fields.length, 0)} tokens
+					</span>
+				</div>
+
+				<div class="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+					{#each ['light', 'dark'] as mode}
+						<Tabs.Content value={mode} class="flex flex-col gap-5">
+							{#each paletteGroups as group}
+								<section class="flex flex-col gap-2">
+									<p
+										class="m-0 text-[0.78rem] font-medium text-foreground-muted"
+									>
+										{group.title}
+									</p>
+									<div class="grid grid-cols-2 gap-x-3 gap-y-2 max-sm:grid-cols-1">
+										{#each group.fields as field}
+											<div class="flex items-center justify-between gap-2">
+												<span class="text-[0.74rem] text-foreground">{field.label}</span>
+												<ColorPicker
+													class="w-[160px]"
+													value={editorTheme[mode as 'light' | 'dark'][field.key]}
+													onValueChange={(v) =>
+														updatePaletteField(mode as 'light' | 'dark', field.key, v)}
+												/>
+											</div>
+										{/each}
+									</div>
+								</section>
+							{/each}
+						</Tabs.Content>
+					{/each}
+				</div>
+			</Tabs.Root>
+
+			<div
+				class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
+			>
+				<Dialog.Exit variant="primary" size="sm" class="h-8 text-[0.8rem]">
+					Done
+				</Dialog.Exit>
+			</div>
+		</Dialog.Content>
+	</Dialog.Root>
+
+	<!-- ─── Remove saved theme confirm ─── -->
+	<Dialog.Root
+		bind:open={
+			() => removeSavedTarget !== null,
+			(v) => {
+				if (!v) cancelDeleteSavedTheme();
+			}
+		}
+	>
+		<Dialog.Content
+			class="w-full max-w-[min(24rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+		>
+			<div class="flex shrink-0 items-start justify-between px-5 py-4">
+				<div class="flex flex-col gap-1">
+					<Dialog.Title>Remove from library?</Dialog.Title>
+					<Dialog.Description>
+						<span class="font-medium text-foreground">{removeSavedTarget?.name ?? ''}</span>
+						will be deleted from your local saved themes.
+					</Dialog.Description>
+				</div>
+			</div>
+			<div class="px-5 py-4">
+				<Alert.Root variant="warning">
+					<Alert.Title>This only affects your browser</Alert.Title>
+					<Alert.Description>
+						Saved themes live in localStorage on this device — nothing is synced to the
+						registry.
+					</Alert.Description>
+				</Alert.Root>
+			</div>
+			<div
+				class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
+			>
+				<Dialog.Exit variant="ghost" size="sm" class="h-8 text-[0.8rem]">
+					Cancel
+				</Dialog.Exit>
+				<Button
+					variant="destructive"
+					size="sm"
+					class="h-8 gap-1.5 text-[0.8rem]"
+					onclick={confirmDeleteSavedTheme}
+				>
+					<Trash size={12} />
+					Remove
+				</Button>
+			</div>
+		</Dialog.Content>
+	</Dialog.Root>
+
+	<!-- ─── Save-before-swap alert ─── -->
+	<Dialog.Root bind:open={saveAlertOpen}>
+		<Dialog.Content
+			class="w-full max-w-[min(26rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+		>
+			<div class="flex shrink-0 items-start justify-between px-5 py-4">
+				<div class="flex flex-col gap-1">
+					<Dialog.Title>Save changes first?</Dialog.Title>
+					<Dialog.Description>
+						You have unsaved tweaks to
+						<span class="font-medium text-foreground">{editorName || 'this theme'}</span>.
+						Loading
+						<span class="font-medium text-foreground"
+							>{pendingThemeLoad?.name ?? 'another theme'}</span
+						>
+						will replace them.
+					</Dialog.Description>
+				</div>
+			</div>
+			<div class="px-5 py-4">
+				<Alert.Root variant="warning">
+					<Alert.Title>Unsaved edits will be lost</Alert.Title>
+					<Alert.Description>
+						Save them to your local library to come back to them later.
+					</Alert.Description>
+				</Alert.Root>
+			</div>
+			<div
+				class="flex shrink-0 flex-wrap items-center justify-end gap-2 px-5 py-3"
+			>
+				<Button
+					variant="ghost"
+					size="sm"
+					class="h-8 text-[0.8rem]"
+					onclick={cancelPendingLoad}
+				>
+					Cancel
+				</Button>
+				<Button
+					variant="outlined"
+					size="sm"
+					class="h-8 text-[0.8rem]"
+					onclick={discardAndContinue}
+				>
+					Discard
+				</Button>
+				<Button
+					variant="primary"
+					size="sm"
+					class="h-8 gap-1.5 text-[0.8rem]"
+					onclick={saveAndContinue}
+				>
+					<Save size={13} />
+					Save & continue
+				</Button>
+			</div>
+		</Dialog.Content>
+	</Dialog.Root>
+
+	<!-- ─── All motion dialog ─── -->
+	<Dialog.Root bind:open={advancedMotionOpen}>
+		<Dialog.Content
+			class="w-full max-w-[min(36rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
+		>
+			<div
+				class="flex shrink-0 items-start justify-between px-5 py-4"
+			>
+				<div class="flex flex-col gap-1">
+					<Dialog.Title>All motion tokens</Dialog.Title>
+					<Dialog.Description>
+						Hand-tune every duration and panel offset. Starts from the current preset.
+					</Dialog.Description>
+				</div>
+				<Dialog.Exit
+					variant="ghost"
+					size="icon"
+					class="size-8 shrink-0"
+					aria-label="Close"
+				>
+					<X size={14} />
+				</Dialog.Exit>
+			</div>
+
+			<div class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-4">
+				<section class="flex flex-col gap-2">
+					<p
+						class="m-0 text-[0.78rem] font-medium text-foreground-muted"
+					>
+						Durations
+					</p>
+					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
+						{#each motionDurationFields as field}
+							{@const value = durationToMs(editorTheme.motion[field.key])}
+							<label class="flex flex-col gap-1.5">
+								<div class="flex items-baseline justify-between gap-2">
+									<span class="text-[0.74rem] font-medium text-foreground">{field.label}</span>
+									<span
+										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
+									>
+										{Math.round(value)}ms
+									</span>
+								</div>
+								<input
+									type="range"
+									min="0"
+									max={field.max}
+									step="10"
+									{value}
+									oninput={(e) =>
+										updateMotionDuration(
+											field.key,
+											(e.currentTarget as HTMLInputElement).value
+										)}
+									class="silk-range"
+								/>
+								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
+							</label>
+						{/each}
 					</div>
 				</section>
 
-				<!-- Card: Transaction list -->
-				<section
-					class="rounded-[var(--radius-xl)] border border-border bg-card p-5 shadow-[var(--outline-shadow)]"
-				>
-					<div class="flex items-center justify-between gap-3">
-						<p
-							class="text-lg font-semibold tracking-tight text-foreground"
-							style="font-family: var(--font-header);"
-						>
-							Transactions
-						</p>
-						<button class="text-sm text-primary hover:underline underline-offset-4">View all</button
-						>
-					</div>
-					<div class="mt-4 space-y-px">
-						{#each [{ name: 'Figma', category: 'Design', amount: '−$45.00', date: 'Today' }, { name: 'Vercel', category: 'Infrastructure', amount: '−$20.00', date: 'Yesterday' }, { name: 'Stripe Payout', category: 'Income', amount: '+$4,300.00', date: 'Oct 13' }, { name: 'Linear', category: 'Productivity', amount: '−$18.00', date: 'Oct 11' }, { name: 'AWS', category: 'Infrastructure', amount: '−$214.60', date: 'Oct 1' }] as tx}
-							<div
-								class="flex items-center gap-3 rounded-[var(--radius-md)] px-2 py-2.5 transition-colors hover:bg-secondary/30"
-							>
-								<div
-									class="flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-secondary/50 text-sm font-medium text-foreground"
-								>
-									{tx.name[0]}
+				<section class="flex flex-col gap-2">
+					<p
+						class="m-0 text-[0.78rem] font-medium text-foreground-muted"
+					>
+						Transition
+					</p>
+					<span class="-mt-1 text-[0.7rem] text-foreground-muted">
+						Per-surface transform & blur — shapes how panels enter the screen.
+					</span>
+					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
+						{#each motionNumberFields as field}
+							{@const numericValue = (editorTheme.motion[field.key] ?? 0) as number}
+							{@const display = field.format
+								? field.format(numericValue)
+								: String(numericValue)}
+							<label class="flex flex-col gap-1.5">
+								<div class="flex items-baseline justify-between gap-2">
+									<span class="flex items-center gap-1.5 text-[0.74rem] font-medium text-foreground">
+										{field.label}
+										{#if field.experimental}
+											<span
+												class="rounded-full border border-border bg-secondary/40 px-1.5 py-0.5 text-[0.6rem] font-medium uppercase tracking-wide text-foreground-muted"
+											>
+												Experimental
+											</span>
+										{/if}
+									</span>
+									<span
+										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
+									>
+										{display}{field.unit ?? ''}
+									</span>
 								</div>
-								<div class="min-w-0 flex-1">
-									<p class="truncate text-sm font-medium text-foreground">{tx.name}</p>
-									<p class="text-sm text-foreground-muted">{tx.category}</p>
-								</div>
-								<div class="text-right">
-									<p class="text-sm font-medium text-foreground">{tx.amount}</p>
-									<p class="text-sm text-foreground-muted">{tx.date}</p>
-								</div>
-							</div>
+								<input
+									type="range"
+									min={field.min}
+									max={field.max}
+									step={field.step}
+									value={numericValue}
+									oninput={(e) =>
+										updateMotionNumber(
+											field.key,
+											(e.currentTarget as HTMLInputElement).value
+										)}
+									class="silk-range"
+								/>
+								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
+							</label>
 						{/each}
 					</div>
 				</section>
 			</div>
-		</div>
-	</div>
+
+			<div
+				class="flex shrink-0 items-center justify-between gap-2 px-5 py-3"
+			>
+				<Button
+					variant="ghost"
+					size="sm"
+					class="h-8 text-[0.8rem]"
+					onclick={resetMotionToPreset}
+				>
+					Reset to preset
+				</Button>
+				<Dialog.Exit variant="primary" size="sm" class="h-8 text-[0.8rem]">
+					Done
+				</Dialog.Exit>
+			</div>
+		</Dialog.Content>
+	</Dialog.Root>
 </div>
+
+<style>
+	.studio-shell {
+		font-family: var(--font-sans), sans-serif;
+	}
+
+	.silk-range {
+		appearance: none;
+		width: 100%;
+		height: 4px;
+		background: var(--color-secondary);
+		border-radius: 9999px;
+		outline: none;
+		cursor: pointer;
+		transition: background-color 150ms ease;
+	}
+	.silk-range:hover {
+		background: color-mix(in srgb, var(--color-secondary) 60%, var(--color-border-strong));
+	}
+	.silk-range::-webkit-slider-thumb {
+		appearance: none;
+		width: 14px;
+		height: 14px;
+		background: var(--color-primary);
+		border: 2px solid var(--color-background);
+		border-radius: 9999px;
+		cursor: pointer;
+		box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
+		transition: transform 150ms ease;
+	}
+	.silk-range::-webkit-slider-thumb:hover {
+		transform: scale(1.1);
+	}
+	.silk-range::-moz-range-thumb {
+		width: 14px;
+		height: 14px;
+		background: var(--color-primary);
+		border: 2px solid var(--color-background);
+		border-radius: 9999px;
+		cursor: pointer;
+		box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
+	}
+	.silk-range:focus-visible {
+		box-shadow: 0 0 0 3px var(--color-ring);
+	}
+</style>

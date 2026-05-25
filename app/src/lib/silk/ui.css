@@ -135,7 +135,7 @@
 
 	--button-outlined-bg: var(--color-background);
 	--button-outlined-foreground: var(--color-foreground);
-	--button-outlined-hover-bg: color-mix(in oklch, var(--button-outlined-bg), black 4%);
+	--button-outlined-hover-bg: color-mix(in srgb, var(--button-outlined-bg) 96%, var(--color-foreground));
 	--button-outlined-shadow: 0 1px 2px rgb(16 24 40 / 0.04);
 
 	--button-ghost-bg: transparent;
@@ -190,7 +190,7 @@
 
 	--separator-color: color-mix(in srgb, var(--color-input) 58%, transparent);
 
-	--switch-track-bg: var(--color-muted);
+	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 18%, var(--color-background));
 	--switch-track-active-bg: var(--color-primary);
 	--switch-thumb-bg: #ffffff;
 
@@ -276,7 +276,7 @@
 	--button-error-foreground: #fff4f4;
 	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #ffaaa8);
 	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 90%, white);
-	--button-outlined-hover-bg: color-mix(in oklch, var(--button-outlined-bg), black 6%);
+	--button-outlined-hover-bg: color-mix(in srgb, var(--button-outlined-bg) 92%, var(--color-foreground));
 	--button-outlined-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
 	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
 	--button-alternate-bg: var(--color-foreground);
@@ -291,7 +291,7 @@
 	--floating-menu-item-hover-bg: var(--menu-item-hover-bg);
 	--floating-menu-item-active-bg: color-mix(in srgb, var(--color-primary) 12%, transparent);
 	--switch-thumb-bg: var(--color-foreground-opposite);
-	--switch-track-bg: color-mix(in srgb, var(--color-secondary) 75%, var(--color-border-strong));
+	--switch-track-bg: color-mix(in srgb, var(--color-foreground) 24%, var(--color-background));
 	--field-outlined-shadow:
 		0 1px 2px 0 rgb(0 0 0 / 0.16), inset 0 -1px 0 0 rgb(0 0 0 / 0.16),
 		inset 0 0 0 1px var(--color-border);
