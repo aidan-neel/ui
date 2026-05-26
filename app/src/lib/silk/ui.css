@@ -73,14 +73,14 @@
 	/* Spacing + sizing */
 	--space-control-x: 0.75rem;
 	--space-control-y: 0.5rem;
-	--space-panel: 1rem;
-	--space-panel-lg: 1.25rem;
-	--space-menu-item-x: 0.5rem;
-	--space-menu-item-y: 0.45rem;
+	--space-panel: 0.75rem;
+	--space-panel-lg: 1rem;
+	--space-menu-item-x: 0.45rem;
+	--space-menu-item-y: 0.15rem;
 	--size-control-sm: 1.8rem;
-	--size-control-md: 2.1rem;
-	--size-control-lg: 2.5rem;
-	--size-icon-md: 2.25rem;
+	--size-control-md: 2rem;
+	--size-control-lg: 2.4rem;
+	--size-icon-md: 2rem;
 	--size-switch-track: 2.45rem;
 	--size-switch-thumb: 0.875rem;
 	--switch-track-padding: 0.125rem;
@@ -99,7 +99,7 @@
 	--text-base: 16px;
 
 	/* Component-level tokens */
-	--button-height: calc(var(--size-control-md) + 1px);
+	--button-height: calc(var(--size-control-md));
 	--button-padding-x: calc(var(--space-control-x) + 0.15rem);
 	--button-gap: 0.375rem;
 
@@ -138,7 +138,11 @@
 
 	--button-outlined-bg: var(--color-background);
 	--button-outlined-foreground: var(--color-foreground);
-	--button-outlined-hover-bg: color-mix(in srgb, var(--button-outlined-bg) 96%, var(--color-foreground));
+	--button-outlined-hover-bg: color-mix(
+		in srgb,
+		var(--button-outlined-bg) 96%,
+		var(--color-foreground)
+	);
 	--button-outlined-shadow: 0 1px 2px rgb(16 24 40 / 0.04);
 
 	--button-ghost-bg: transparent;
@@ -161,7 +165,7 @@
 
 	--field-height: var(--size-control-md);
 	--field-padding-x: var(--space-control-x);
-	--field-padding-y: 0.5rem;
+	--field-padding-y: 0rem;
 	--field-focus-border: color-mix(in srgb, var(--color-primary) 28%, var(--color-border-strong));
 	--field-disabled-opacity: 0.55;
 	--field-outlined-shadow:
@@ -279,7 +283,11 @@
 	--button-error-foreground: #fff4f4;
 	--button-error-hover-bg: color-mix(in srgb, var(--color-error) 88%, #ffaaa8);
 	--button-flat-foreground: color-mix(in srgb, var(--color-primary) 90%, white);
-	--button-outlined-hover-bg: color-mix(in srgb, var(--button-outlined-bg) 92%, var(--color-foreground));
+	--button-outlined-hover-bg: color-mix(
+		in srgb,
+		var(--button-outlined-bg) 92%,
+		var(--color-foreground)
+	);
 	--button-outlined-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
 	--button-ghost-hover-bg: color-mix(in srgb, var(--color-foreground) 8%, transparent);
 	--button-alternate-bg: var(--color-foreground);
