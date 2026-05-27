@@ -1,62 +1,75 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
-	import { states, UIState } from '$lib/silk/internals/state.svelte.ts';
+	import { getContext, onMount, onDestroy } from 'svelte';
+	import { states, type UIState } from '$lib/silk/internals/state.svelte.ts';
 	import { cn } from '$lib/silk/utils';
-	import type { HoverCardTriggerProps, HoverCardState } from '.';
+	import type { HoverCardTriggerProps } from '.';
+	import type { PopoverState } from '$lib/silk/components/popover';
 
 	let { class: className, children, href, ...rest }: HoverCardTriggerProps = $props();
-	const key = getContext<string>('key');
-	const uiState = states[key] as UIState<HoverCardState>;
-	let el = $state<HTMLElement>();
 
-	function scheduleOpen() {
-		if (uiState.data.closeTimer) {
-			clearTimeout(uiState.data.closeTimer);
-			uiState.data.closeTimer = undefined;
+	const key = getContext('key') as string;
+	const uiState = states[key] as UIState<PopoverState>;
+	let element = $state<HTMLElement>();
+
+	function clearTimers() {
+		if (uiState.data.hoverTimeout) {
+			clearTimeout(uiState.data.hoverTimeout);
+			uiState.data.hoverTimeout = undefined;
 		}
-		if (uiState.data.openTimer) return;
-		uiState.data.openTimer = window.setTimeout(() => {
+		if (uiState.data.closeTimeout) {
+			clearTimeout(uiState.data.closeTimeout);
+			uiState.data.closeTimeout = undefined;
+		}
+	}
+
+	function open() {
+		clearTimers();
+		const delay = uiState.data.delay ?? 0;
+		uiState.data.hoverTimeout = setTimeout(() => {
 			uiState.data.open = true;
-			uiState.data.openTimer = undefined;
-		}, uiState.data.openDelay);
-	}
-	function scheduleClose() {
-		if (uiState.data.openTimer) {
-			clearTimeout(uiState.data.openTimer);
-			uiState.data.openTimer = undefined;
-		}
-		if (uiState.data.closeTimer) return;
-		uiState.data.closeTimer = window.setTimeout(() => {
-			uiState.data.open = false;
-			uiState.data.closeTimer = undefined;
-		}, uiState.data.closeDelay);
+			uiState.data.hovering = true;
+		}, delay);
 	}
 
-	$effect(() => {
-		if (el) uiState.data.triggerRef = el;
+	function close() {
+		clearTimers();
+		const closeDelay = uiState.data.closeDelay ?? 150;
+		uiState.data.closeTimeout = setTimeout(() => {
+			uiState.data.open = false;
+			uiState.data.hovering = false;
+		}, closeDelay);
+	}
+
+	onMount(() => {
+		uiState.data.buttonRef = element ?? null;
 	});
+
+	onDestroy(clearTimers);
 </script>
 
 {#if href}
 	<a
-		bind:this={el as HTMLAnchorElement}
+		bind:this={element as HTMLAnchorElement}
 		{href}
-		onmouseenter={scheduleOpen}
-		onmouseleave={scheduleClose}
-		onfocus={scheduleOpen}
-		onblur={scheduleClose}
-		class={cn('underline decoration-foreground-muted underline-offset-2 hover:decoration-foreground', className)}
+		onmouseenter={open}
+		onmouseleave={close}
+		onfocus={open}
+		onblur={close}
+		class={cn(
+			'underline decoration-foreground-muted underline-offset-2 hover:decoration-foreground',
+			className
+		)}
 		{...rest}
 	>
 		{@render children?.()}
 	</a>
 {:else}
 	<span
-		bind:this={el}
-		onmouseenter={scheduleOpen}
-		onmouseleave={scheduleClose}
-		onfocus={scheduleOpen}
-		onblur={scheduleClose}
+		bind:this={element}
+		onmouseenter={open}
+		onmouseleave={close}
+		onfocus={open}
+		onblur={close}
 		tabindex="0"
 		class={cn('inline-flex', className)}
 		{...rest}

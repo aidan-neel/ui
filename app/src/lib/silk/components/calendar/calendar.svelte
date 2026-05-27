@@ -2,6 +2,7 @@
 	import { cn } from '$lib/silk/utils';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import { tick } from 'svelte';
 	import type { CalendarProps } from '.';
 
 	let {
@@ -96,6 +97,92 @@
 		value = d;
 		onValueChange?.(d);
 	}
+
+	// ── Keyboard navigation (WAI-ARIA grid pattern) ──────────────────────
+	// One focusable cell at a time per WAI-ARIA roving-tabindex pattern.
+	// Focused date starts at the selected value, else today, else first of view.
+	let focusedDate = $state<Date>(value ?? today);
+	let gridEl = $state<HTMLDivElement | undefined>();
+
+	function dateKey(d: Date): string {
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+	}
+
+	async function moveFocus(delta: number, unit: 'day' | 'week' | 'month' | 'year') {
+		const next = new Date(focusedDate);
+		if (unit === 'day') next.setDate(next.getDate() + delta);
+		else if (unit === 'week') next.setDate(next.getDate() + delta * 7);
+		else if (unit === 'month') next.setMonth(next.getMonth() + delta);
+		else if (unit === 'year') next.setFullYear(next.getFullYear() + delta);
+
+		if (!inRange(next)) return;
+		focusedDate = next;
+		if (next.getMonth() !== viewMonth || next.getFullYear() !== viewYear) {
+			viewMonth = next.getMonth();
+			viewYear = next.getFullYear();
+		}
+		// Focus the cell after Svelte re-renders the grid.
+		await tick();
+		const cell = gridEl?.querySelector<HTMLElement>(
+			`[data-date="${dateKey(focusedDate)}"]`
+		);
+		cell?.focus();
+	}
+
+	async function moveToWeekEdge(side: 'start' | 'end') {
+		const dow = (focusedDate.getDay() - weekStartsOn + 7) % 7;
+		const next = new Date(focusedDate);
+		next.setDate(next.getDate() + (side === 'start' ? -dow : 6 - dow));
+		if (!inRange(next)) return;
+		focusedDate = next;
+		if (next.getMonth() !== viewMonth || next.getFullYear() !== viewYear) {
+			viewMonth = next.getMonth();
+			viewYear = next.getFullYear();
+		}
+		await tick();
+		const cell = gridEl?.querySelector<HTMLElement>(
+			`[data-date="${dateKey(focusedDate)}"]`
+		);
+		cell?.focus();
+	}
+
+	function handleGridKeydown(event: KeyboardEvent) {
+		switch (event.key) {
+			case 'ArrowLeft':
+				event.preventDefault();
+				void moveFocus(-1, 'day');
+				return;
+			case 'ArrowRight':
+				event.preventDefault();
+				void moveFocus(1, 'day');
+				return;
+			case 'ArrowUp':
+				event.preventDefault();
+				void moveFocus(-1, 'week');
+				return;
+			case 'ArrowDown':
+				event.preventDefault();
+				void moveFocus(1, 'week');
+				return;
+			case 'Home':
+				event.preventDefault();
+				void moveToWeekEdge('start');
+				return;
+			case 'End':
+				event.preventDefault();
+				void moveToWeekEdge('end');
+				return;
+			case 'PageUp':
+				event.preventDefault();
+				void moveFocus(event.shiftKey ? -1 : -1, event.shiftKey ? 'year' : 'month');
+				return;
+			case 'PageDown':
+				event.preventDefault();
+				void moveFocus(event.shiftKey ? 1 : 1, event.shiftKey ? 'year' : 'month');
+				return;
+		}
+	}
+
 </script>
 
 <div
@@ -129,19 +216,29 @@
 		{/each}
 	</div>
 
-	<div role="grid" class="grid grid-cols-7 gap-1">
+	<div
+		bind:this={gridEl}
+		role="grid"
+		class="grid grid-cols-7 gap-1"
+		onkeydown={handleGridKeydown}
+	>
 		{#each grid as cell, i (i)}
 			{@const selected = value ? isSameDay(cell.date, value) : false}
 			{@const isToday = isSameDay(cell.date, today)}
 			{@const allowed = inRange(cell.date)}
+			{@const focused = isSameDay(cell.date, focusedDate)}
 			<button
 				type="button"
 				role="gridcell"
+				data-date={dateKey(cell.date)}
 				aria-selected={selected}
 				aria-current={isToday ? 'date' : undefined}
 				disabled={!allowed}
-				tabindex={selected ? 0 : -1}
-				onclick={() => pick(cell.date)}
+				tabindex={focused ? 0 : -1}
+				onclick={() => {
+					pick(cell.date);
+					focusedDate = cell.date;
+				}}
 				class={cn(
 					'inline-flex size-8 items-center justify-center rounded-[var(--radius-md)] text-[0.82rem] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] disabled:cursor-not-allowed disabled:opacity-30',
 					!cell.inMonth && 'text-foreground-muted/50',

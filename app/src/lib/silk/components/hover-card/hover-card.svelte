@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { setContext } from 'svelte';
-	import { useState } from '$lib/silk/internals/state.svelte.ts';
-	import type { HoverCardProps, HoverCardState } from '.';
+	import * as Popover from '$lib/silk/components/popover';
+	import type { HoverCardProps } from '.';
 
 	let {
 		open = $bindable(false),
@@ -9,36 +8,8 @@
 		closeDelay = 150,
 		children
 	}: HoverCardProps = $props();
-
-	const uiState = useState<HoverCardState>({
-		open,
-		triggerRef: null,
-		contentRef: null,
-		openTimer: undefined,
-		closeTimer: undefined,
-		openDelay,
-		closeDelay
-	});
-
-	let synced = $state(open);
-	$effect(() => {
-		if (open !== synced) {
-			synced = open;
-			uiState.data.open = open;
-		}
-	});
-	$effect(() => {
-		if (uiState.data.open !== synced) {
-			synced = uiState.data.open;
-			open = uiState.data.open;
-		}
-	});
-	$effect(() => {
-		uiState.data.openDelay = openDelay;
-		uiState.data.closeDelay = closeDelay;
-	});
-
-	setContext('key', uiState.key);
 </script>
 
-{@render children?.()}
+<Popover.Root bind:open hoverable delay={openDelay} {closeDelay}>
+	{@render children?.()}
+</Popover.Root>

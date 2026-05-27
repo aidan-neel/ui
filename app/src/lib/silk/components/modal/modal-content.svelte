@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { flyAndScale, themedFade } from '$lib/silk/internals/transition';
-	import { clickOutside, cn, getFocusableElements, trapFocus } from '$lib/silk/utils';
+	import { cn } from '$lib/silk/utils';
 	import type { ModalContentProps, ModalState } from '.';
 	import { getContext } from 'svelte';
 	import { states, UIState } from '$lib/silk/internals/state.svelte.ts';
+	import { useOverlay } from '$lib/silk/components/_internal/overlay';
 
 	let {
 		class: className,
@@ -21,8 +22,6 @@
 	let element = $state<HTMLElement>();
 	let portalEl = $state<HTMLDivElement>();
 
-	let cleanup: (() => void) | undefined;
-
 	// Portal the modal to <body> so its z-index escapes ancestor stacking
 	// contexts (e.g. flex items with z-index, transformed parents, etc.).
 	$effect(() => {
@@ -33,19 +32,14 @@
 		};
 	});
 
-	$effect(() => {
-		if (typeof document === 'undefined') return;
-
-		if (uiState.data.open) {
-			cleanup = trapFocus(element as HTMLElement, {
-				initialFocus: getFocusableElements(element as HTMLElement)[0] ?? null
-			});
-			document.body.style.overflow = 'hidden';
-		} else {
-			document.body.style.overflow = '';
-			cleanup?.();
-			cleanup = undefined;
-		}
+	// Shared overlay behavior — focus trap, click-outside, Escape, body lock.
+	useOverlay({
+		isOpen: () => uiState.data.open,
+		panelEl: () => element,
+		onClose: () => {
+			uiState.data.open = false;
+		},
+		allowClickOutside: () => allowClickOutside
 	});
 </script>
 
@@ -66,17 +60,6 @@
 				className,
 				'bg-[var(--color-overlay-bg)] text-[var(--color-panel-foreground)] border border-border rounded-[var(--radius-lg)] shadow-[var(--panel-shadow)] duration-200 transition-all flex flex-col gap-[var(--modal-section-gap,16px)] p-[var(--modal-padding,16px)] fixed top-[47%] left-1/2 z-[120] overflow-y-auto overscroll-contain -translate-x-1/2 -translate-y-1/2 m-auto md:w-full w-[calc(100%-1.5rem)] max-w-[35rem] min-h-[5rem] max-h-[calc(100dvh-2rem)]'
 			)}
-			use:clickOutside={() => {
-				if (allowClickOutside) {
-					uiState.data.open = false;
-				}
-			}}
-			onkeydown={(event) => {
-				if (event.key === 'Escape') {
-					event.preventDefault();
-					uiState.data.open = false;
-				}
-			}}
 			{role}
 			aria-modal="true"
 			id={`${panelIdPrefix}-${uiState.key}`}

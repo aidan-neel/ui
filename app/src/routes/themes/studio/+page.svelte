@@ -16,7 +16,7 @@
 	import * as Alert from '$lib/silk/components/alert';
 	import * as Tooltip from '$lib/silk/components/tooltip';
 	import * as Breadcrumb from '$lib/silk/components/breadcrumb';
-	import * as Dialog from '$lib/silk/components/dialog';
+	import * as Modal from "$lib/silk/components/modal";
 	import * as Command from '$lib/silk/components/command';
 	import { toast } from '$lib/silk/components/toast';
 	import {
@@ -1729,7 +1729,7 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 
-			<Dialog.Root bind:open={publishDialogOpen}>
+			<Modal.Root bind:open={publishDialogOpen}>
 				<Button
 					variant="primary"
 					size="sm"
@@ -1739,19 +1739,19 @@
 					<Send size={12} />
 					Publish
 				</Button>
-				<Dialog.Content
+				<Modal.Content
 					class="w-full max-w-[min(30rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
 				>
 					<div
 						class="flex shrink-0 items-start justify-between px-5 py-4"
 					>
 						<div class="flex flex-col gap-1">
-							<Dialog.Title>Publish theme</Dialog.Title>
-							<Dialog.Description>
+							<Modal.Title>Publish theme</Modal.Title>
+							<Modal.Description>
 								Add the details people will see when browsing the registry.
-							</Dialog.Description>
+							</Modal.Description>
 						</div>
-						<Dialog.Exit
+						<Modal.Close
 							variant="ghost"
 							size="icon"
 							class="size-8 shrink-0"
@@ -1765,7 +1765,7 @@
 							>
 								<path d="M3 3l10 10M13 3L3 13" stroke-linecap="round" />
 							</svg>
-						</Dialog.Exit>
+						</Modal.Close>
 					</div>
 					<div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
 						<Input
@@ -1813,9 +1813,9 @@
 					<div
 						class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
 					>
-						<Dialog.Exit variant="ghost" size="sm" class="h-8 text-[0.8rem]">
+						<Modal.Close variant="ghost" size="sm" class="h-8 text-[0.8rem]">
 							Cancel
-						</Dialog.Exit>
+						</Modal.Close>
 						<Button
 							variant="primary"
 							size="sm"
@@ -1827,8 +1827,8 @@
 							{isPublishing ? 'Publishing…' : 'Publish theme'}
 						</Button>
 					</div>
-				</Dialog.Content>
-			</Dialog.Root>
+				</Modal.Content>
+			</Modal.Root>
 		</div>
 	</header>
 
@@ -1956,24 +1956,24 @@
 									</Command.Content>
 								</Command.Root>
 
-								<Dialog.Root bind:open={newProjectOpen}>
-									<Dialog.Trigger size="sm" class="h-9 gap-1.5 text-[0.82rem]">
+								<Modal.Root bind:open={newProjectOpen}>
+									<Modal.Trigger size="sm" class="h-9 gap-1.5 text-[0.82rem]">
 										<Plus size={13} />
 										New project
-									</Dialog.Trigger>
-									<Dialog.Content
+									</Modal.Trigger>
+									<Modal.Content
 										class="w-full max-w-[min(28rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
 									>
 										<div
 											class="flex shrink-0 items-start justify-between px-5 py-4"
 										>
 											<div class="flex flex-col gap-1">
-												<Dialog.Title>Create a new project</Dialog.Title>
-												<Dialog.Description>
+												<Modal.Title>Create a new project</Modal.Title>
+												<Modal.Description>
 													Give your project a name and pick the team it belongs to.
-												</Dialog.Description>
+												</Modal.Description>
 											</div>
-											<Dialog.Exit
+											<Modal.Close
 												variant="ghost"
 												size="icon"
 												class="size-8 shrink-0"
@@ -1987,7 +1987,7 @@
 												>
 													<path d="M3 3l10 10M13 3L3 13" stroke-linecap="round" />
 												</svg>
-											</Dialog.Exit>
+											</Modal.Close>
 										</div>
 										<div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-5 py-4">
 											<Input
@@ -2018,20 +2018,20 @@
 										<div
 											class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
 										>
-											<Dialog.Exit variant="ghost" size="sm" class="h-8 text-[0.8rem]">
+											<Modal.Close variant="ghost" size="sm" class="h-8 text-[0.8rem]">
 												Cancel
-											</Dialog.Exit>
-											<Dialog.Confirm
+											</Modal.Close>
+											<Modal.Confirm
 												size="sm"
 												class="h-8 text-[0.8rem]"
 												onclick={createProject}
 											>
 												<Plus size={13} />
 												Create project
-											</Dialog.Confirm>
+											</Modal.Confirm>
 										</div>
-									</Dialog.Content>
-								</Dialog.Root>
+									</Modal.Content>
+								</Modal.Root>
 							</div>
 						</div>
 					</header>
@@ -3400,27 +3400,27 @@
 	</div>
 
 	<!-- ─── All colors dialog ─── -->
-	<Dialog.Root bind:open={advancedColorsOpen}>
-		<Dialog.Content
+	<Modal.Root bind:open={advancedColorsOpen}>
+		<Modal.Content
 			class="flex w-full max-w-[min(42rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
 			<div
 				class="flex shrink-0 items-start justify-between px-5 py-4"
 			>
 				<div class="flex flex-col gap-1">
-					<Dialog.Title>All color tokens</Dialog.Title>
-					<Dialog.Description>
+					<Modal.Title>All color tokens</Modal.Title>
+					<Modal.Description>
 						Override every palette token individually for light and dark mode.
-					</Dialog.Description>
+					</Modal.Description>
 				</div>
-				<Dialog.Exit
+				<Modal.Close
 					variant="ghost"
 					size="icon"
 					class="size-8 shrink-0"
 					aria-label="Close"
 				>
 					<X size={14} />
-				</Dialog.Exit>
+				</Modal.Close>
 			</div>
 
 			<Tabs.Root bind:value={advancedColorsMode} class="flex min-h-0 flex-1 flex-col">
@@ -3467,15 +3467,15 @@
 			<div
 				class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
 			>
-				<Dialog.Exit variant="primary" size="sm" class="h-8 text-[0.8rem]">
+				<Modal.Close variant="primary" size="sm" class="h-8 text-[0.8rem]">
 					Done
-				</Dialog.Exit>
+				</Modal.Close>
 			</div>
-		</Dialog.Content>
-	</Dialog.Root>
+		</Modal.Content>
+	</Modal.Root>
 
 	<!-- ─── Remove saved theme confirm ─── -->
-	<Dialog.Root
+	<Modal.Root
 		bind:open={
 			() => removeSavedTarget !== null,
 			(v) => {
@@ -3483,16 +3483,16 @@
 			}
 		}
 	>
-		<Dialog.Content
+		<Modal.Content
 			class="w-full max-w-[min(24rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
 		>
 			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
-					<Dialog.Title>Remove from library?</Dialog.Title>
-					<Dialog.Description>
+					<Modal.Title>Remove from library?</Modal.Title>
+					<Modal.Description>
 						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{removeSavedTarget?.name ?? ''}</span>
 						will be deleted from your local saved themes.
-					</Dialog.Description>
+					</Modal.Description>
 				</div>
 			</div>
 			<div class="px-5 py-4">
@@ -3507,9 +3507,9 @@
 			<div
 				class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
 			>
-				<Dialog.Exit variant="ghost" size="sm" class="h-8 text-[0.8rem]">
+				<Modal.Close variant="ghost" size="sm" class="h-8 text-[0.8rem]">
 					Cancel
-				</Dialog.Exit>
+				</Modal.Close>
 				<Button
 					variant="destructive"
 					size="sm"
@@ -3520,18 +3520,18 @@
 					Remove
 				</Button>
 			</div>
-		</Dialog.Content>
-	</Dialog.Root>
+		</Modal.Content>
+	</Modal.Root>
 
 	<!-- ─── Save-before-swap alert ─── -->
-	<Dialog.Root bind:open={saveAlertOpen}>
-		<Dialog.Content
+	<Modal.Root bind:open={saveAlertOpen}>
+		<Modal.Content
 			class="w-full max-w-[min(26rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
 		>
 			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
-					<Dialog.Title>Save changes first?</Dialog.Title>
-					<Dialog.Description>
+					<Modal.Title>Save changes first?</Modal.Title>
+					<Modal.Description>
 						You have unsaved tweaks to
 						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{editorName || 'this theme'}</span>.
 						Loading
@@ -3539,7 +3539,7 @@
 							>{pendingThemeLoad?.name ?? 'another theme'}</span
 						>
 						will replace them.
-					</Dialog.Description>
+					</Modal.Description>
 				</div>
 			</div>
 			<div class="px-5 py-4">
@@ -3579,31 +3579,31 @@
 					Save & continue
 				</Button>
 			</div>
-		</Dialog.Content>
-	</Dialog.Root>
+		</Modal.Content>
+	</Modal.Root>
 
 	<!-- ─── All motion dialog ─── -->
-	<Dialog.Root bind:open={advancedMotionOpen}>
-		<Dialog.Content
+	<Modal.Root bind:open={advancedMotionOpen}>
+		<Modal.Content
 			class="flex w-full max-w-[min(36rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
 			<div
 				class="flex shrink-0 items-start justify-between px-5 py-4"
 			>
 				<div class="flex flex-col gap-1">
-					<Dialog.Title>All motion tokens</Dialog.Title>
-					<Dialog.Description>
+					<Modal.Title>All motion tokens</Modal.Title>
+					<Modal.Description>
 						Hand-tune every duration and panel offset. Starts from the current preset.
-					</Dialog.Description>
+					</Modal.Description>
 				</div>
-				<Dialog.Exit
+				<Modal.Close
 					variant="ghost"
 					size="icon"
 					class="size-8 shrink-0"
 					aria-label="Close"
 				>
 					<X size={14} />
-				</Dialog.Exit>
+				</Modal.Close>
 			</div>
 
 			<div class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-5 py-4">
@@ -3708,12 +3708,12 @@
 				>
 					Reset to preset
 				</Button>
-				<Dialog.Exit variant="primary" size="sm" class="h-8 text-[0.8rem]">
+				<Modal.Close variant="primary" size="sm" class="h-8 text-[0.8rem]">
 					Done
-				</Dialog.Exit>
+				</Modal.Close>
 			</div>
-		</Dialog.Content>
-	</Dialog.Root>
+		</Modal.Content>
+	</Modal.Root>
 </div>
 
 <style>

@@ -70,8 +70,6 @@
 		{ prop: 'size', type: '"sm" | "default" | "lg" | "icon"', default: '"default"', description: 'Token-driven height and padding.' },
 		{ prop: 'href', type: 'string', default: '—', description: 'Renders an `<a>` instead of a `<button>` — same styling, semantic anchor.' },
 		{ prop: 'onclick', type: '() => void', default: '—', description: 'Pointer + keyboard activation.' },
-		{ prop: 'onhover', type: '() => void', default: '—', description: 'Fires when the cursor enters the button. Useful for preloading.' },
-		{ prop: 'onhoverend', type: '() => void', default: '—', description: 'Fires when the cursor leaves the button.' },
 		{ prop: 'element', type: 'HTMLButtonElement | HTMLAnchorElement | undefined', default: '—', description: 'Bindable reference for imperative focus / measurement.' },
 		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Standard disabled — also disables hover / focus shadows.' },
 		{ prop: 'class', type: 'string', default: '—', description: 'Tailwind classes appended via `cn()` — overrides win.' }

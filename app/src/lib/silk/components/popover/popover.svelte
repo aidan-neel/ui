@@ -21,17 +21,17 @@
 	// svelte-ignore state_referenced_locally
 	const localState = useState<PopoverState>(
 		{
-			open: false,
+			open,
 			trigger: null,
 			focusedElement: null,
 			buttonRef: null,
 			popoverRef: undefined,
-			placement: 'bottom',
+			placement,
 			onclick: undefined,
 			closeTimeout: undefined,
-			hoverable: false,
-			delay: 0,
-			closeDelay: 150
+			hoverable: hoverable ?? false,
+			delay,
+			closeDelay
 		} as PopoverState,
 		state_key ?? providedState?.key ?? generatedKey
 	);

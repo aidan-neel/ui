@@ -1,71 +1,61 @@
 <script lang="ts">
-	import { getContext, onDestroy, tick, type Snippet } from 'svelte';
+	import { getContext, onMount, onDestroy, type Snippet } from 'svelte';
+	import { states, type UIState } from '$lib/silk/internals/state.svelte.ts';
 	import { cn } from '$lib/silk/utils';
+	import type { PopoverState } from '$lib/silk/components/popover';
 
-	type TooltipContext = {
-		id: string;
-		open: boolean;
-		delay: number;
-		closeDelay: number;
-		placement: 'top' | 'left' | 'bottom' | 'right';
-		triggerEl?: HTMLElement;
-		contentEl?: HTMLElement;
-		openTimeout?: ReturnType<typeof setTimeout>;
-		closeTimeout?: ReturnType<typeof setTimeout>;
-	};
+	const key = getContext('key') as string;
+	const uiState = states[key] as UIState<PopoverState>;
 
-	const tooltipState = getContext<TooltipContext>('tooltip');
+	let element = $state<HTMLElement>();
 
-	let element: HTMLSpanElement | undefined = $state();
-
-	const {
-		children,
-		class: className
-	}: {
-		children?: Snippet;
-		class?: string;
-	} = $props();
+	const { children, class: className }: { children?: Snippet; class?: string } = $props();
 
 	function clearTimers() {
-		if (tooltipState.openTimeout) clearTimeout(tooltipState.openTimeout);
-		if (tooltipState.closeTimeout) clearTimeout(tooltipState.closeTimeout);
-		tooltipState.openTimeout = undefined;
-		tooltipState.closeTimeout = undefined;
+		if (uiState.data.hoverTimeout) {
+			clearTimeout(uiState.data.hoverTimeout);
+			uiState.data.hoverTimeout = undefined;
+		}
+		if (uiState.data.closeTimeout) {
+			clearTimeout(uiState.data.closeTimeout);
+			uiState.data.closeTimeout = undefined;
+		}
 	}
 
-	async function openTooltip() {
+	function open() {
 		clearTimers();
-		tooltipState.openTimeout = setTimeout(async () => {
-			tooltipState.open = true;
-			await tick();
-		}, tooltipState.delay);
+		const delay = uiState.data.delay ?? 0;
+		uiState.data.hoverTimeout = setTimeout(() => {
+			uiState.data.open = true;
+			uiState.data.hovering = true;
+		}, delay);
 	}
 
-	function closeTooltip() {
+	function close() {
 		clearTimers();
-		tooltipState.closeTimeout = setTimeout(() => {
-			tooltipState.open = false;
-		}, tooltipState.closeDelay);
+		const closeDelay = uiState.data.closeDelay ?? 150;
+		uiState.data.closeTimeout = setTimeout(() => {
+			uiState.data.open = false;
+			uiState.data.hovering = false;
+		}, closeDelay);
 	}
 
-	$effect(() => {
-		tooltipState.triggerEl = element;
+	onMount(() => {
+		uiState.data.buttonRef = element ?? null;
 	});
 
-	onDestroy(() => {
-		clearTimers();
-	});
+	onDestroy(clearTimers);
 </script>
 
 <span
 	bind:this={element}
-	class={cn(className, 'inline-flex')}
-	onmouseenter={openTooltip}
-	onmouseleave={closeTooltip}
-	onfocusin={openTooltip}
-	onfocusout={closeTooltip}
 	role="presentation"
-	aria-describedby={tooltipState.open ? tooltipState.id : undefined}
+	aria-describedby={uiState.data.open ? `popover-${String(key)}-content` : undefined}
+	onmouseenter={open}
+	onmouseleave={close}
+	onfocusin={open}
+	onfocusout={close}
+	class={cn(className, 'inline-flex')}
 >
 	{@render children?.()}
 </span>

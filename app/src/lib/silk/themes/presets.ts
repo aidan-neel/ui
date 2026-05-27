@@ -244,10 +244,10 @@ export type ThemeDraft = {
 	motion: ThemeMotion;
 	light: ThemePalette;
 	dark: ThemePalette;
-	/** Per-element font weights. Optional — falls back to `defaultTypography`. */
-	typography?: ThemeTypography;
-	/** Padding tokens. Optional — falls back to `defaultSpacing`. */
-	spacing?: ThemeSpacing;
+	/** Per-element font weights. Optional — partial overrides merge into `defaultTypography`. */
+	typography?: Partial<ThemeTypography>;
+	/** Padding tokens. Optional — partial overrides merge into `defaultSpacing`. */
+	spacing?: Partial<ThemeSpacing>;
 	/** When true, button:active translates -1px for a soft haptic feel. Default false. */
 	hapticPress?: boolean;
 	/** Master toggle for soft drop shadows on panels (card/modal/popover/select/etc.). Default true. */

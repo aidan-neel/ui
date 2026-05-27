@@ -21,7 +21,11 @@
 	const { children, class: className, allowClickOutside = true, ...rest }: Props = $props();
 </script>
 
-<div class="overflow-y-auto max-h-full p-[var(--menu-padding)] flex flex-col gap-0">
+<div
+	role="listbox"
+	id={`combobox-${String(key)}-listbox`}
+	class="overflow-y-auto max-h-full p-[var(--menu-padding)] flex flex-col gap-0"
+>
 	{#if uiState.searchContent === ''}
 		{@render children?.()}
 	{:else if uiState.results.size > 0}

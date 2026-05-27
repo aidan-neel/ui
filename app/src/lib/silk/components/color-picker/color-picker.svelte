@@ -3,6 +3,7 @@
 	import { useState } from '$lib/silk/internals/state.svelte.ts';
 	import { cn } from '$lib/silk/utils';
 	import Check from '@lucide/svelte/icons/check';
+	import { hexToHsv, hsvToHex, hexToHsl, hslToHex, isValidHex } from './conversions';
 
 	export type ColorOption = {
 		label: string;
@@ -29,133 +30,6 @@
 		variant = 'outlined',
 		class: className
 	}: Props = $props();
-
-	// ── Color conversion ────────────────────────────────────────────────────────
-
-	function hexToHsv(hex: string): [number, number, number] {
-		const h = hex.replace('#', '');
-		if (h.length !== 6) return [0, 0, 100];
-		const r = parseInt(h.slice(0, 2), 16) / 255;
-		const g = parseInt(h.slice(2, 4), 16) / 255;
-		const b = parseInt(h.slice(4, 6), 16) / 255;
-		const max = Math.max(r, g, b),
-			min = Math.min(r, g, b),
-			delta = max - min;
-		let hue = 0;
-		if (delta !== 0) {
-			if (max === r) hue = ((g - b) / delta) % 6;
-			else if (max === g) hue = (b - r) / delta + 2;
-			else hue = (r - g) / delta + 4;
-			hue = hue * 60;
-			if (hue < 0) hue += 360;
-		}
-		return [
-			Math.round(hue),
-			max === 0 ? 0 : Math.round((delta / max) * 100),
-			Math.round(max * 100)
-		];
-	}
-
-	function hsvToHex(hue: number, sat: number, val: number): string {
-		const s = sat / 100,
-			v = val / 100;
-		const c = v * s,
-			x = c * (1 - Math.abs(((hue / 60) % 2) - 1)),
-			m = v - c;
-		let r = 0,
-			g = 0,
-			b = 0;
-		if (hue < 60) {
-			r = c;
-			g = x;
-		} else if (hue < 120) {
-			r = x;
-			g = c;
-		} else if (hue < 180) {
-			g = c;
-			b = x;
-		} else if (hue < 240) {
-			g = x;
-			b = c;
-		} else if (hue < 300) {
-			r = x;
-			b = c;
-		} else {
-			r = c;
-			b = x;
-		}
-		const toH = (n: number) =>
-			Math.round((n + m) * 255)
-				.toString(16)
-				.padStart(2, '0');
-		return `#${toH(r)}${toH(g)}${toH(b)}`;
-	}
-
-	function isValidHex(h: string) {
-		return /^#[0-9a-fA-F]{6}$/.test(h);
-	}
-
-	// ── HSL helpers ──────────────────────────────────────────────────
-	// HSL gives the user direct lightness control (instead of HSV's "value"),
-	// which is what you reach for when tweaking neutrals / dark variants.
-
-	function hexToHsl(hex: string): [number, number, number] {
-		const h = hex.replace('#', '');
-		if (h.length !== 6) return [0, 0, 100];
-		const r = parseInt(h.slice(0, 2), 16) / 255;
-		const g = parseInt(h.slice(2, 4), 16) / 255;
-		const b = parseInt(h.slice(4, 6), 16) / 255;
-		const max = Math.max(r, g, b);
-		const min = Math.min(r, g, b);
-		const delta = max - min;
-		const l = (max + min) / 2;
-		let hue = 0;
-		let sat = 0;
-		if (delta !== 0) {
-			sat = delta / (1 - Math.abs(2 * l - 1));
-			if (max === r) hue = ((g - b) / delta) % 6;
-			else if (max === g) hue = (b - r) / delta + 2;
-			else hue = (r - g) / delta + 4;
-			hue *= 60;
-			if (hue < 0) hue += 360;
-		}
-		return [Math.round(hue), Math.round(sat * 100), Math.round(l * 100)];
-	}
-
-	function hslToHex(hue: number, sat: number, light: number): string {
-		const s = sat / 100;
-		const l = light / 100;
-		const c = (1 - Math.abs(2 * l - 1)) * s;
-		const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
-		const m = l - c / 2;
-		let r = 0;
-		let g = 0;
-		let b = 0;
-		if (hue < 60) {
-			r = c;
-			g = x;
-		} else if (hue < 120) {
-			r = x;
-			g = c;
-		} else if (hue < 180) {
-			g = c;
-			b = x;
-		} else if (hue < 240) {
-			g = x;
-			b = c;
-		} else if (hue < 300) {
-			r = x;
-			b = c;
-		} else {
-			r = c;
-			b = x;
-		}
-		const toH = (n: number) =>
-			Math.round((n + m) * 255)
-				.toString(16)
-				.padStart(2, '0');
-		return `#${toH(r)}${toH(g)}${toH(b)}`;
-	}
 
 	// ── Popover state ───────────────────────────────────────────────
 

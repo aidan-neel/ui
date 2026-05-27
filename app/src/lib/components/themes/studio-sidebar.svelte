@@ -7,7 +7,7 @@
 	import * as Combobox from '$lib/silk/components/combobox';
 	import Sliders from '@lucide/svelte/icons/sliders';
 	import * as Select from '$lib/silk/components/select';
-	import * as Dialog from '$lib/silk/components/dialog';
+	import * as Modal from "$lib/silk/components/modal";
 	import * as Tabs from '$lib/silk/components/tabs';
 	import { Button } from '$lib/silk/components/button';
 	import { ColorPicker, type ColorOption } from '$lib/silk/components/color-picker';
@@ -454,16 +454,16 @@
 	</div>
 </div>
 
-<Dialog.Root bind:open={motionOpen}>
-	<Dialog.Content
+<Modal.Root bind:open={motionOpen}>
+	<Modal.Content
 		class="max-w-[min(42rem,calc(100vw-2rem))] w-full max-h-[min(40rem,calc(100dvh-2rem))] flex flex-col gap-0 p-0 overflow-hidden"
 	>
 		<div class="flex shrink-0 items-center justify-between border-b border-border px-6 py-4">
 			<div>
-				<Dialog.Title>Transition details</Dialog.Title>
-				<Dialog.Description>Exact timings and motion values for this theme.</Dialog.Description>
+				<Modal.Title>Transition details</Modal.Title>
+				<Modal.Description>Exact timings and motion values for this theme.</Modal.Description>
 			</div>
-			<Dialog.Exit />
+			<Modal.Close />
 		</div>
 		<div class="grid gap-3 overflow-y-auto px-6 py-5 sm:grid-cols-2">
 			<label class="space-y-1">
@@ -602,19 +602,19 @@
 				/>
 			</label>
 		</div>
-	</Dialog.Content>
-</Dialog.Root>
+	</Modal.Content>
+</Modal.Root>
 
 <!-- Advanced full-screen color modal -->
-<Dialog.Root bind:open={advancedOpen}>
-	<Dialog.Content
+<Modal.Root bind:open={advancedOpen}>
+	<Modal.Content
 		class="max-w-[min(72rem,calc(100vw-2rem))] w-full max-h-[min(44rem,calc(100dvh-2rem))] flex flex-col gap-0 p-0 overflow-hidden"
 	>
 		<div class="flex shrink-0 items-center justify-between border-b border-border px-6 py-4">
 			<div>
-				<Dialog.Title>All color tokens</Dialog.Title>
-				<Dialog.Description
-					>Fine-tune every color variable for light and dark mode.</Dialog.Description
+				<Modal.Title>All color tokens</Modal.Title>
+				<Modal.Description
+					>Fine-tune every color variable for light and dark mode.</Modal.Description
 				>
 			</div>
 			<div class="flex items-center gap-3">
@@ -624,7 +624,7 @@
 						<Tabs.Trigger value="dark">Dark</Tabs.Trigger>
 					</Tabs.List>
 				</Tabs.Root>
-				<Dialog.Exit />
+				<Modal.Close />
 			</div>
 		</div>
 
@@ -691,5 +691,5 @@
 				</div>
 			</div>
 		</div>
-	</Dialog.Content>
-</Dialog.Root>
+	</Modal.Content>
+</Modal.Root>

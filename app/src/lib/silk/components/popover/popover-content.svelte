@@ -73,6 +73,7 @@
 		role = 'dialog',
 		tabindex = -1,
 		id,
+		'aria-modal': ariaModalProp,
 		...rest
 	}: PopoverContentProps = $props();
 
@@ -217,8 +218,14 @@
 			{...rest}
 			id={id ?? `popover-${String(key)}-content`}
 			{role}
-			aria-modal="true"
-			aria-labelledby={`popover-${String(key)}-title`}
+			aria-modal={ariaModalProp ?? (role === 'dialog' || role === 'alertdialog' ? 'true' : undefined)}
+			aria-labelledby={
+				rest['aria-label']
+					? undefined
+					: role === 'dialog' || role === 'alertdialog'
+						? `popover-${String(key)}-title`
+						: undefined
+			}
 			{tabindex}
 			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
 			data-ui="popover-content"

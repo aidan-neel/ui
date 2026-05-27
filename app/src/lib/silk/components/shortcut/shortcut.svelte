@@ -2,13 +2,16 @@
 	import { states } from '$lib/silk/internals/state.svelte.ts';
 	import { cn } from '$lib/silk/utils';
 	import { getContext, onMount, type Snippet } from 'svelte';
-	import type { ButtonState } from '../button';
+
+    // Mirrors button.svelte's internal state shape — kept as a local type
+    // since the public `ButtonState` export was removed in button@2.0.0.
+    type ButtonStateShape = { onclick?: (() => void) | undefined };
 
     const key = getContext('key') as string | undefined;
     // Shortcut is most commonly used inside a Button (auto-wires onclick), but
     // it can also be rendered standalone. When there's no parent Button,
     // `uiState` is undefined and the key handler simply does nothing.
-    const uiState = key ? (states[key]?.data as ButtonState | undefined) : undefined;
+    const uiState = key ? (states[key]?.data as ButtonStateShape | undefined) : undefined;
 
     type Props = {
         children?: Snippet;

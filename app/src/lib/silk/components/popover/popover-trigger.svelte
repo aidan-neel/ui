@@ -18,6 +18,8 @@
 		style,
 		id,
 		'aria-haspopup': ariaHaspopup,
+		'aria-controls': ariaControls,
+		'aria-label': ariaLabel,
 		...rest
 	}: Props = $props();
 
@@ -104,7 +106,8 @@
 	onblur={handleLeave}
 	aria-haspopup={ariaHaspopup ?? 'dialog'}
 	aria-expanded={uiState.data?.open ? 'true' : 'false'}
-	aria-controls={`popover-${String(key)}-content`}
+	aria-controls={ariaControls ?? `popover-${String(key)}-content`}
+	aria-label={ariaLabel}
 	id={id ?? `popover-${String(key)}-controls`}
 >
 	{@render children?.()}

@@ -18,7 +18,7 @@
 
 <Popover.Content
 	{...rest}
-	role="listbox"
+	role="none"
 	tabindex={-1}
 	data-ui="combobox-content"
 	class={cn(

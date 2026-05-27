@@ -54,7 +54,6 @@
 	{:else if type === 'checkbox'}
 		<input
 			bind:this={element}
-			bind:value
 			bind:checked
 			type="checkbox"
 			data-ui="input"

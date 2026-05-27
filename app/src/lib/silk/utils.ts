@@ -16,7 +16,10 @@ export type DefaultProps = {
 	children?: Snippet;
 } & Partial<Record<`data-${string}`, string | boolean | null>>;
 
-/** Merges class values and resolves Tailwind conflicts. */
+/** Merges class values and resolves Tailwind conflicts. Silk uses the
+ * `cn(className, extraClasses)` convention — consumer's `className` first,
+ * library-side classes after. `.reverse()` flips into twMerge so the
+ * first argument wins on conflicts. */
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs.reverse()));
 }
@@ -97,8 +100,11 @@ export function trapFocus(dialogEl: HTMLElement, options?: { initialFocus?: HTML
 	document.addEventListener('focusin', handleFocusIn, true);
 
 	queueMicrotask(() => {
-		options?.initialFocus?.focus();
-		focusFirstDescendant(dialogEl) ?? dialogEl.focus();
+		if (options?.initialFocus) {
+			options.initialFocus.focus();
+		} else {
+			focusFirstDescendant(dialogEl) ?? dialogEl.focus();
+		}
 	});
 
 	return () => {

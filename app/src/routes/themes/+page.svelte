@@ -9,7 +9,7 @@
 	import { Progress } from '$lib/silk/components/progress';
 	import * as Select from '$lib/silk/components/select';
 	import * as Alert from '$lib/silk/components/alert';
-	import * as Dialog from '$lib/silk/components/dialog';
+	import * as Modal from "$lib/silk/components/modal";
 	import * as Avatar from '$lib/silk/components/avatar';
 	import { toast } from '$lib/silk/components/toast';
 	import { applyLiveThemeCss, saveThemeStudioState } from '$lib/silk/themes/live';
@@ -590,8 +590,8 @@
 	</section>
 
 	<!-- ═══════════════════ DETAIL MODAL ═══════════════════ -->
-	<Dialog.Root bind:open={detailOpen}>
-		<Dialog.Content
+	<Modal.Root bind:open={detailOpen}>
+		<Modal.Content
 			class="!w-full !max-w-[min(72rem,calc(100vw-1.5rem))] !max-h-[calc(100vh-2rem)] !top-[50%] gap-0 overflow-hidden p-0"
 		>
 			{#if detailTheme}
@@ -718,9 +718,9 @@
 								<h3 class="m-0 truncate text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">{t.name}</h3>
 								<p class="m-0 truncate text-[0.74rem] text-foreground-muted">by {t.publisher?.trim() || 'Anonymous'}</p>
 							</div>
-							<Dialog.Exit variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
+							<Modal.Close variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
 								<X size={14} />
-							</Dialog.Exit>
+							</Modal.Close>
 						</header>
 
 						<div class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-5 py-4">
@@ -784,8 +784,8 @@
 					</aside>
 				</div>
 			{/if}
-		</Dialog.Content>
-	</Dialog.Root>
+		</Modal.Content>
+	</Modal.Root>
 </div>
 
 <style>

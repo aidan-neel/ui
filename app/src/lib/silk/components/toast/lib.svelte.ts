@@ -1,10 +1,18 @@
 import { UIState } from '$lib/silk/internals/state.svelte.ts';
-import { setContext, getContext } from 'svelte';
+import { setContext, getContext, onDestroy } from 'svelte';
 
 export const STATE_KEY = Symbol('TOAST');
 
 const toastTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
 const TOAST_EXIT_DURATION = 340;
+
+/**
+ * Per-Toaster-mount state. The most recently mounted Toaster registers
+ * here for free-function toast(...) calls. On SSR there is no Toaster
+ * mount, so activeState stays undefined and all toast functions become
+ * no-ops — eliminating the cross-request bleed bug (P3-F12).
+ */
+let activeState: UIState<ToastUIState> | undefined;
 
 export interface ToastUIState {
 	toasts: Toast[];
@@ -58,8 +66,6 @@ export interface ToastFn {
 	dismiss(id?: number): void;
 }
 
-const toastUIState = new UIState<ToastUIState>({ toasts: [] }, 'toast');
-
 /** Clears the pending timeout for a toast when one exists. */
 function clearToastTimeout(id: number) {
 	const timeout = toastTimeouts.get(id);
@@ -70,8 +76,9 @@ function clearToastTimeout(id: number) {
 
 /** Starts the exit lifecycle for a toast and removes it after the exit duration. */
 function dismissToast(id: number) {
-	if (!toastUIState.data) return;
-	const current = toastUIState.data.toasts.find((t) => t.id === id);
+	const state = activeState;
+	if (!state?.data) return;
+	const current = state.data.toasts.find((t) => t.id === id);
 	if (!current) return;
 	if (current.leaving) return;
 	current.leaving = true;
@@ -79,8 +86,9 @@ function dismissToast(id: number) {
 	toastTimeouts.set(
 		id,
 		setTimeout(() => {
-			if (!toastUIState.data) return;
-			toastUIState.data.toasts = toastUIState.data.toasts.filter((t) => t.id !== id);
+			const s = activeState;
+			if (!s?.data) return;
+			s.data.toasts = s.data.toasts.filter((t) => t.id !== id);
 			toastTimeouts.delete(id);
 		}, TOAST_EXIT_DURATION)
 	);
@@ -94,8 +102,9 @@ function scheduleToastRemoval(id: number, duration: number) {
 
 /** Pauses a toast timer while the user is interacting with it. */
 function pauseToast(id: number) {
-	if (!toastUIState.data) return;
-	const current = toastUIState.data.toasts.find((t) => t.id === id);
+	const state = activeState;
+	if (!state?.data) return;
+	const current = state.data.toasts.find((t) => t.id === id);
 	if (!current || current.persistent || current.paused || current.leaving) return;
 	current.paused = true;
 	const elapsed = Date.now() - (current.createdAt ?? Date.now());
@@ -105,8 +114,9 @@ function pauseToast(id: number) {
 
 /** Resumes a paused toast timer using its remaining duration. */
 function resumeToast(id: number) {
-	if (!toastUIState.data) return;
-	const current = toastUIState.data.toasts.find((t) => t.id === id);
+	const state = activeState;
+	if (!state?.data) return;
+	const current = state.data.toasts.find((t) => t.id === id);
 	if (!current || current.persistent || !current.paused || current.leaving) return;
 	current.paused = false;
 	current.createdAt = Date.now();
@@ -115,8 +125,9 @@ function resumeToast(id: number) {
 
 /** Updates a toast in place and reschedules dismissal when needed. */
 function updateToast(id: number, updates: Partial<Toast>) {
-	if (!toastUIState.data) return;
-	const current = toastUIState.data.toasts.find((t) => t.id === id);
+	const state = activeState;
+	if (!state?.data) return;
+	const current = state.data.toasts.find((t) => t.id === id);
 	if (!current) return;
 	Object.assign(current, updates);
 	if (updates.leaving === false) {
@@ -129,7 +140,8 @@ function updateToast(id: number, updates: Partial<Toast>) {
 
 /** Creates a toast instance, registers its actions, and returns the live object. */
 function createToast(toastData: ToastInput): Toast {
-	if (!toastUIState.data) return toastData as Toast;
+	const state = activeState;
+	if (!state?.data) return toastData as Toast;
 
 	const toastId = Math.floor(Math.random() * 10623962836);
 	const duration = toastData.duration ?? 5600;
@@ -149,12 +161,12 @@ function createToast(toastData: ToastInput): Toast {
 	nextToast.exit = () => dismissToast(toastId);
 	nextToast.update = (updates: Partial<Toast>) => updateToast(toastId, updates);
 
-	if (toastUIState.data.toasts.length >= 5) {
-		const oldest = toastUIState.data.toasts[0];
+	if (state.data.toasts.length >= 5) {
+		const oldest = state.data.toasts[0];
 		if (oldest?.id !== undefined) dismissToast(oldest.id);
 	}
 
-	toastUIState.data.toasts = [...toastUIState.data.toasts, nextToast];
+	state.data.toasts = [...state.data.toasts, nextToast];
 
 	if (!nextToast.persistent) {
 		scheduleToastRemoval(toastId, duration);
@@ -234,20 +246,64 @@ toast.loading = (title, opts) =>
 toast.dismiss = (id?: number) => {
 	if (id !== undefined) {
 		dismissToast(id);
-	} else {
-		[...toastUIState.data.toasts].forEach((t) => {
-			if (t.id !== undefined) dismissToast(t.id);
-		});
+		return;
 	}
+	const state = activeState;
+	if (!state?.data) return;
+	[...state.data.toasts].forEach((t) => {
+		if (t.id !== undefined) dismissToast(t.id);
+	});
 };
 
-function getToastUIState(): UIState<ToastUIState> {
+function getToastUIState(): UIState<ToastUIState> | undefined {
 	return getContext(STATE_KEY);
 }
 
-/** Stores the shared toast state in context for descendant components. */
+/**
+ * Per-mount state. Each <Toaster /> instance gets its own UIState and
+ * registers as the active state for free-function toast(...) calls.
+ * On the server there is no Toaster mount, so activeState stays
+ * undefined and toast(...) is a no-op — eliminating the cross-request
+ * bleed bug (P3-F12).
+ */
 function setToastUIState(): UIState<ToastUIState> {
-	return setContext(STATE_KEY, toastUIState);
+	const state = new UIState<ToastUIState>(
+		{ toasts: [] },
+		`toast-${Math.random().toString(36).slice(2)}`
+	);
+	setContext(STATE_KEY, state);
+	activeState = state;
+	onDestroy(() => {
+		if (activeState === state) activeState = undefined;
+	});
+	return state;
 }
 
-export { toast, dismissToast, pauseToast, resumeToast, updateToast, toastUIState, getToastUIState, setToastUIState };
+/**
+ * Test-only escape hatch. Lets unit tests drive toast functions without
+ * mounting a Toaster component. Production code uses setToastUIState
+ * via the Toaster.
+ */
+function __setActiveToastStateForTests(state: UIState<ToastUIState> | undefined) {
+	activeState = state;
+}
+
+/**
+ * Test-only accessor. Lets unit tests read the currently active toast
+ * state without going through Svelte context.
+ */
+function __getActiveToastStateForTests(): UIState<ToastUIState> | undefined {
+	return activeState;
+}
+
+export {
+	toast,
+	dismissToast,
+	pauseToast,
+	resumeToast,
+	updateToast,
+	getToastUIState,
+	setToastUIState,
+	__setActiveToastStateForTests,
+	__getActiveToastStateForTests
+};

@@ -19,15 +19,29 @@ export type ButtonProps = {
 	variant?: ButtonVariant;
 	size?: 'sm' | 'default' | 'lg' | 'icon';
 	children?: Snippet;
+	/**
+	 * Bindable reference to the rendered DOM element. Type is the union of
+	 * the two possible element types — narrow at the use site:
+	 *
+	 * ```ts
+	 * let buttonEl: HTMLButtonElement | HTMLAnchorElement | undefined =
+	 *   $state();
+	 * // ...
+	 * <Button bind:element={buttonEl} href={undefined} />
+	 * if (buttonEl instanceof HTMLButtonElement) {
+	 *   buttonEl.focus();
+	 * }
+	 * ```
+	 *
+	 * Pass `href={undefined}` to guarantee a `<button>` element and narrow
+	 * to `HTMLButtonElement`; pass `href` to render an `<a>` element. The
+	 * union exists because both element types share the public API surface;
+	 * the type system can't distinguish without flow-sensitive analysis at
+	 * the call site.
+	 */
 	element?: HTMLButtonElement | HTMLAnchorElement | undefined;
-	onhover?: () => void;
-	onhoverend?: () => void;
 	onclick?: () => void;
 } & Partial<HTMLButtonAttributes | HTMLAnchorAttributes>;
-
-export type ButtonState = {
-	onclick?: () => void;
-};
 
 export { Button };
 export default Button;

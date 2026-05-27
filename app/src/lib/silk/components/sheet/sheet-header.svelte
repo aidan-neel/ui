@@ -20,6 +20,7 @@
 		}}
 		class="absolute top-3 right-3 size-8 text-foreground-muted"
 		variant="ghost"
+		aria-label="Close"
 	>
 		<X />
 	</Button>

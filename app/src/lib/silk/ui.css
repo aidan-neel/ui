@@ -443,3 +443,21 @@
 		background-position: -200% 0;
 	}
 }
+
+/* Reduced motion (P3-F14).
+   When the user opts out of motion, zero every silk motion duration so
+   transitions complete in one frame. Consumers who want to keep some
+   motion under reduced-motion can override these variables in their
+   own stylesheet. */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--motion-duration-hover: 0ms;
+		--motion-duration-menu: 0ms;
+		--motion-duration-panel: 0ms;
+		--motion-duration-sheet: 0ms;
+		--motion-duration-overlay: 0ms;
+		--motion-duration-tooltip: 0ms;
+		--motion-duration-toast-in: 0ms;
+		--motion-duration-toast-out: 0ms;
+	}
+}

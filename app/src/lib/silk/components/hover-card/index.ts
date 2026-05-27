@@ -24,14 +24,4 @@ export type HoverCardContentProps = {
 	children?: Snippet;
 } & DefaultProps;
 
-export type HoverCardState = {
-	open: boolean;
-	triggerRef: HTMLElement | null;
-	contentRef: HTMLElement | null;
-	openTimer: number | undefined;
-	closeTimer: number | undefined;
-	openDelay: number;
-	closeDelay: number;
-};
-
 export { Root, Trigger, Content, Title, Description };

@@ -170,16 +170,6 @@
 				description: "Click handler passed to the underlying button or anchor."
 			},
 			{
-				property: "onhover",
-				type: "() => void",
-				description: "Optional hover start callback."
-			},
-			{
-				property: "onhoverend",
-				type: "() => void",
-				description: "Optional hover end callback."
-			},
-			{
 				property: "...rest",
 				type: "HTMLButtonAttributes | HTMLAnchorAttributes",
 				description: "Additional attributes passed to the element.",
