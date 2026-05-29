@@ -123,9 +123,16 @@ export function clickOutside(node: Node, callback: () => void, exclude: Node[] =
 		const isInsideExcluded = exclude.some(
 			(excludeNode) => path.includes(excludeNode) || (target ? excludeNode.contains(target) : false)
 		);
-		const isInsideFloating = path.some(
-			(el) => el instanceof Element && el.hasAttribute('data-floating-content')
-		);
+		// Floating layers (Select, DropdownMenu, etc.) portal to <body> and carry
+		// `data-floating-content`. Clicking one of their items closes that layer,
+		// and Svelte flushes the removal synchronously *before* this document-level
+		// listener runs -- so the now-detached node drops out of composedPath().
+		// Fall back to the target's own ancestor chain, which stays intact after
+		// the wrapper is detached, so a parent overlay (Modal/Sheet) isn't dismissed.
+		const targetEl = target instanceof Element ? target : null;
+		const isInsideFloating =
+			path.some((el) => el instanceof Element && el.hasAttribute('data-floating-content')) ||
+			targetEl?.closest('[data-floating-content]') != null;
 
 		if (!isInsideNode && !isInsideExcluded && !isInsideFloating) {
 			callback();
