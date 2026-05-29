@@ -19,7 +19,7 @@
 	<Command.Content>
 		<Command.Search placeholder="Search commands" />
 		<Command.Results>
-			<Command.Group>
+			<Command.Group heading="Account">
 				<Command.Item name="profile" callback={onProfile}>
 					<span data-testid="cmd-profile">Profile</span>
 				</Command.Item>
@@ -28,7 +28,7 @@
 				</Command.Item>
 			</Command.Group>
 			<Command.Separator />
-			<Command.Group>
+			<Command.Group heading="Session">
 				<Command.Item name="logout" callback={onLogout}>
 					<span data-testid="cmd-logout">Logout</span>
 				</Command.Item>

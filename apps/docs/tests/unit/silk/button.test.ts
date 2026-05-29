@@ -12,14 +12,14 @@ function textSnippet(text: string) {
 
 describe('Button -- rendering and DOM element selection', () => {
 	it('renders as <button> by default', () => {
-		render(Button, { props: { children: () => 'Click me' } });
+		render(Button, { props: { children: textSnippet('Click me') } });
 		const el = screen.getByRole('button');
 		expect(el).toBeInTheDocument();
 		expect(el.tagName).toBe('BUTTON');
 	});
 
 	it('renders as <a> when href is provided', () => {
-		render(Button, { props: { href: '/somewhere', children: () => 'Link' } });
+		render(Button, { props: { href: '/somewhere', children: textSnippet('Link') } });
 		const el = screen.getByRole('link');
 		expect(el).toBeInTheDocument();
 		expect(el.tagName).toBe('A');
@@ -27,10 +27,10 @@ describe('Button -- rendering and DOM element selection', () => {
 	});
 
 	it('forwards the bindable element to the right node type', () => {
-		const buttonResult = render(Button, { props: { children: () => 'x' } });
+		const buttonResult = render(Button, { props: { children: textSnippet('x') } });
 		expect(buttonResult.container.querySelector('button')).toBeTruthy();
 
-		const linkResult = render(Button, { props: { href: '/a', children: () => 'x' } });
+		const linkResult = render(Button, { props: { href: '/a', children: textSnippet('x') } });
 		expect(linkResult.container.querySelector('a')).toBeTruthy();
 	});
 });
@@ -52,14 +52,14 @@ describe('Button -- variant prop wiring', () => {
 	for (const variant of variants) {
 		it(`renders the "${variant}" variant without throwing`, () => {
 			const result = render(Button, {
-				props: { variant, children: () => variant }
+				props: { variant, children: textSnippet(variant) }
 			});
 			expect(result.container.querySelector('button')).toBeTruthy();
 		});
 	}
 
 	it('renders without an explicit variant (default = primary)', () => {
-		const result = render(Button, { props: { children: () => 'x' } });
+		const result = render(Button, { props: { children: textSnippet('x') } });
 		expect(result.container.querySelector('button')).toBeTruthy();
 	});
 });
@@ -69,7 +69,7 @@ describe('Button -- size prop wiring', () => {
 
 	for (const size of sizes) {
 		it(`renders the "${size}" size`, () => {
-			const result = render(Button, { props: { size, children: () => size } });
+			const result = render(Button, { props: { size, children: textSnippet(size) } });
 			expect(result.container.querySelector('button')).toBeTruthy();
 		});
 	}
@@ -78,7 +78,7 @@ describe('Button -- size prop wiring', () => {
 describe('Button -- click behavior', () => {
 	it('fires onclick when activated by mouse', async () => {
 		const onclick = vi.fn();
-		render(Button, { props: { onclick, children: () => 'Click' } });
+		render(Button, { props: { onclick, children: textSnippet('Click') } });
 		const user = userEvent.setup();
 		await user.click(screen.getByRole('button'));
 		expect(onclick).toHaveBeenCalledTimes(1);
@@ -87,7 +87,7 @@ describe('Button -- click behavior', () => {
 	it('does not fire onclick when disabled', async () => {
 		const onclick = vi.fn();
 		render(Button, {
-			props: { onclick, disabled: true, children: () => 'Disabled' }
+			props: { onclick, disabled: true, children: textSnippet('Disabled') }
 		});
 		const user = userEvent.setup();
 		await user.click(screen.getByRole('button'));
@@ -95,7 +95,7 @@ describe('Button -- click behavior', () => {
 	});
 
 	it('reflects the disabled prop on the DOM element', () => {
-		render(Button, { props: { disabled: true, children: () => 'x' } });
+		render(Button, { props: { disabled: true, children: textSnippet('x') } });
 		const el = screen.getByRole('button');
 		expect(el).toBeDisabled();
 	});
@@ -157,7 +157,7 @@ describe('Button -- pointer events (renamed in 2.0.0)', () => {
 describe('Button -- keyboard activation', () => {
 	it('fires onclick when activated by keyboard (button mode)', async () => {
 		const onclick = vi.fn();
-		render(Button, { props: { onclick, children: () => 'Press' } });
+		render(Button, { props: { onclick, children: textSnippet('Press') } });
 		const el = screen.getByRole('button');
 		el.focus();
 
@@ -168,7 +168,7 @@ describe('Button -- keyboard activation', () => {
 
 	it('responds to Space in button mode', async () => {
 		const onclick = vi.fn();
-		render(Button, { props: { onclick, children: () => 'Press' } });
+		render(Button, { props: { onclick, children: textSnippet('Press') } });
 		const el = screen.getByRole('button');
 		el.focus();
 

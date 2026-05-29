@@ -7,7 +7,7 @@
 
     type Props = {
         children: Snippet;
-        class: string;
+        class?: string;
     }
 
     let { children, class: className, ...rest}: Props = $props();

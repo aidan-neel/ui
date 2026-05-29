@@ -28,8 +28,8 @@
 
 	type Props = {
 		children: Snippet;
-		class: string;
-		value: string;
+		class?: string;
+		value?: string;
 	};
 
 	let {

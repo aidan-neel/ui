@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { render } from 'svelte/server';
+import type { Component } from 'svelte';
 import { states, useState } from '@silk/ui/internals/state.svelte.ts';
 import {
 	toast,
@@ -58,23 +59,23 @@ describe('Failure mode (i) -- registry pollution across SSR renders (still NOT r
 
 	it('rendering ModalFixture via svelte/server does NOT populate the registry', () => {
 		expect(Object.keys(states).length).toBe(0);
-		render(ModalFixture as never, { props: { open: false } });
+		render(ModalFixture as Component<Record<string, unknown>>, { props: { open: false } });
 		expect(Object.keys(states).length).toBe(0);
 	});
 
 	it('rendering ModalFixture 50 times does NOT grow the registry', () => {
 		expect(Object.keys(states).length).toBe(0);
 		for (let i = 0; i < 50; i++) {
-			render(ModalFixture as never, { props: { open: false } });
+			render(ModalFixture as Component<Record<string, unknown>>, { props: { open: false } });
 		}
 		expect(Object.keys(states).length).toBe(0);
 	});
 
 	it('rendering different fixtures does NOT grow the registry', () => {
-		render(ModalFixture as never, { props: { open: false } });
-		render(SheetFixture as never, { props: { open: false } });
-		render(SheetFixture as never, { props: { open: true } });
-		render(ModalFixture as never, { props: { open: true } });
+		render(ModalFixture as Component<Record<string, unknown>>, { props: { open: false } });
+		render(SheetFixture as Component<Record<string, unknown>>, { props: { open: false } });
+		render(SheetFixture as Component<Record<string, unknown>>, { props: { open: true } });
+		render(ModalFixture as Component<Record<string, unknown>>, { props: { open: true } });
 		expect(Object.keys(states).length).toBe(0);
 	});
 });

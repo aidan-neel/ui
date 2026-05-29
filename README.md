@@ -48,7 +48,7 @@ silk/
 │   ├── docs/        # SvelteKit docs site + theme studio
 │   └── registry/    # Elysia + Prisma API serving themes from Supabase
 ├── packages/
-│   └── silk/        # Canonical component source (symlinked into apps/docs/src/lib/silk)
+│   └── silk/        # Canonical component source (consumed by apps/docs via the @silk/ui alias)
 ├── docker-compose.yml
 ├── turbo.json
 └── package.json     # Bun workspaces + Turborepo
@@ -64,7 +64,7 @@ bun run build       # production build (adapter-node for docs)
 ```
 
 Editing a component in `packages/silk/src/components/…` is live in the docs site via the
-`apps/docs/src/lib/silk` symlink — Vite picks the change up immediately.
+`@silk/ui` alias (`apps/docs/svelte.config.js`) — Vite picks the change up immediately.
 
 ## Production deploy (self-hosted)
 

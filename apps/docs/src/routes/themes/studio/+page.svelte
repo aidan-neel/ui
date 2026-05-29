@@ -1718,20 +1718,20 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content class="min-w-[14rem]">
 					<DropdownMenu.Item onclick={copyGeneratedCss}>
+						<span>Copy CSS</span>
 						{#if copiedCss}
 							<Check size={14} />
 						{:else}
 							<Copy size={14} />
 						{/if}
-						<span>Copy CSS</span>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item onclick={copyTypeScriptPreset}>
+						<span>Copy TypeScript preset</span>
 						{#if copiedTs}
 							<Check size={14} />
 						{:else}
 							<Copy size={14} />
 						{/if}
-						<span>Copy TypeScript preset</span>
 					</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
@@ -2801,19 +2801,20 @@
 				</div>
 
 				<div class="min-h-0 flex-1 overflow-y-auto">
+					{#snippet colorRow(label: string, value: string | undefined, opts: ColorOption[], onChange: (v: string) => void)}
+						<div class="flex items-center justify-between gap-2">
+							<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{label}</span>
+							<ColorPicker
+								class="w-[170px]"
+								value={value ?? ''}
+								options={opts}
+								onValueChange={onChange}
+							/>
+						</div>
+					{/snippet}
+
 					<!-- COLORS TAB -->
 					<Tabs.Content value="colors" class="flex flex-col gap-4 p-3.5">
-						{#snippet colorRow(label: string, value: string, opts: ColorOption[], onChange: (v: string) => void)}
-							<div class="flex items-center justify-between gap-2">
-								<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{label}</span>
-								<ColorPicker
-									class="w-[170px]"
-									value={value}
-									options={opts}
-									onValueChange={onChange}
-								/>
-							</div>
-						{/snippet}
 
 						<section class="flex flex-col gap-2.5">
 							<div class="flex items-center justify-between">
@@ -2990,9 +2991,9 @@
 							<div class="flex flex-col gap-2.5">
 								{#each weightFields as field}
 									{@const typo = editorTheme.typography ?? defaultTypography}
-									{@const currentWeight = typo[field.key]}
-									{@const currentTracking = typo[field.trackingKey]}
-									{@const currentSize = typo[field.sizeKey]}
+									{@const currentWeight = typo[field.key] ?? defaultTypography[field.key]}
+									{@const currentTracking = typo[field.trackingKey] ?? defaultTypography[field.trackingKey]}
+									{@const currentSize = typo[field.sizeKey] ?? defaultTypography[field.sizeKey]}
 									{@const fontFam = field.key === 'weightHeader' ? 'var(--font-header)' : 'var(--font-sans)'}
 									<div class="flex flex-col gap-1.5">
 										<span class="text-[0.74rem] text-foreground-muted">{field.label}</span>

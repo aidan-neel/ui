@@ -6,8 +6,8 @@
     const key = getContext('key')
 
     type Props = {
-        children: Snippet;
-        class: string;
+        children?: Snippet;
+        class?: string;
     }
 
     let { children, class: className, ...rest }: Props = $props();

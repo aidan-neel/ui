@@ -12,7 +12,7 @@
 	const uiState = states[key] as UIState<PopoverState>;
 
 	type Props = {
-		class: string;
+		class?: string;
 		children?: Snippet;
 		callback?: () => void;
 	} & ButtonProps;

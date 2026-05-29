@@ -16,7 +16,7 @@ export type PopoverContentProps = {
 	allowClickOutside?: boolean;
 	portal?: boolean;
 	refElement?: VirtualElement;
-	role?: 'dialog' | 'menu' | 'listbox' | 'none';
+	role?: 'dialog' | 'alertdialog' | 'menu' | 'listbox' | 'none';
 	tabindex?: number;
 } & DefaultProps &
 	Partial<HTMLAttributes<HTMLElement>>;
@@ -35,7 +35,7 @@ export type PopoverProps = {
 export type PopoverTriggerProps = {
 	icon?: boolean;
 	variant?: ButtonVariant;
-	size?: 'default' | 'icon';
+	size?: 'sm' | 'default' | 'lg' | 'icon';
 	children?: Snippet;
 	class?: string;
 	element?: HTMLButtonElement | HTMLAnchorElement | undefined;

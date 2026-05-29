@@ -2,9 +2,13 @@
 	import * as ToggleGroup from '@silk/ui/components/toggle-group';
 
 	let {
-		type = 'single' as 'single' | 'multiple',
-		value = $bindable<string | string[]>(''),
+		type = 'single',
+		value = $bindable<string | string[] | undefined>(''),
 		disabled = false
+	}: {
+		type?: 'single' | 'multiple';
+		value?: string | string[] | undefined;
+		disabled?: boolean;
 	} = $props();
 </script>
 

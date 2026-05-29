@@ -29,6 +29,7 @@
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/svelte": "^5.3.1",
 		"@testing-library/user-event": "^14.6.1",
+		"@types/node": "^22.0.0",
 		"@vitest/browser": "^4.1.7",
 		"@vitest/browser-playwright": "^4.1.7",
 		"axe-core": "^4.11.4",
@@ -53,6 +54,7 @@
 		"vitest-browser-svelte": "^2.1.1"
 	},
 	"dependencies": {
+		"@silk/ui": "workspace:*",
 		"@floating-ui/dom": "^1.7.6",
 		"@lucide/svelte": "^1.7.0",
 		"clsx": "^2.1.1",

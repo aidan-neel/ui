@@ -18,8 +18,8 @@
 
     type Props = {
         children: Snippet;
-        class: string;
-        value: string;
+        class?: string;
+        value?: string;
     }
 
     let { class: className, children, value = $bindable(uiState.data?.value), ...rest}: Props = $props();

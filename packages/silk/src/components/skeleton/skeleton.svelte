@@ -10,11 +10,11 @@
 		unit = 'px',
 		...rest
 	}: {
-		children: Snippet;
+		children?: Snippet;
 		class?: string;
-		w: number;
-		h: number;
-		unit:
+		w?: number;
+		h?: number;
+		unit?:
 			| 'px'
 			| 'rem'
 			| 'em'

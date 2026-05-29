@@ -5,6 +5,10 @@
 		value = $bindable('#ff0000'),
 		label = 'Color',
 		onValueChange = (v: string) => { value = v; }
+	}: {
+		value?: string;
+		label?: string;
+		onValueChange?: (value: string) => void;
 	} = $props();
 
 	const options = [
