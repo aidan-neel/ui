@@ -27,6 +27,27 @@
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import Info from '@lucide/svelte/icons/info';
 	import Slash from '@lucide/svelte/icons/slash';
+	// ── Gallery-screen components (one+ per token group) ──────────────────
+	import { Slider } from '@silk/ui/components/slider';
+	import { Toggle } from '@silk/ui/components/toggle';
+	import { Progress } from '@silk/ui/components/progress';
+	import { Separator } from '@silk/ui/components/separator';
+	import { Pagination } from '@silk/ui/components/pagination';
+	import { Calendar } from '@silk/ui/components/calendar';
+	import { Label } from '@silk/ui/components/label';
+	import { Textarea } from '@silk/ui/components/textarea';
+	import { Marquee } from '@silk/ui/components/marquee';
+	import { ScrollArea } from '@silk/ui/components/scroll-area';
+	import * as Card from '@silk/ui/components/card';
+	import * as Accordion from '@silk/ui/components/accordion';
+	import * as Collapsible from '@silk/ui/components/collapsible';
+	import * as Avatar from '@silk/ui/components/avatar';
+	import * as HoverCard from '@silk/ui/components/hover-card';
+	import * as Popover from '@silk/ui/components/popover';
+	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
+	import * as ToggleGroup from '@silk/ui/components/toggle-group';
+	import * as RadioGroup from '@silk/ui/components/radio-group';
+	import * as AlertDialog from '@silk/ui/components/alert-dialog';
 
 	// ── Playground demo state (local to the preview surface) ──────────────
 	let playgroundTab = $state('overview');
@@ -40,6 +61,15 @@
 	let pgProgress = $state(64);
 
 	let screenTab = $state('dashboard');
+	// Gallery-screen interactive state
+	let glToggle = $state(false);
+	let glAlign = $state('left');
+	let glSlider = $state(50);
+	let glPlan = $state('pro');
+	let glAccordion = $state('a1');
+	let glPage = $state(2);
+	let glCalendar = $state<Date | undefined>(new Date(2026, 4, 15));
+	let glTextarea = $state('Silk themes cascade from a single source of truth.');
 	let newProjectOpen = $state(false);
 	let newProjectName = $state('');
 	let newProjectTeam = $state('design');
@@ -104,7 +134,8 @@
 	const screenOptions = [
 		{ id: 'dashboard', label: 'Dashboard' },
 		{ id: 'settings', label: 'Settings' },
-		{ id: 'mail', label: 'Mail' }
+		{ id: 'mail', label: 'Mail' },
+		{ id: 'gallery', label: 'Gallery' }
 	] as const;
 
 	const tagToTone: Record<string, string> = {
@@ -1159,6 +1190,198 @@
 								Delete
 							</Button>
 						</div>
+					</section>
+				{:else if screenTab === 'gallery'}
+					<!-- ─── Gallery: a representative component from every token group ─── -->
+					{#snippet groupLabel(text: string)}
+						<p
+							class="text-[0.66rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:0.08em] uppercase text-foreground-muted"
+						>
+							{text}
+						</p>
+					{/snippet}
+
+					<!-- CONTROLS -->
+					<section data-group="controls" class="flex flex-col gap-4 px-6 py-7 md:px-8">
+						{@render groupLabel('Controls')}
+						<div class="flex flex-wrap items-center gap-2">
+							<Toggle bind:pressed={glToggle}>{glToggle ? 'On' : 'Off'}</Toggle>
+							<ToggleGroup.Root type="single" bind:value={glAlign}>
+								<ToggleGroup.Item value="left">Left</ToggleGroup.Item>
+								<ToggleGroup.Item value="center">Center</ToggleGroup.Item>
+								<ToggleGroup.Item value="right">Right</ToggleGroup.Item>
+							</ToggleGroup.Root>
+						</div>
+						<div class="flex flex-col gap-1.5">
+							<Label>Volume — {glSlider}%</Label>
+							<Slider bind:value={glSlider} min={0} max={100} label="Volume" />
+						</div>
+						<div class="flex flex-col gap-1.5">
+							<Label>Notes</Label>
+							<Textarea bind:value={glTextarea} />
+						</div>
+						<RadioGroup.Root bind:value={glPlan} name="gallery-plan">
+							<RadioGroup.Item value="free" label="Free" description="For solo hobby projects." />
+							<RadioGroup.Item value="pro" label="Pro" description="For growing teams." />
+							<RadioGroup.Item value="team" label="Team" description="For whole orgs." />
+						</RadioGroup.Root>
+					</section>
+
+					<!-- SURFACES -->
+					<section
+						data-group="surfaces"
+						class="flex flex-col gap-4 border-t border-border/60 px-6 py-7 md:px-8"
+					>
+						{@render groupLabel('Surfaces')}
+						<Card.Root>
+							<Card.Header>
+								<Card.Title>Card surface</Card.Title>
+								<Card.Description
+									>Padding, radius, and elevation all read from tokens.</Card.Description
+								>
+							</Card.Header>
+							<Card.Content>
+								<p class="text-[0.85rem] text-foreground-muted">
+									Cards, panels, sheets, and accordions share the Surfaces token group.
+								</p>
+							</Card.Content>
+						</Card.Root>
+						<Accordion.Root type="single" bind:value={glAccordion}>
+							<Accordion.Item value="a1">
+								<Accordion.Trigger>What is a token group?</Accordion.Trigger>
+								<Accordion.Content
+									>A coherent bundle of tokens shared by related components.</Accordion.Content
+								>
+							</Accordion.Item>
+							<Accordion.Item value="a2">
+								<Accordion.Trigger>Does it theme live?</Accordion.Trigger>
+								<Accordion.Content
+									>Yes — every value here cascades from the active theme.</Accordion.Content
+								>
+							</Accordion.Item>
+						</Accordion.Root>
+						<Collapsible.Root>
+							<Collapsible.Trigger>Toggle details</Collapsible.Trigger>
+							<Collapsible.Content>
+								<p class="pt-2 text-[0.85rem] text-foreground-muted">
+									Collapsible content surface.
+								</p>
+							</Collapsible.Content>
+						</Collapsible.Root>
+						<Separator />
+						<ScrollArea
+							class="h-24 w-full rounded-[var(--radius-md)] border border-border bg-background p-3"
+						>
+							<p class="text-[0.85rem] text-foreground-muted">
+								Scroll region. Pellentesque habitant morbi tristique senectus et netus et malesuada
+								fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget,
+								tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.
+							</p>
+						</ScrollArea>
+					</section>
+
+					<!-- MENUS -->
+					<section
+						data-group="menus"
+						class="flex flex-wrap items-center gap-2 border-t border-border/60 px-6 py-7 md:px-8"
+					>
+						{@render groupLabel('Menus')}
+						<div class="flex w-full flex-wrap items-center gap-2">
+							<DropdownMenu.Root>
+								<DropdownMenu.Trigger variant="outlined" size="sm">Dropdown</DropdownMenu.Trigger>
+								<DropdownMenu.Content>
+									<DropdownMenu.Label>Sort by</DropdownMenu.Label>
+									<DropdownMenu.Item><span>Recently updated</span></DropdownMenu.Item>
+									<DropdownMenu.Item><span>Alphabetical</span></DropdownMenu.Item>
+									<DropdownMenu.Separator />
+									<DropdownMenu.Item><span>Archived</span></DropdownMenu.Item>
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+							<Popover.Root placement="bottom">
+								<Popover.Trigger variant="outlined" size="sm">Popover</Popover.Trigger>
+								<Popover.Content class="w-64">
+									<Popover.Title>Floating panel</Popover.Title>
+									<p class="text-[0.85rem] text-foreground-muted">
+										Menus are button-anchored floating surfaces.
+									</p>
+								</Popover.Content>
+							</Popover.Root>
+						</div>
+					</section>
+
+					<!-- MODALS + TRANSIENT -->
+					<section
+						data-group="modals"
+						class="flex flex-wrap items-center gap-2 border-t border-border/60 px-6 py-7 md:px-8"
+					>
+						{@render groupLabel('Modals & transient')}
+						<AlertDialog.Root>
+							<AlertDialog.Trigger variant="outlined">Alert dialog</AlertDialog.Trigger>
+							<AlertDialog.Content>
+								<AlertDialog.Header>
+									<AlertDialog.Title>Delete this project?</AlertDialog.Title>
+									<AlertDialog.Description>This action cannot be undone.</AlertDialog.Description>
+								</AlertDialog.Header>
+								<AlertDialog.Footer>
+									<AlertDialog.Exit>Cancel</AlertDialog.Exit>
+									<AlertDialog.Confirm>Delete</AlertDialog.Confirm>
+								</AlertDialog.Footer>
+							</AlertDialog.Content>
+						</AlertDialog.Root>
+						<HoverCard.Root>
+							<HoverCard.Trigger>
+								<Button variant="outlined" size="sm">Hover card</Button>
+							</HoverCard.Trigger>
+							<HoverCard.Content class="w-64">
+								<HoverCard.Title>Transient surface</HoverCard.Title>
+								<HoverCard.Description
+									>Ephemeral feedback like tooltips and toasts.</HoverCard.Description
+								>
+							</HoverCard.Content>
+						</HoverCard.Root>
+						<Button
+							variant="secondary"
+							size="sm"
+							onclick={() =>
+								toast({
+									title: 'Toast fired',
+									description: 'Transient feedback.',
+									type: 'success',
+									duration: 2400
+								})}
+						>
+							Fire toast
+						</Button>
+					</section>
+
+					<!-- NAV / DATA -->
+					<section
+						data-group="nav"
+						class="flex flex-col gap-4 border-t border-border/60 px-6 py-7 md:px-8"
+					>
+						{@render groupLabel('Navigation & data')}
+						<div class="flex items-center gap-2">
+							<Avatar.Root size="sm"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
+							<Avatar.Root size="md"><Avatar.Fallback>MC</Avatar.Fallback></Avatar.Root>
+							<Avatar.Root size="lg" shape="square"
+								><Avatar.Fallback>LP</Avatar.Fallback></Avatar.Root
+							>
+						</div>
+						<Progress value={glSlider} />
+						<Pagination bind:page={glPage} total={20} />
+						<Calendar bind:value={glCalendar} />
+						<Marquee
+							pauseOnHover
+							duration="22s"
+							class="rounded-[var(--radius-md)] border border-border py-3"
+						>
+							<span class="px-4 text-[0.85rem] text-foreground-muted"
+								>Silk · extreme customizability ·</span
+							>
+							<span class="px-4 text-[0.85rem] text-foreground-muted"
+								>every token, one source ·</span
+							>
+						</Marquee>
 					</section>
 				{/if}
 			</div>
