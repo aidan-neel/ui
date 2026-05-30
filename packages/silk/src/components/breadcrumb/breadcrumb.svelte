@@ -5,6 +5,6 @@
 	let { class: className, children, ...rest }: BreadcrumbProps = $props();
 </script>
 
-<div {...rest} class={cn(className, `flex flex-row gap-2 items-center`)}>
+<div {...rest} class={cn(className, `flex flex-row gap-[var(--breadcrumb-gap)] items-center`)}>
 	{@render children?.()}
 </div>

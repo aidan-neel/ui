@@ -62,7 +62,7 @@
 		{#if Icon}
 			<div
 				class={cn(
-					'mt-0.5 flex size-[1.65rem] shrink-0 items-center justify-center rounded-md',
+					'mt-0.5 flex size-[var(--toast-icon-size)] shrink-0 items-center justify-center rounded-md',
 					iconColorClass
 				)}
 			>
@@ -107,7 +107,7 @@
 				type="button"
 				onclick={() => dismissToast(toast.id!)}
 				class={cn(
-					'mt-0.5 inline-flex size-[1.2rem] shrink-0 items-center justify-center rounded-md',
+					'mt-0.5 inline-flex size-[var(--toast-close-size)] shrink-0 items-center justify-center rounded-md',
 					'text-foreground-muted opacity-0 transition-all duration-200',
 					'hover:bg-secondary/50 hover:text-foreground',
 					'group-hover:opacity-100'

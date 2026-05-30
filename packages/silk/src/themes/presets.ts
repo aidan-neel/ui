@@ -143,6 +143,16 @@ export type ThemeSpacing = {
 	modalSectionGap: number;
 	/** Sheet body content padding (px). Default 16. */
 	sheetBodyPadding: number;
+	/** Vertical input padding (px). Default 0 (inputs are vertically centered by height). */
+	fieldPaddingY: number;
+	/** Gap between a button's icon and label (px). Default 6. */
+	buttonGap: number;
+	/** Switch track inner padding (px). Default 2. */
+	switchTrackPadding: number;
+	/** Textarea minimum height (px). Default 112. */
+	textareaMinHeight: number;
+	/** Textarea vertical padding (px). Default 11. */
+	textareaPaddingY: number;
 };
 
 export const defaultSpacing: ThemeSpacing = {
@@ -179,7 +189,12 @@ export const defaultSpacing: ThemeSpacing = {
 	modalPadding: 16,
 	modalTitleDescriptionGap: 6,
 	modalSectionGap: 16,
-	sheetBodyPadding: 16
+	sheetBodyPadding: 16,
+	fieldPaddingY: 0,
+	buttonGap: 6,
+	switchTrackPadding: 2,
+	textareaMinHeight: 112,
+	textareaPaddingY: 11
 };
 
 export function resolveSpacing(input?: Partial<ThemeSpacing>): ThemeSpacing {
@@ -603,7 +618,7 @@ export function themeToCss(theme: ThemeDraft) {
 	const cursorOverrides = pointerCursor
 		? '\n\t--ui-cursor-interactive: pointer;'
 		: '\n\t--ui-cursor-interactive: default;';
-	const spacingTokens = `\n\t--button-padding-x: ${spacing.buttonPaddingX}px;\n\t--badge-padding-x: ${spacing.badgePaddingX}px;\n\t--badge-padding-y: ${spacing.badgePaddingY}px;\n\t--card-padding: ${spacing.cardPadding}px;\n\t--panel-padding: ${spacing.panelPadding}px;\n\t--field-padding-x: ${spacing.fieldPaddingX}px;\n\t--space-menu-item-x: ${spacing.menuItemPaddingX}px;\n\t--menu-item-padding-x: ${spacing.menuItemPaddingX}px;\n\t--size-control-md: ${spacing.buttonHeight}px;\n\t--size-control-sm: ${spacing.buttonHeightSm}px;\n\t--size-control-lg: ${spacing.buttonHeightLg}px;\n\t--field-height: ${spacing.fieldHeight}px;\n\t--menu-item-height: ${spacing.menuItemHeight}px;\n\t--size-switch-track: ${spacing.switchTrackWidth}px;\n\t--size-switch-thumb: ${spacing.switchThumbSize}px;\n\t--size-icon-md: ${spacing.iconButtonSize}px;\n\t--menu-padding: ${spacing.menuPadding}px;\n\t--menu-search-padding: ${spacing.menuSearchPadding}px;\n\t--menu-label-padding-x: ${spacing.menuLabelPaddingX}px;\n\t--menu-label-padding-y: ${spacing.menuLabelPaddingY}px;\n\t--toggle-padding-sm: ${spacing.togglePaddingSm}px;\n\t--toggle-padding-md: ${spacing.togglePaddingMd}px;\n\t--toggle-padding-lg: ${spacing.togglePaddingLg}px;\n\t--tabs-trigger-padding-x: ${spacing.tabsTriggerPaddingX}px;\n\t--tabs-trigger-padding-y: ${spacing.tabsTriggerPaddingY}px;\n\t--tabs-list-padding: ${spacing.tabsListPadding}px;\n\t--toast-padding-x: ${spacing.toastPaddingX}px;\n\t--toast-padding-y: ${spacing.toastPaddingY}px;\n\t--calendar-padding: ${spacing.calendarPadding}px;\n\t--color-picker-padding: ${spacing.colorPickerPadding}px;\n\t--sheet-header-padding-bottom: ${spacing.sheetHeaderPaddingBottom}px;\n\t--modal-padding: ${spacing.modalPadding}px;\n\t--modal-title-description-gap: ${spacing.modalTitleDescriptionGap}px;\n\t--modal-section-gap: ${spacing.modalSectionGap}px;\n\t--sheet-body-padding: ${spacing.sheetBodyPadding}px;`;
+	const spacingTokens = `\n\t--button-padding-x: ${spacing.buttonPaddingX}px;\n\t--badge-padding-x: ${spacing.badgePaddingX}px;\n\t--badge-padding-y: ${spacing.badgePaddingY}px;\n\t--card-padding: ${spacing.cardPadding}px;\n\t--panel-padding: ${spacing.panelPadding}px;\n\t--field-padding-x: ${spacing.fieldPaddingX}px;\n\t--space-menu-item-x: ${spacing.menuItemPaddingX}px;\n\t--menu-item-padding-x: ${spacing.menuItemPaddingX}px;\n\t--size-control-md: ${spacing.buttonHeight}px;\n\t--size-control-sm: ${spacing.buttonHeightSm}px;\n\t--size-control-lg: ${spacing.buttonHeightLg}px;\n\t--field-height: ${spacing.fieldHeight}px;\n\t--menu-item-height: ${spacing.menuItemHeight}px;\n\t--size-switch-track: ${spacing.switchTrackWidth}px;\n\t--size-switch-thumb: ${spacing.switchThumbSize}px;\n\t--size-icon-md: ${spacing.iconButtonSize}px;\n\t--menu-padding: ${spacing.menuPadding}px;\n\t--menu-search-padding: ${spacing.menuSearchPadding}px;\n\t--menu-label-padding-x: ${spacing.menuLabelPaddingX}px;\n\t--menu-label-padding-y: ${spacing.menuLabelPaddingY}px;\n\t--toggle-padding-sm: ${spacing.togglePaddingSm}px;\n\t--toggle-padding-md: ${spacing.togglePaddingMd}px;\n\t--toggle-padding-lg: ${spacing.togglePaddingLg}px;\n\t--tabs-trigger-padding-x: ${spacing.tabsTriggerPaddingX}px;\n\t--tabs-trigger-padding-y: ${spacing.tabsTriggerPaddingY}px;\n\t--tabs-list-padding: ${spacing.tabsListPadding}px;\n\t--toast-padding-x: ${spacing.toastPaddingX}px;\n\t--toast-padding-y: ${spacing.toastPaddingY}px;\n\t--calendar-padding: ${spacing.calendarPadding}px;\n\t--color-picker-padding: ${spacing.colorPickerPadding}px;\n\t--sheet-header-padding-bottom: ${spacing.sheetHeaderPaddingBottom}px;\n\t--modal-padding: ${spacing.modalPadding}px;\n\t--modal-title-description-gap: ${spacing.modalTitleDescriptionGap}px;\n\t--modal-section-gap: ${spacing.modalSectionGap}px;\n\t--sheet-body-padding: ${spacing.sheetBodyPadding}px;\n\t--field-padding-y: ${spacing.fieldPaddingY}px;\n\t--button-gap: ${spacing.buttonGap}px;\n\t--switch-track-padding: ${spacing.switchTrackPadding}px;\n\t--textarea-min-height: ${spacing.textareaMinHeight}px;\n\t--textarea-padding-y: ${spacing.textareaPaddingY}px;`;
 	const flatShadowOverrides =
 		buttonShadowOverrides +
 		badgeShadowOverrides +

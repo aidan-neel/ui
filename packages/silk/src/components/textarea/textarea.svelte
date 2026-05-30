@@ -38,7 +38,11 @@
 		bind:value
 		data-ui="textarea"
 		data-variant={variant}
-		class={cn(classProp, 'min-h-[7rem] resize-y py-[0.7rem] leading-6', input({ variant }))}
+		class={cn(
+			classProp,
+			'min-h-[var(--textarea-min-height)] resize-y py-[var(--textarea-padding-y)] leading-6',
+			input({ variant })
+		)}
 		{...rest}
 		{placeholder}
 	></textarea>

@@ -52,6 +52,9 @@
 	});
 </script>
 
-<p {...rest} class={cn(className, 'text-[11px] text-foreground-muted/80')}>
+<p
+	{...rest}
+	class={cn(className, 'text-[length:var(--shortcut-font-size)] text-foreground-muted/80')}
+>
 	{@render children?.()}
 </p>

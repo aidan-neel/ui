@@ -212,14 +212,19 @@
 	</div>
 
 	<div
-		class="grid grid-cols-7 gap-1 text-center [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] uppercase text-foreground-muted"
+		class="grid grid-cols-7 gap-[var(--calendar-grid-gap)] text-center [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] uppercase text-foreground-muted"
 	>
 		{#each weekdays as w, i (i)}
 			<span>{w}</span>
 		{/each}
 	</div>
 
-	<div bind:this={gridEl} role="grid" class="grid grid-cols-7 gap-1" onkeydown={handleGridKeydown}>
+	<div
+		bind:this={gridEl}
+		role="grid"
+		class="grid grid-cols-7 gap-[var(--calendar-grid-gap)]"
+		onkeydown={handleGridKeydown}
+	>
 		{#each grid as cell, i (i)}
 			{@const selected = value ? isSameDay(cell.date, value) : false}
 			{@const isToday = isSameDay(cell.date, today)}
