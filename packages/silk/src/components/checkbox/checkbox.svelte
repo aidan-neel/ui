@@ -29,11 +29,16 @@
 	)}
 >
 	{#if disabled}
-		<input type="checkbox" class="peer absolute size-4 opacity-0" disabled aria-checked={checked} />
+		<input
+			type="checkbox"
+			class="peer absolute size-[var(--checkbox-size)] opacity-0"
+			disabled
+			aria-checked={checked}
+		/>
 	{:else}
 		<input
 			type="checkbox"
-			class="peer absolute size-4 opacity-0"
+			class="peer absolute size-[var(--checkbox-size)] opacity-0"
 			bind:checked
 			aria-checked={checked}
 		/>
@@ -41,14 +46,14 @@
 	{#if checked}
 		<div
 			in:scaleFade={{ duration: 200, durationVar: '--motion-duration-hover' }}
-			class="flex h-4 w-4 items-center justify-center rounded-[var(--radius-sm)] bg-primary p-0 ring-offset-2 transition-[box-shadow,transform] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
+			class="flex h-[var(--checkbox-size)] w-[var(--checkbox-size)] items-center justify-center rounded-[var(--radius-sm)] bg-[var(--checkbox-checked-bg)] p-0 ring-offset-2 transition-[box-shadow,transform] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		>
-			<Check size="12" class="text-foreground-btn" />
+			<Check size="12" class="text-[var(--checkbox-checked-foreground)]" />
 		</div>
 	{:else}
 		<div
 			in:scaleFade={{ duration: 200, durationVar: '--motion-duration-hover' }}
-			class="flex h-4 w-4 items-center justify-center rounded-[var(--radius-sm)] border bg-[var(--checkbox-bg)] p-0 duration-200 transition-[background-color,box-shadow,transform] peer-hover:bg-[var(--color-field-hover)] peer-focus-visible:bg-[var(--color-field-hover)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
+			class="flex h-[var(--checkbox-size)] w-[var(--checkbox-size)] items-center justify-center rounded-[var(--radius-sm)] border bg-[var(--checkbox-bg)] p-0 duration-[var(--motion-duration-hover)] transition-[background-color,box-shadow,transform] peer-hover:bg-[var(--color-field-hover)] peer-focus-visible:bg-[var(--color-field-hover)] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--color-ring)] peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background"
 		></div>
 	{/if}
 	{#if label}

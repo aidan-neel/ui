@@ -86,7 +86,7 @@
 		background: var(--color-overlay);
 		backdrop-filter: blur(var(--motion-overlay-blur));
 		-webkit-backdrop-filter: blur(var(--motion-overlay-blur));
-		animation: silk-sheet-backdrop-in 150ms ease-out both;
+		animation: silk-sheet-backdrop-in var(--motion-duration-overlay, 150ms) ease-out both;
 	}
 
 	.silk-sheet-panel {
@@ -103,7 +103,7 @@
 	}
 
 	.silk-sheet-root[data-state='closed'] .silk-sheet-backdrop {
-		animation: silk-sheet-backdrop-out 150ms ease-in both;
+		animation: silk-sheet-backdrop-out var(--motion-duration-overlay, 150ms) ease-in both;
 	}
 	.silk-sheet-root[data-state='closed'] .silk-sheet-panel[data-side='right'] {
 		animation-name: silk-sheet-slide-out-right;

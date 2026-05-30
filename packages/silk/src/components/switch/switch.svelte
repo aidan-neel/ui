@@ -69,7 +69,7 @@
 		<span
 			aria-hidden="true"
 			data-state={switched ? 'checked' : 'unchecked'}
-			class="block h-[var(--size-switch-thumb)] w-[var(--size-switch-thumb)] rounded-full bg-white ring-1 ring-inset ring-black/[0.06] will-change-transform"
+			class="block h-[var(--size-switch-thumb)] w-[var(--size-switch-thumb)] rounded-full bg-[var(--switch-thumb-bg)] ring-1 ring-inset ring-black/[0.06] will-change-transform"
 			style:transform={switched ? `translateX(${thumbOnOffset})` : 'translateX(0px)'}
 			style:box-shadow={switched
 				? '0 2px 4px rgb(16 24 40 / 0.14), 0 4px 12px -2px rgb(16 24 40 / 0.22), inset 0 1px 0 rgb(255 255 255 / 0.7)'

@@ -25,9 +25,9 @@ export const button = tv({
 				'[--ui-button-shadow:var(--button-destructive-shadow)] relative bg-[var(--button-destructive-bg)] text-[var(--button-destructive-foreground)] hover:bg-[var(--button-destructive-hover-bg)] shadow-[var(--ui-button-shadow)] before:absolute before:inset-px before:rounded-[calc(var(--radius-lg)-1px)] before:border before:border-[var(--button-fancy-highlight,rgba(255,255,255,0.12))] before:[mask-image:linear-gradient(to_bottom,black,transparent)] before:pointer-events-none'
 		},
 		size: {
-			sm: '[--button-height:var(--size-control-sm)] [--button-padding-x:0.75rem] text-[13px]',
+			sm: '[--button-height:var(--size-control-sm)] px-[calc(var(--button-padding-x)_-_0.125rem)] text-[13px]',
 			default: '[--button-height:var(--size-control-md)]',
-			lg: '[--button-height:var(--size-control-lg)] [--button-padding-x:1rem] text-[14px]',
+			lg: '[--button-height:var(--size-control-lg)] px-[calc(var(--button-padding-x)_+_0.125rem)] text-[14px]',
 			icon: 'h-[var(--size-icon-md)] w-[var(--size-icon-md)] min-w-[var(--size-icon-md)] justify-center px-0'
 		}
 	},
