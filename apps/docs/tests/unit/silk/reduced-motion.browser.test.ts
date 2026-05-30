@@ -174,7 +174,7 @@ describe('Reduced motion -- content visible within 50ms of open action under pre
 });
 
 describe('Reduced motion -- silk DOES auto-zero its motion CSS variables under prefers-reduced-motion (P3-F14 fixed)', () => {
-	it('silk\'s ui.css includes a @media (prefers-reduced-motion: reduce) block', async () => {
+	it("silk's ui.css includes a @media (prefers-reduced-motion: reduce) block", async () => {
 		// Inspect the loaded stylesheets. ui.css now includes the block
 		// (P3-F14 fix). At least one rule should match.
 		const sheets = Array.from(document.styleSheets).filter((s) => {
@@ -194,9 +194,7 @@ describe('Reduced motion -- silk DOES auto-zero its motion CSS variables under p
 			})
 			.join('\n');
 
-		const reducedMotionDeclarations = sheetsText.match(
-			/@media[^{]*prefers-reduced-motion[^{]*\{/g
-		);
-		expect((reducedMotionDeclarations?.length ?? 0)).toBeGreaterThan(0);
+		const reducedMotionDeclarations = sheetsText.match(/@media[^{]*prefers-reduced-motion[^{]*\{/g);
+		expect(reducedMotionDeclarations?.length ?? 0).toBeGreaterThan(0);
 	});
 });

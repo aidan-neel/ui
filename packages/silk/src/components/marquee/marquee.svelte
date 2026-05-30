@@ -70,12 +70,20 @@
 	}
 
 	@keyframes silk-marquee-x {
-		from { transform: translateX(0); }
-		to { transform: translateX(calc(-100% - var(--silk-marquee-gap))); }
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(-100% - var(--silk-marquee-gap)));
+		}
 	}
 	@keyframes silk-marquee-y {
-		from { transform: translateY(0); }
-		to { transform: translateY(calc(-100% - var(--silk-marquee-gap))); }
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(-100% - var(--silk-marquee-gap)));
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {

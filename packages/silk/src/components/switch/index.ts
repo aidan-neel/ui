@@ -11,7 +11,8 @@ export type SwitchProps = {
 	label?: string;
 	description?: string;
 	element?: HTMLButtonElement | undefined;
-} & DefaultProps & Partial<HTMLButtonAttributes>;
+} & DefaultProps &
+	Partial<HTMLButtonAttributes>;
 
 export default Switch;
 export { Switch };

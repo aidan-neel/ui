@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { sanitizeComponent } from '$lib/components';
+	import type { Component } from 'svelte';
 	import type { PageData } from './$types';
 	import { components } from '$lib/components';
 	import { Button } from '@silk/ui/components/button';
@@ -15,11 +16,13 @@
 		data: PageData;
 	} = $props();
 
-	const Markdown = $derived(data.content) as unknown as ConstructorOfATypedSvelteComponent;
+	const Markdown = $derived(data.content) as unknown as Component;
 	const Title = $derived(data.metadata.title);
 	const Description = $derived(data.metadata.description);
 	const Source = $derived(data.metadata.source);
-	const AriaUrl = $derived((data.metadata as Record<string, unknown>).ariaUrl as string | undefined);
+	const AriaUrl = $derived(
+		(data.metadata as Record<string, unknown>).ariaUrl as string | undefined
+	);
 	const slug = $derived($page.params.slug);
 
 	let curIndex = $derived(components.indexOf(Title.toLowerCase()));

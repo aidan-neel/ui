@@ -57,7 +57,7 @@
 			{#if selectedTab === 1}
 				{@render children?.()}
 			{:else}
-				<Tooltip.Root placement={'top'} delay={0}>
+				<Tooltip.Root placement="top" delay={0}>
 					<Tooltip.Trigger class="z-50 absolute top-3 right-3">
 						<button
 							type="button"

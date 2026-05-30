@@ -18,7 +18,7 @@ async function fetchStarCount(fetchImpl: typeof fetch): Promise<number | null> {
 }
 
 export const load: LayoutServerLoad = async ({ fetch, setHeaders }) => {
-	let popularThemes: RegistryTheme[] = [];
+	let popularThemes: RegistryTheme[];
 	try {
 		const all = await listRegistryThemes(fetch);
 		popularThemes = [...all]

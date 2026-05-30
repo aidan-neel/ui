@@ -21,9 +21,7 @@ describe('Pagination -- rendering', () => {
 			props: { page: 1, total: 5, siblings: 5 }
 		});
 		const buttons = Array.from(container.querySelectorAll('button'));
-		const pageButtons = buttons.filter((b) =>
-			/^\d+$/.test(b.textContent?.trim() ?? '')
-		);
+		const pageButtons = buttons.filter((b) => /^\d+$/.test(b.textContent?.trim() ?? ''));
 		expect(pageButtons.length).toBe(5);
 	});
 
@@ -137,9 +135,7 @@ describe('Pagination -- sibling configuration', () => {
 			props: { page: 10, total: 20, siblings: 0 }
 		});
 		const buttons = Array.from(container.querySelectorAll('button'));
-		const pageButtons = buttons.filter((b) =>
-			/^\d+$/.test(b.textContent?.trim() ?? '')
-		);
+		const pageButtons = buttons.filter((b) => /^\d+$/.test(b.textContent?.trim() ?? ''));
 		// Should have at least: 1, 10, 20.
 		expect(pageButtons.map((b) => b.textContent?.trim())).toEqual(
 			expect.arrayContaining(['1', '10', '20'])
@@ -151,13 +147,9 @@ describe('Pagination -- sibling configuration', () => {
 			props: { page: 10, total: 20, siblings: 2 }
 		});
 		const buttons = Array.from(container.querySelectorAll('button'));
-		const pageButtons = buttons.filter((b) =>
-			/^\d+$/.test(b.textContent?.trim() ?? '')
-		);
+		const pageButtons = buttons.filter((b) => /^\d+$/.test(b.textContent?.trim() ?? ''));
 		// siblings=2 around 10 → 8,9,10,11,12 plus 1 and 20.
 		const labels = pageButtons.map((b) => b.textContent?.trim());
-		expect(labels).toEqual(
-			expect.arrayContaining(['1', '8', '9', '10', '11', '12', '20'])
-		);
+		expect(labels).toEqual(expect.arrayContaining(['1', '8', '9', '10', '11', '12', '20']));
 	});
 });

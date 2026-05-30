@@ -47,7 +47,9 @@
 	}
 </script>
 
-<div class="flex w-full items-center gap-2 border-b border-border/70 p-[var(--menu-search-padding)]">
+<div
+	class="flex w-full items-center gap-2 border-b border-border/70 p-[var(--menu-search-padding)]"
+>
 	<Search size={18} class="mt-0.5 text-foreground-muted" />
 	<input
 		bind:this={element}

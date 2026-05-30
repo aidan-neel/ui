@@ -1,10 +1,7 @@
 <script lang="ts">
 	import * as AlertDialog from '@silk/ui/components/alert-dialog';
 
-	let {
-		open = $bindable(false),
-		allowClickOutside = false
-	} = $props();
+	let { open = $bindable(false), allowClickOutside = false } = $props();
 </script>
 
 <button data-testid="trigger" onclick={() => (open = true)}>Open alert dialog</button>

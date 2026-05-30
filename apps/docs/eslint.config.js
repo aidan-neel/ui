@@ -35,5 +35,30 @@ export default ts.config(
 				svelteConfig
 			}
 		}
+	},
+	{
+		rules: {
+			// The docs site intentionally renders trusted markdown / syntax-highlighted
+			// HTML via {@html}; this is by design, not an XSS risk here.
+			'svelte/no-at-html-tags': 'off',
+			// Keyed {#each} is preferred but not enforced as a hard gate; surfaced as a
+			// warning to be cleaned up incrementally.
+			'svelte/require-each-key': 'warn',
+			// Stylistic Svelte 5 preferences that require non-mechanical refactors
+			// (prop-synced state, route resolution); surfaced as warnings to address
+			// incrementally rather than blocking merges.
+			'svelte/prefer-writable-derived': 'warn',
+			'svelte/no-navigation-without-resolve': 'warn',
+			// Allow underscore-prefixed bindings/args to be intentionally unused
+			// (e.g. `{#each items as _, i}` where only the index is needed).
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{
+					argsIgnorePattern: '^_',
+					varsIgnorePattern: '^_',
+					caughtErrorsIgnorePattern: '^_'
+				}
+			]
+		}
 	}
 );

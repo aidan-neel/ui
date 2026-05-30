@@ -7,9 +7,7 @@
 	const tabsState = getContext<TabsState>('tabs');
 
 	let listEl = $state<HTMLDivElement | undefined>(undefined);
-	let indicator = $state<{ left: number; top: number; width: number; height: number } | null>(
-		null
-	);
+	let indicator = $state<{ left: number; top: number; width: number; height: number } | null>(null);
 	let ready = $state(false);
 
 	function measureIndicator() {

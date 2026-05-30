@@ -61,7 +61,12 @@
 			}
 		},
 		{
-			"scope": ["entity.name.type.class", "support.type", "storage.type", "entity.other.attribute-name"],
+			"scope": [
+				"entity.name.type.class",
+				"support.type",
+				"storage.type",
+				"entity.other.attribute-name"
+			],
 			"settings": {
 				"foreground": "#8f3d8f"
 			}

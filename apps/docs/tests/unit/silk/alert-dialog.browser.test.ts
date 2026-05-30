@@ -43,9 +43,7 @@ describe('AlertDialog -- open/closed mount', () => {
 		render(AlertDialogFixture, { open: true });
 		await flush();
 		await expect.element(page.getByText('Delete project?')).toBeInTheDocument();
-		await expect
-			.element(page.getByText(/this action cannot be undone/i))
-			.toBeInTheDocument();
+		await expect.element(page.getByText(/this action cannot be undone/i)).toBeInTheDocument();
 	});
 
 	it('opens via the test trigger', async () => {
@@ -68,9 +66,7 @@ describe('AlertDialog -- distinctive ARIA contract (role="alertdialog")', () => 
 	it('sets aria-modal="true"', async () => {
 		render(AlertDialogFixture, { open: true });
 		await flush();
-		expect(
-			document.querySelector('[role="alertdialog"]')?.getAttribute('aria-modal')
-		).toBe('true');
+		expect(document.querySelector('[role="alertdialog"]')?.getAttribute('aria-modal')).toBe('true');
 	});
 
 	it('sets aria-labelledby pointing to the title', async () => {
@@ -79,9 +75,7 @@ describe('AlertDialog -- distinctive ARIA contract (role="alertdialog")', () => 
 		const dialog = document.querySelector('[role="alertdialog"]')!;
 		const labelledBy = dialog.getAttribute('aria-labelledby');
 		expect(labelledBy).toBeTruthy();
-		expect(document.getElementById(labelledBy!)?.textContent).toContain(
-			'Delete project?'
-		);
+		expect(document.getElementById(labelledBy!)?.textContent).toContain('Delete project?');
 	});
 
 	it('sets aria-describedby pointing to the description', async () => {
@@ -103,9 +97,7 @@ describe('AlertDialog -- default allowClickOutside=false (distinctive from Modal
 		await new Promise((r) => setTimeout(r, 20));
 		await expect.element(page.getByText('Delete project?')).toBeInTheDocument();
 
-		const overlay = document.querySelector(
-			'.bg-\\[var\\(--color-overlay\\)\\]'
-		) as HTMLElement;
+		const overlay = document.querySelector('.bg-\\[var\\(--color-overlay\\)\\]') as HTMLElement;
 		expect(overlay).toBeInTheDocument();
 		overlay.click();
 		await flush();
@@ -119,9 +111,7 @@ describe('AlertDialog -- default allowClickOutside=false (distinctive from Modal
 		await new Promise((r) => setTimeout(r, 20));
 		await expect.element(page.getByText('Delete project?')).toBeInTheDocument();
 
-		const overlay = document.querySelector(
-			'.bg-\\[var\\(--color-overlay\\)\\]'
-		) as HTMLElement;
+		const overlay = document.querySelector('.bg-\\[var\\(--color-overlay\\)\\]') as HTMLElement;
 		overlay.click();
 		await flush();
 		await expect.element(page.getByText('Delete project?')).not.toBeInTheDocument();

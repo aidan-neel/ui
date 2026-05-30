@@ -33,7 +33,9 @@
 				{title}
 			</h1>
 			{#if description}
-				<p class="m-0 max-w-[46rem] text-balance text-[1rem] leading-[1.7] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted max-md:text-[0.98rem]">
+				<p
+					class="m-0 max-w-[46rem] text-balance text-[1rem] leading-[1.7] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted max-md:text-[0.98rem]"
+				>
 					{description}
 				</p>
 			{/if}

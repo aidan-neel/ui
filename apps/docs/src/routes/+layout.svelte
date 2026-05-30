@@ -25,7 +25,7 @@
 <ModeWatcher />
 <Toaster />
 <main class="flex w-full flex-row justify-center">
-	<Navbar popularThemes={data?.popularThemes ?? []} starCount={data?.starCount ?? null} />
+	<Navbar starCount={data?.starCount ?? null} />
 </main>
 
 {@render children?.()}

@@ -53,7 +53,10 @@
 
 	{#each pages as p, i (i)}
 		{#if p === 'ellipsis'}
-			<span aria-hidden="true" class="inline-flex size-8 items-center justify-center text-foreground-muted">
+			<span
+				aria-hidden="true"
+				class="inline-flex size-8 items-center justify-center text-foreground-muted"
+			>
 				<MoreHorizontal size={14} />
 			</span>
 		{:else}

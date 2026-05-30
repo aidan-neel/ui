@@ -1,0 +1,8 @@
+node_modules
+.turbo
+**/.svelte-kit
+**/build
+**/dist
+**/generated
+bun.lock
+*.svx

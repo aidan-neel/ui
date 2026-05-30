@@ -14,9 +14,7 @@
 
 <ContextMenu.Root>
 	<ContextMenu.Trigger>
-		<div data-testid="ctx-trigger" style="padding: 20px; background: #eee;">
-			Right-click here
-		</div>
+		<div data-testid="ctx-trigger" style="padding: 20px; background: #eee;">Right-click here</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Content>
 		<ContextMenu.Item callback={onCopy}>

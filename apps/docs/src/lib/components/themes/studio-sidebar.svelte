@@ -7,7 +7,7 @@
 	import * as Combobox from '@silk/ui/components/combobox';
 	import Sliders from '@lucide/svelte/icons/sliders';
 	import * as Select from '@silk/ui/components/select';
-	import * as Modal from "@silk/ui/components/modal";
+	import * as Modal from '@silk/ui/components/modal';
 	import * as Tabs from '@silk/ui/components/tabs';
 	import { Button } from '@silk/ui/components/button';
 	import { ColorPicker, type ColorOption } from '@silk/ui/components/color-picker';
@@ -210,7 +210,11 @@
 	<!-- Header -->
 	<div class="shrink-0 border-b border-border px-4 py-3.5">
 		<div class="flex items-center justify-between gap-2">
-			<p class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Theme Studio</p>
+			<p
+				class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+			>
+				Theme Studio
+			</p>
 			<div class="flex gap-1">
 				<button
 					type="button"
@@ -247,7 +251,11 @@
 	<div class="flex-1 overflow-y-auto">
 		<!-- Radius -->
 		<div class="border-b border-border p-4">
-			<p class="mb-2.5 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Radius</p>
+			<p
+				class="mb-2.5 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+			>
+				Radius
+			</p>
 			<Select.Root value={activeRadius} class="">
 				<Select.Trigger class="w-full" variant="outlined">{activeRadius}</Select.Trigger>
 				<Select.Content class="">
@@ -268,12 +276,22 @@
 
 		<!-- Fonts -->
 		<div class="border-b border-border p-4">
-			<p class="mb-3 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Fonts</p>
+			<p
+				class="mb-3 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+			>
+				Fonts
+			</p>
 			<div class="space-y-3">
 				<div class="space-y-1.5">
-					<p class="text-sm [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">Heading</p>
+					<p
+						class="text-sm [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+					>
+						Heading
+					</p>
 					<Combobox.Root>
-						<Combobox.Trigger variant="outlined" class="w-full">{headerFontSelection}</Combobox.Trigger>
+						<Combobox.Trigger variant="outlined" class="w-full"
+							>{headerFontSelection}</Combobox.Trigger
+						>
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
 							<Combobox.Search placeholder="Search fonts..." />
 							<Combobox.Results>
@@ -296,9 +314,15 @@
 					</Combobox.Root>
 				</div>
 				<div class="space-y-1.5">
-					<p class="text-sm [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">Body</p>
+					<p
+						class="text-sm [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+					>
+						Body
+					</p>
 					<Combobox.Root>
-						<Combobox.Trigger variant="outlined" class="w-full">{bodyFontSelection}</Combobox.Trigger>
+						<Combobox.Trigger variant="outlined" class="w-full"
+							>{bodyFontSelection}</Combobox.Trigger
+						>
 						<Combobox.Content class="w-full min-w-[var(--button-width,auto)]">
 							<Combobox.Search placeholder="Search fonts..." />
 							<Combobox.Results>
@@ -325,7 +349,11 @@
 
 		<!-- Motion -->
 		<div class="border-b border-border p-4">
-			<p class="mb-2.5 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Motion</p>
+			<p
+				class="mb-2.5 text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+			>
+				Motion
+			</p>
 			<Select.Root value={activeDurationName} class="">
 				<Select.Trigger class="w-full" variant="outlined">{activeDurationName}</Select.Trigger>
 				<Select.Content class="">
@@ -349,7 +377,11 @@
 		<!-- Colors -->
 		<Tabs.Root bind:value={paletteMode} class="p-4">
 			<div class="mb-3 flex items-center justify-between">
-				<p class="text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Colors</p>
+				<p
+					class="text-sm [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+				>
+					Colors
+				</p>
 				<Tabs.List>
 					<Tabs.Trigger value="light">Light</Tabs.Trigger>
 					<Tabs.Trigger value="dark">Dark</Tabs.Trigger>
@@ -412,7 +444,11 @@
 	<!-- Bottom actions -->
 	<div class="shrink-0 space-y-2 border-t border-border p-4">
 		<div class="space-y-1.5">
-			<p class="text-sm [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">Theme name</p>
+			<p
+				class="text-sm [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+			>
+				Theme name
+			</p>
 			<input
 				class="h-9 w-full rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 text-sm text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground-muted focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 				value={editorName}
@@ -467,7 +503,10 @@
 		</div>
 		<div class="grid gap-3 overflow-y-auto px-6 py-5 sm:grid-cols-2">
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Hover</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Hover</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.hoverDuration}
@@ -476,7 +515,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Menu</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Menu</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.menuDuration}
@@ -484,7 +526,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Panel</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Panel</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.panelDuration}
@@ -493,7 +538,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Sheet</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Sheet</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.sheetDuration}
@@ -502,7 +550,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Overlay</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Overlay</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.overlayDuration}
@@ -511,7 +562,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Tooltip</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Tooltip</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.tooltipDuration}
@@ -520,7 +574,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Toast In</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Toast In</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.toastInDuration}
@@ -529,7 +586,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Toast Out</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Toast Out</span
+				>
 				<input
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 					value={editorTheme.motion.toastOutDuration}
@@ -538,7 +598,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Panel X</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Panel X</span
+				>
 				<input
 					type="number"
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
@@ -548,7 +611,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Panel Y</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Panel Y</span
+				>
 				<input
 					type="number"
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
@@ -558,7 +624,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Panel Blur</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Panel Blur</span
+				>
 				<input
 					type="number"
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
@@ -568,7 +637,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Panel Scale</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Panel Scale</span
+				>
 				<input
 					type="number"
 					step="0.01"
@@ -582,7 +654,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Sheet Offset</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Sheet Offset</span
+				>
 				<input
 					type="number"
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
@@ -592,7 +667,10 @@
 				/>
 			</label>
 			<label class="space-y-1">
-				<span class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Overlay Blur</span>
+				<span
+					class="text-xs [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+					>Overlay Blur</span
+				>
 				<input
 					type="number"
 					class="h-8 w-full rounded-[var(--radius-lg)] border border-border bg-[var(--color-field)] px-2 text-sm text-foreground outline-none transition-[border-color,box-shadow] focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
@@ -632,7 +710,11 @@
 			<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 				<!-- Base colors -->
 				<div class="space-y-3">
-					<p class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Base</p>
+					<p
+						class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+					>
+						Base
+					</p>
 					{#each baseTokens as token}
 						<ColorPicker
 							label={token.label}
@@ -644,7 +726,11 @@
 
 				<!-- Text colors -->
 				<div class="space-y-3">
-					<p class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Text</p>
+					<p
+						class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+					>
+						Text
+					</p>
 					{#each textTokens as token}
 						<ColorPicker
 							label={token.label}
@@ -656,7 +742,11 @@
 
 				<!-- Border colors -->
 				<div class="space-y-3">
-					<p class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Borders</p>
+					<p
+						class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+					>
+						Borders
+					</p>
 					{#each borderTokens as token}
 						<ColorPicker
 							label={token.label}
@@ -668,7 +758,11 @@
 
 				<!-- Interactive colors -->
 				<div class="space-y-3">
-					<p class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Interactive</p>
+					<p
+						class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+					>
+						Interactive
+					</p>
 					{#each interactiveTokens as token}
 						<ColorPicker
 							label={token.label}
@@ -680,7 +774,11 @@
 
 				<!-- Status colors -->
 				<div class="space-y-3">
-					<p class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Status</p>
+					<p
+						class="text-sm [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+					>
+						Status
+					</p>
 					{#each statusTokens as token}
 						<ColorPicker
 							label={token.label}

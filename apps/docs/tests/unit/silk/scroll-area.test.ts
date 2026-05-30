@@ -66,12 +66,12 @@ describe('ScrollArea -- orientation prop', () => {
 		const { container: horiz } = render(ScrollArea, {
 			props: { orientation: 'horizontal', children: textSnippet('x') }
 		});
-		expect(
-			vert.querySelector('[data-ui="scroll-area"]')?.getAttribute('data-orientation')
-		).toBe('vertical');
-		expect(
-			horiz.querySelector('[data-ui="scroll-area"]')?.getAttribute('data-orientation')
-		).toBe('horizontal');
+		expect(vert.querySelector('[data-ui="scroll-area"]')?.getAttribute('data-orientation')).toBe(
+			'vertical'
+		);
+		expect(horiz.querySelector('[data-ui="scroll-area"]')?.getAttribute('data-orientation')).toBe(
+			'horizontal'
+		);
 	});
 });
 

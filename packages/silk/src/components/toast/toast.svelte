@@ -22,10 +22,14 @@
 	});
 
 	const iconColorClass = $derived.by(() => {
-		if (toast.type === 'success') return 'text-[var(--color-success)] bg-[color-mix(in_srgb,var(--color-success)_12%,transparent)]';
-		if (toast.type === 'error') return 'text-[var(--color-error)] bg-[color-mix(in_srgb,var(--color-error)_12%,transparent)]';
-		if (toast.type === 'warning') return 'text-[var(--color-warning)] bg-[color-mix(in_srgb,var(--color-warning)_12%,transparent)]';
-		if (toast.type === 'info') return 'text-[var(--color-info)] bg-[color-mix(in_srgb,var(--color-info)_12%,transparent)]';
+		if (toast.type === 'success')
+			return 'text-[var(--color-success)] bg-[color-mix(in_srgb,var(--color-success)_12%,transparent)]';
+		if (toast.type === 'error')
+			return 'text-[var(--color-error)] bg-[color-mix(in_srgb,var(--color-error)_12%,transparent)]';
+		if (toast.type === 'warning')
+			return 'text-[var(--color-warning)] bg-[color-mix(in_srgb,var(--color-warning)_12%,transparent)]';
+		if (toast.type === 'info')
+			return 'text-[var(--color-info)] bg-[color-mix(in_srgb,var(--color-info)_12%,transparent)]';
 		if (toast.type === 'loading') return 'text-foreground-muted bg-secondary/40';
 		return '';
 	});
@@ -58,7 +62,7 @@
 		{#if Icon}
 			<div
 				class={cn(
-					'mt-0.5 flex size-[1.65rem] shrink-0 items-center justify-center rounded-md',
+					'mt-0.5 flex size-[var(--toast-icon-size)] shrink-0 items-center justify-center rounded-md',
 					iconColorClass
 				)}
 			>
@@ -73,7 +77,9 @@
 				{toast.title}
 			</p>
 			{#if toast.description}
-				<p class="[font-size:var(--font-size-body,16px)] leading-[1.45] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
+				<p
+					class="[font-size:var(--font-size-body,16px)] leading-[1.45] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+				>
 					{toast.description}
 				</p>
 			{/if}
@@ -101,7 +107,7 @@
 				type="button"
 				onclick={() => dismissToast(toast.id!)}
 				class={cn(
-					'mt-0.5 inline-flex size-[1.2rem] shrink-0 items-center justify-center rounded-md',
+					'mt-0.5 inline-flex size-[var(--toast-close-size)] shrink-0 items-center justify-center rounded-md',
 					'text-foreground-muted opacity-0 transition-all duration-200',
 					'hover:bg-secondary/50 hover:text-foreground',
 					'group-hover:opacity-100'

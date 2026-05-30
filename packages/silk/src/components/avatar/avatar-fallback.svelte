@@ -8,10 +8,7 @@
 </script>
 
 {#if !ctx.imageLoaded}
-	<span
-		class={cn('flex h-full w-full items-center justify-center', className)}
-		{...rest}
-	>
+	<span class={cn('flex h-full w-full items-center justify-center', className)} {...rest}>
 		{@render children?.()}
 	</span>
 {/if}

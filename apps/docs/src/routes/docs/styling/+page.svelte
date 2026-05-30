@@ -167,11 +167,15 @@ src/lib/silk/components/button/
 			</div>
 			<div class="flex flex-1 flex-col gap-3">
 				<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">{layer.body}</p>
-				<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
+				<div
+					class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40"
+				>
 					<div
 						class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5"
 					>
-						<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+						<span
+							class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+						>
 							<Terminal size={11} />
 							{layer.lang}
 						</span>
@@ -188,7 +192,9 @@ src/lib/silk/components/button/
 						</button>
 					</div>
 					<pre
-						class="m-0 max-h-[22rem] overflow-auto px-4 py-3 font-mono text-[0.8rem] leading-relaxed text-foreground"><code>{@html highlight(layer.code, layer.lang)}</code></pre>
+						class="m-0 max-h-[22rem] overflow-auto px-4 py-3 font-mono text-[0.8rem] leading-relaxed text-foreground"><code
+							>{@html highlight(layer.code, layer.lang)}</code
+						></pre>
 				</div>
 			</div>
 		</div>
@@ -201,7 +207,10 @@ src/lib/silk/components/button/
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Tag size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			When to use which
 		</h2>
 	</div>
@@ -209,9 +218,17 @@ src/lib/silk/components/button/
 	<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
 		<table class="w-full border-collapse text-left">
 			<thead class="bg-secondary/40">
-				<tr class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
-					<th class="px-4 py-2.5 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">If you want to…</th>
-					<th class="px-4 py-2.5 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Use</th>
+				<tr
+					class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+				>
+					<th
+						class="px-4 py-2.5 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+						>If you want to…</th
+					>
+					<th
+						class="px-4 py-2.5 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+						>Use</th
+					>
 				</tr>
 			</thead>
 			<tbody class="divide-y divide-border/60 text-[0.84rem]">
@@ -259,7 +276,10 @@ src/lib/silk/components/button/
 	class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 >
 	<div class="flex flex-col gap-1">
-		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<p
+			class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Theming, the layer above
 		</p>
 		<p class="m-0 text-[0.86rem] text-foreground-muted">

@@ -28,11 +28,10 @@
 	class={cn('relative flex w-full select-none items-center', disabled && 'opacity-50', className)}
 	{...rest}
 >
-	<div class="relative h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-		<div
-			class="absolute inset-y-0 left-0 rounded-full bg-primary"
-			style:width={`${pct}%`}
-		></div>
+	<div
+		class="relative h-[var(--slider-track-height)] w-full overflow-hidden rounded-full bg-secondary"
+	>
+		<div class="absolute inset-y-0 left-0 rounded-full bg-primary" style:width={`${pct}%`}></div>
 	</div>
 	<input
 		type="range"
@@ -54,14 +53,16 @@
 	/* Thumb -- webkit */
 	:global(.silk-slider-input::-webkit-slider-thumb) {
 		appearance: none;
-		width: 16px;
-		height: 16px;
+		width: var(--slider-thumb-size);
+		height: var(--slider-thumb-size);
 		border-radius: 9999px;
 		background: var(--color-background);
-		border: 2px solid var(--color-primary);
+		border: var(--slider-thumb-border) solid var(--color-primary);
 		box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
 		cursor: pointer;
-		transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+		transition:
+			transform var(--slider-transition-duration) ease-out,
+			box-shadow var(--slider-transition-duration) ease-out;
 	}
 	:global(.silk-slider-input:focus-visible::-webkit-slider-thumb) {
 		box-shadow: 0 0 0 3px var(--color-ring);
@@ -71,11 +72,11 @@
 	}
 	/* Thumb -- moz */
 	:global(.silk-slider-input::-moz-range-thumb) {
-		width: 16px;
-		height: 16px;
+		width: var(--slider-thumb-size);
+		height: var(--slider-thumb-size);
 		border-radius: 9999px;
 		background: var(--color-background);
-		border: 2px solid var(--color-primary);
+		border: var(--slider-thumb-border) solid var(--color-primary);
 		box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
 		cursor: pointer;
 	}

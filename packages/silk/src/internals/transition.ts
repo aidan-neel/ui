@@ -171,10 +171,7 @@ type ThemedFadeParams = {
 };
 
 /** Opacity-only fade that reads its duration from a CSS motion variable. */
-export const themedFade = (
-	node: Element,
-	params: ThemedFadeParams = {}
-): TransitionConfig => {
+export const themedFade = (node: Element, params: ThemedFadeParams = {}): TransitionConfig => {
 	const duration = getCssDuration(
 		node,
 		params.durationVar ?? '--motion-duration-overlay',
@@ -194,10 +191,7 @@ type ThemedSlideParams = {
 };
 
 /** Vertical slide that reads its duration from a CSS motion variable. */
-export const themedSlide = (
-	node: Element,
-	params: ThemedSlideParams = {}
-): TransitionConfig => {
+export const themedSlide = (node: Element, params: ThemedSlideParams = {}): TransitionConfig => {
 	const duration = getCssDuration(
 		node,
 		params.durationVar ?? '--motion-duration-panel',

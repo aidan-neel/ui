@@ -27,11 +27,7 @@ export const manifest: Manifest = {
 		'components/_internal/overlay/manifest.ts'
 	],
 	components: [],
-	shared: [
-		'utils.clickOutside',
-		'utils.getFocusableElements',
-		'utils.trapFocus'
-	],
+	shared: ['utils.clickOutside', 'utils.getFocusableElements', 'utils.trapFocus'],
 	peerDependencies: {
 		svelte: '^5.0.0'
 	}

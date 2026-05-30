@@ -21,4 +21,5 @@ const loadedPresets = Object.entries(presetModules)
 	});
 
 export const builtInThemePresets = loadedPresets;
-export const defaultTheme = builtInThemePresets.find((theme) => theme.slug === 'default') ?? builtInThemePresets[0];
+export const defaultTheme =
+	builtInThemePresets.find((theme) => theme.slug === 'default') ?? builtInThemePresets[0];

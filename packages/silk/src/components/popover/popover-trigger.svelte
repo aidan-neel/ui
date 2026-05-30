@@ -1,4 +1,4 @@
-	<script lang="ts">
+<script lang="ts">
 	import { Button } from '@silk/ui/components/button';
 	import { positionFloatingPanel } from '@silk/ui/utils';
 	import { getContext, onMount, tick } from 'svelte';

@@ -11,9 +11,9 @@ describe('Slider -- rendering', () => {
 
 	it('exposes the value via aria-valuenow', () => {
 		const { container } = render(Slider, { props: { value: 42 } });
-		expect(
-			container.querySelector('input[type="range"]')?.getAttribute('aria-valuenow')
-		).toBe('42');
+		expect(container.querySelector('input[type="range"]')?.getAttribute('aria-valuenow')).toBe(
+			'42'
+		);
 	});
 
 	it('exposes min and max via aria attributes', () => {
@@ -29,9 +29,9 @@ describe('Slider -- rendering', () => {
 		const { container } = render(Slider, {
 			props: { value: 0, label: 'Volume' }
 		});
-		expect(
-			container.querySelector('input[type="range"]')?.getAttribute('aria-label')
-		).toBe('Volume');
+		expect(container.querySelector('input[type="range"]')?.getAttribute('aria-label')).toBe(
+			'Volume'
+		);
 	});
 });
 

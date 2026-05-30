@@ -28,7 +28,11 @@
 
 <aside class={`${classProp} silk-docs-sidebar flex flex-col gap-5 overflow-y-auto pb-8 pr-2`}>
 	<section class="flex flex-col gap-1.5">
-		<h3 class="px-2 text-[12px] text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Getting Started</h3>
+		<h3
+			class="px-2 text-[12px] text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+		>
+			Getting Started
+		</h3>
 		<div class="flex flex-col gap-0.5">
 			{#each gettingStartedItems as item}
 				{@const active = isActive(`/docs/${item.slug}`)}
@@ -51,7 +55,11 @@
 
 	<section class="flex flex-col gap-1.5">
 		<div class="flex items-center justify-between px-2">
-			<h3 class="text-[12px] text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Components</h3>
+			<h3
+				class="text-[12px] text-foreground-muted [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+			>
+				Components
+			</h3>
 			<span class="text-[11px] text-foreground-muted/70">{components.length}</span>
 		</div>
 		<div class="flex flex-col gap-0.5">
@@ -62,7 +70,9 @@
 					href={`/docs/components/${component}`}
 					onclick={onNavigate}
 					class={`h-8.5 w-full justify-start rounded-lg px-3 text-left text-sm transition-[background-color,color] ${
-						active ? 'bg-secondary/85 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]' : 'hover:bg-secondary/55 hover:text-foreground'
+						active
+							? 'bg-secondary/85 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]'
+							: 'hover:bg-secondary/55 hover:text-foreground'
 					}`}
 				>
 					{sanitizeComponent(component)}

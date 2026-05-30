@@ -4,7 +4,8 @@ export const manifest: Manifest = {
 	name: 'badge',
 	version: '1.0.0',
 	visibility: 'public',
-	description: 'Inline status pill. 7 variants. Optionally renders as anchor when href is provided.',
+	description:
+		'Inline status pill. 7 variants. Optionally renders as anchor when href is provided.',
 	files: [
 		'components/badge/badge.svelte',
 		'components/badge/variants.ts',

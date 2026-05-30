@@ -6,7 +6,14 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	try {
 		const themes = await listRegistryThemes(fetch);
 		return {
-			themes: themes.length ? [...builtInThemePresets, ...themes.filter((theme) => !builtInThemePresets.some((preset) => preset.slug === theme.slug))] : builtInThemePresets
+			themes: themes.length
+				? [
+						...builtInThemePresets,
+						...themes.filter(
+							(theme) => !builtInThemePresets.some((preset) => preset.slug === theme.slug)
+						)
+					]
+				: builtInThemePresets
 		};
 	} catch {
 		return {

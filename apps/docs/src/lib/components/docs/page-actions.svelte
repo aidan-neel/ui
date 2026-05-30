@@ -42,9 +42,7 @@
 {:else}
 	<div class="flex flex-row flex-wrap items-center gap-2 pt-1 pb-6">
 		{#if source}
-			<Badge variant="outlined" href={source} icon={FileCode} class="gap-1.5 text-xs">
-				Source
-			</Badge>
+			<Badge variant="outlined" href={source} icon={FileCode} class="gap-1.5 text-xs">Source</Badge>
 		{/if}
 		{#if ariaUrl}
 			<Badge variant="outlined" href={ariaUrl} icon={Accessibility} class="gap-1.5 text-xs">

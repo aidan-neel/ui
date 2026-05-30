@@ -4,7 +4,9 @@
 	let {
 		value = $bindable('#ff0000'),
 		label = 'Color',
-		onValueChange = (v: string) => { value = v; }
+		onValueChange = (v: string) => {
+			value = v;
+		}
 	}: {
 		value?: string;
 		label?: string;

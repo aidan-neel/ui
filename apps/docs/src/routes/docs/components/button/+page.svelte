@@ -6,7 +6,6 @@
 	import * as Tooltip from '@silk/ui/components/tooltip';
 	import * as Alert from '@silk/ui/components/alert';
 	import { toast } from '@silk/ui/components/toast';
-	import PageActions from '$lib/components/docs/page-actions.svelte';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import Sparkles from '@lucide/svelte/icons/sparkles';
@@ -30,7 +29,6 @@
 	import Hash from '@lucide/svelte/icons/hash';
 
 	const TITLE = 'Button';
-	const SLUG = 'button';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/button';
 
 	const curIndex = components.indexOf(TITLE.toLowerCase());
@@ -46,36 +44,146 @@
 	let pgLoading = $state(false);
 
 	const variantList: { value: ButtonVariant; label: string; tone: string; use: string }[] = [
-		{ value: 'primary', label: 'Primary', tone: 'The hero action', use: 'One per surface. Hits the eye first.' },
-		{ value: 'secondary', label: 'Secondary', tone: 'Quiet partner', use: 'Pairs with Primary when you need two equally valid choices.' },
-		{ value: 'outlined', label: 'Outlined', tone: 'Neutral container', use: 'Toolbar actions, in-line controls, anything that should defer to content.' },
-		{ value: 'flat', label: 'Flat', tone: 'Primary-tinted ghost', use: 'Soft emphasis without a full background.' },
-		{ value: 'ghost', label: 'Ghost', tone: 'Invisible until hovered', use: 'Dense menus, icon buttons, anywhere chrome should disappear.' },
-		{ value: 'alternate', label: 'Alternate', tone: 'Inverted contrast', use: 'Stands out against busy surfaces -- perfect on hero sections.' },
-		{ value: 'success', label: 'Success', tone: 'Positive confirmation', use: '"Confirm payment", "Approve", "Save".' },
-		{ value: 'warning', label: 'Warning', tone: 'Careful, not scary', use: 'Reversible but consequential actions.' },
-		{ value: 'error', label: 'Error', tone: 'Trouble ahead', use: 'Failure recovery, retry flows, error-state CTAs.' },
-		{ value: 'destructive', label: 'Destructive', tone: 'Irreversible', use: '"Delete account", "Erase data" -- the actions you want users to pause on.' }
+		{
+			value: 'primary',
+			label: 'Primary',
+			tone: 'The hero action',
+			use: 'One per surface. Hits the eye first.'
+		},
+		{
+			value: 'secondary',
+			label: 'Secondary',
+			tone: 'Quiet partner',
+			use: 'Pairs with Primary when you need two equally valid choices.'
+		},
+		{
+			value: 'outlined',
+			label: 'Outlined',
+			tone: 'Neutral container',
+			use: 'Toolbar actions, in-line controls, anything that should defer to content.'
+		},
+		{
+			value: 'flat',
+			label: 'Flat',
+			tone: 'Primary-tinted ghost',
+			use: 'Soft emphasis without a full background.'
+		},
+		{
+			value: 'ghost',
+			label: 'Ghost',
+			tone: 'Invisible until hovered',
+			use: 'Dense menus, icon buttons, anywhere chrome should disappear.'
+		},
+		{
+			value: 'alternate',
+			label: 'Alternate',
+			tone: 'Inverted contrast',
+			use: 'Stands out against busy surfaces -- perfect on hero sections.'
+		},
+		{
+			value: 'success',
+			label: 'Success',
+			tone: 'Positive confirmation',
+			use: '"Confirm payment", "Approve", "Save".'
+		},
+		{
+			value: 'warning',
+			label: 'Warning',
+			tone: 'Careful, not scary',
+			use: 'Reversible but consequential actions.'
+		},
+		{
+			value: 'error',
+			label: 'Error',
+			tone: 'Trouble ahead',
+			use: 'Failure recovery, retry flows, error-state CTAs.'
+		},
+		{
+			value: 'destructive',
+			label: 'Destructive',
+			tone: 'Irreversible',
+			use: '"Delete account", "Erase data" -- the actions you want users to pause on.'
+		}
 	];
 
 	const sizeList: { value: Size; label: string; height: string; padX: string; usage: string }[] = [
-		{ value: 'sm', label: 'sm', height: '32 px', padX: '10 px', usage: 'Toolbars, dense tables, inline filters.' },
-		{ value: 'default', label: 'default', height: '36 px', padX: '12 px', usage: 'Forms, dialogs, page CTAs.' },
-		{ value: 'lg', label: 'lg', height: '40 px', padX: '16 px', usage: 'Marketing pages and high-emphasis flows.' },
-		{ value: 'icon', label: 'icon', height: '36 px', padX: '0 px', usage: 'Square, content-less affordances.' }
+		{
+			value: 'sm',
+			label: 'sm',
+			height: '32 px',
+			padX: '10 px',
+			usage: 'Toolbars, dense tables, inline filters.'
+		},
+		{
+			value: 'default',
+			label: 'default',
+			height: '36 px',
+			padX: '12 px',
+			usage: 'Forms, dialogs, page CTAs.'
+		},
+		{
+			value: 'lg',
+			label: 'lg',
+			height: '40 px',
+			padX: '16 px',
+			usage: 'Marketing pages and high-emphasis flows.'
+		},
+		{
+			value: 'icon',
+			label: 'icon',
+			height: '36 px',
+			padX: '0 px',
+			usage: 'Square, content-less affordances.'
+		}
 	];
 
 	const apiRows = [
-		{ prop: 'variant', type: '"primary" | "secondary" | "outlined" | "flat" | "ghost" | "alternate" | "success" | "warning" | "error" | "destructive"', default: '"primary"', description: 'Visual treatment. See Variants for guidance.' },
-		{ prop: 'size', type: '"sm" | "default" | "lg" | "icon"', default: '"default"', description: 'Token-driven height and padding.' },
-		{ prop: 'href', type: 'string', default: '--', description: 'Renders an `<a>` instead of a `<button>` -- same styling, semantic anchor.' },
-		{ prop: 'onclick', type: '() => void', default: '--', description: 'Pointer + keyboard activation.' },
-		{ prop: 'element', type: 'HTMLButtonElement | HTMLAnchorElement | undefined', default: '--', description: 'Bindable reference for imperative focus / measurement.' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Standard disabled -- also disables hover / focus shadows.' },
-		{ prop: 'class', type: 'string', default: '--', description: 'Tailwind classes appended via `cn()` -- overrides win.' }
+		{
+			prop: 'variant',
+			type: '"primary" | "secondary" | "outlined" | "flat" | "ghost" | "alternate" | "success" | "warning" | "error" | "destructive"',
+			default: '"primary"',
+			description: 'Visual treatment. See Variants for guidance.'
+		},
+		{
+			prop: 'size',
+			type: '"sm" | "default" | "lg" | "icon"',
+			default: '"default"',
+			description: 'Token-driven height and padding.'
+		},
+		{
+			prop: 'href',
+			type: 'string',
+			default: '--',
+			description: 'Renders an `<a>` instead of a `<button>` -- same styling, semantic anchor.'
+		},
+		{
+			prop: 'onclick',
+			type: '() => void',
+			default: '--',
+			description: 'Pointer + keyboard activation.'
+		},
+		{
+			prop: 'element',
+			type: 'HTMLButtonElement | HTMLAnchorElement | undefined',
+			default: '--',
+			description: 'Bindable reference for imperative focus / measurement.'
+		},
+		{
+			prop: 'disabled',
+			type: 'boolean',
+			default: 'false',
+			description: 'Standard disabled -- also disables hover / focus shadows.'
+		},
+		{
+			prop: 'class',
+			type: 'string',
+			default: '--',
+			description: 'Tailwind classes appended via `cn()` -- overrides win.'
+		}
 	];
 
-	const playgroundCode = $derived(`<Button${pgVariant !== 'primary' ? ` variant="${pgVariant}"` : ''}${pgSize !== 'default' ? ` size="${pgSize}"` : ''}>
+	const playgroundCode =
+		$derived(`<Button${pgVariant !== 'primary' ? ` variant="${pgVariant}"` : ''}${pgSize !== 'default' ? ` size="${pgSize}"` : ''}>
 ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 </Button>`);
 
@@ -116,12 +224,19 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-start justify-between gap-3">
 		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]">Component</Badge>
-		<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">10 variants</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">4 sizes</Badge>
+			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
+				>Component</Badge
+			>
+			<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">10 variants</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">4 sizes</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a
+			href={SOURCE}
+			target="_blank"
+			rel="noreferrer noopener"
+			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
+		>
 			View source
 			<External size={11} />
 		</a>
@@ -135,8 +250,8 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			Button
 		</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
-			The most touched piece of UI in your product. Silk's Button is built around semantic
-			intent — pick a variant for what the action means, not how it should look.
+			The most touched piece of UI in your product. Silk's Button is built around semantic intent —
+			pick a variant for what the action means, not how it should look.
 		</p>
 	</div>
 
@@ -162,7 +277,6 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			{/if}
 		</button>
 	</div>
-
 </header>
 
 <!-- ─── Playground (vertical layout) ───────────────────────────── -->
@@ -177,12 +291,7 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<div
 				class="grid min-h-[12rem] place-items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-10"
 			>
-				<Button
-					variant={pgVariant}
-					size={pgSize}
-					disabled={pgLoading}
-					onclick={runLoadingDemo}
-				>
+				<Button variant={pgVariant} size={pgSize} disabled={pgLoading} onclick={runLoadingDemo}>
 					{#if pgLoading}
 						<Loader size={14} class="animate-spin" />
 					{:else if pgIcon}
@@ -209,7 +318,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+					<span
+						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>
 						Variant
 					</span>
 					<div class="flex flex-wrap gap-1.5">
@@ -226,7 +337,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+					<span
+						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>
 						Size
 					</span>
 					<div class="flex flex-wrap gap-1.5">
@@ -243,7 +356,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</div>
 
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<span class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+					<span
+						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>
 						Options
 					</span>
 					<label class="flex items-center gap-2">
@@ -256,7 +371,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 			<div
 				class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5"
 			>
-				<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+				<span
+					class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+				>
 					Snippet
 				</span>
 				<button
@@ -274,7 +391,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</button>
 			</div>
 			<pre
-				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(playgroundCode, "svelte")}</code></pre>
+				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+					>{@html highlight(playgroundCode, 'svelte')}</code
+				></pre>
 		</div>
 	</div>
 </section>
@@ -296,7 +415,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 		</div>
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
 			{#each [{ icon: Layers, title: '10 variants', body: 'Semantic + status + neutral.' }, { icon: Type, title: '4 sizes', body: 'Token-driven height + padding.' }, { icon: Link, title: 'Polymorphic', body: 'Pass `href` to render an anchor.' }] as card}
-				<div class="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border bg-card p-4">
+				<div
+					class="flex flex-col gap-2 rounded-[var(--radius-lg)] border border-border bg-card p-4"
+				>
 					<span class="grid size-8 place-items-center rounded-md bg-secondary/60 text-foreground">
 						<card.icon size={14} />
 					</span>
@@ -353,7 +474,11 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					</div>
 					<div class="flex flex-col gap-1 border-t border-border/70 px-4 py-3">
 						<div class="flex items-center justify-between gap-2">
-							<p class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{v.label}</p>
+							<p
+								class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]"
+							>
+								{v.label}
+							</p>
 							<button
 								type="button"
 								onclick={() => copy(code, `var-${v.value}`)}
@@ -367,7 +492,11 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 								{/if}
 							</button>
 						</div>
-						<p class="m-0 text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{v.tone}</p>
+						<p
+							class="m-0 text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+						>
+							{v.tone}
+						</p>
 						<p class="m-0 text-[0.74rem] leading-snug text-foreground-muted">{v.use}</p>
 					</div>
 				</div>
@@ -411,10 +540,16 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 					</div>
 				{/each}
 			</div>
-			<div class="grid grid-cols-1 divide-y divide-border/60 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
+			<div
+				class="grid grid-cols-1 divide-y divide-border/60 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-y-0"
+			>
 				{#each sizeList as s}
 					<div class="flex flex-col gap-1 p-4">
-						<p class="m-0 font-mono text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{s.label}</p>
+						<p
+							class="m-0 font-mono text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]"
+						>
+							{s.label}
+						</p>
 						<div class="flex items-center gap-3 text-[0.72rem] text-foreground-muted">
 							<span class="font-mono">{s.height}</span>
 							<span aria-hidden="true">·</span>
@@ -467,7 +602,10 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 							<Button>Rest</Button>
 						{/if}
 					</div>
-					<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{s.label}</span>
+					<span
+						class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+						>{s.label}</span
+					>
 				</div>
 			{/each}
 		</div>
@@ -512,10 +650,15 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						</Button>
 					</div>
 					<pre
-						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code>{@html highlight(`<Button>
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<Button>
   <Plus size={14} />
   New project
-</Button>`, "svelte")}</code></pre>
+</Button>`,
+								'svelte'
+							)}</code
+						></pre>
 				</Tabs.Content>
 
 				<Tabs.Content value="trailing" class="contents">
@@ -528,10 +671,15 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						</Button>
 					</div>
 					<pre
-						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code>{@html highlight(`<Button variant="secondary">
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<Button variant="secondary">
   Continue
   <ArrowRight size={14} />
-</Button>`, "svelte")}</code></pre>
+</Button>`,
+								'svelte'
+							)}</code
+						></pre>
 				</Tabs.Content>
 
 				<Tabs.Content value="loading" class="contents">
@@ -544,14 +692,19 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						</Button>
 					</div>
 					<pre
-						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code>{@html highlight(`<Button disabled={busy}>
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<Button disabled={busy}>
   {#if busy}
     <Loader size={14} class="animate-spin" />
     Saving…
   {:else}
     Save
   {/if}
-</Button>`, "svelte")}</code></pre>
+</Button>`,
+								'svelte'
+							)}</code
+						></pre>
 				</Tabs.Content>
 
 				<Tabs.Content value="link" class="contents">
@@ -564,10 +717,15 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						</Button>
 					</div>
 					<pre
-						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code>{@html highlight(`<Button href="/docs" variant="outlined">
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<Button href="/docs" variant="outlined">
   <External size={13} />
   Open docs
-</Button>`, "svelte")}</code></pre>
+</Button>`,
+								'svelte'
+							)}</code
+						></pre>
 				</Tabs.Content>
 
 				<Tabs.Content value="group" class="contents">
@@ -581,11 +739,16 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 						</div>
 					</div>
 					<pre
-						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code>{@html highlight(`<div class="flex items-center gap-2">
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<div class="flex items-center gap-2">
   <Button variant="ghost"><Download size={14} /></Button>
   <Button variant="ghost"><Send size={14} /></Button>
   <Button variant="ghost"><Trash size={14} /></Button>
-</div>`, "svelte")}</code></pre>
+</div>`,
+								'svelte'
+							)}</code
+						></pre>
 				</Tabs.Content>
 			</div>
 		</Tabs.Root>
@@ -606,8 +769,8 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 				</h2>
 			</div>
 			<p class="m-0 max-w-[42rem] text-[0.86rem] text-foreground-muted">
-				<code class="font-mono text-foreground">Button</code> is the only export. Every prop
-				accepts the underlying button/anchor attributes too.
+				<code class="font-mono text-foreground">Button</code> is the only export. Every prop accepts the
+				underlying button/anchor attributes too.
 			</p>
 		</div>
 
@@ -628,7 +791,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 								onclick={() => copy(row.prop, `prop-${row.prop}`)}
 								class="group inline-flex items-center gap-1.5 rounded-md px-1 py-0.5 transition-colors hover:bg-secondary/60"
 							>
-								<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground">
+								<code
+									class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+								>
 									{row.prop}
 								</code>
 								{#if copiedSnippet === `prop-${row.prop}`}
@@ -742,7 +907,9 @@ ${pgIcon ? '  <ArrowRight size={14} />\n' : ''}  ${pgLabel || 'Button'}
 		background: var(--color-background);
 		cursor: pointer;
 		position: relative;
-		transition: background-color 150ms ease, border-color 150ms ease;
+		transition:
+			background-color 150ms ease,
+			border-color 150ms ease;
 	}
 	.silk-checkbox:hover {
 		border-color: var(--color-primary);

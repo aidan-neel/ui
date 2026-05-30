@@ -6,12 +6,6 @@
 	let { class: className, children, ...rest }: Props = $props();
 </script>
 
-<div
-	{...rest}
-	class={cn(
-		className,
-		'flex flex-col gap-[var(--modal-title-description-gap,6px)]'
-	)}
->
+<div {...rest} class={cn(className, 'flex flex-col gap-[var(--modal-title-description-gap,6px)]')}>
 	{@render children?.()}
 </div>
