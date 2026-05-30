@@ -12,6 +12,8 @@ import {
 	type ThemeBasePalette
 } from '@silk/ui/themes/presets';
 import { preset as defaultPreset } from '@silk/ui/themes/presets/default';
+import { button } from '@silk/ui/components/button/variants';
+import { input } from '@silk/ui/components/input/variants';
 
 describe('slugifyThemeName', () => {
 	it('lowercases simple names', () => {
@@ -263,6 +265,76 @@ describe('themeToCss', () => {
 			spacing: { buttonHeight: 50 }
 		});
 		expect(css).toContain('--size-control-md: 50px');
+	});
+
+	// Phase 1: tokens promoted into the editable schema must now be emitted so
+	// the Studio can drive them. Defaults preserve current rendering.
+	it('emits the Phase 1 spacing tokens with their defaults', () => {
+		const css = themeToCss(defaultPreset);
+		expect(css).toContain('--field-padding-y: 0px');
+		expect(css).toContain('--button-gap: 6px');
+		expect(css).toContain('--switch-track-padding: 2px');
+		expect(css).toContain('--textarea-min-height: 112px');
+		expect(css).toContain('--textarea-padding-y: 11px');
+	});
+
+	it('reflects overrides for the Phase 1 spacing tokens', () => {
+		const css = themeToCss({
+			...defaultPreset,
+			spacing: { fieldPaddingY: 9, buttonGap: 12, switchTrackPadding: 4 }
+		});
+		expect(css).toContain('--field-padding-y: 9px');
+		expect(css).toContain('--button-gap: 12px');
+		expect(css).toContain('--switch-track-padding: 4px');
+	});
+
+	it('emits the group-scoped motion-curve easing tokens', () => {
+		const css = themeToCss(defaultPreset);
+		expect(css).toContain('--motion-panel-easing:');
+		expect(css).toContain('--motion-easing-hover:');
+	});
+
+	it('reflects a hoverEasing override', () => {
+		const css = themeToCss({
+			...defaultPreset,
+			motion: { ...defaultPreset.motion, hoverEasing: 'linear' }
+		});
+		expect(css).toContain('--motion-easing-hover: linear');
+	});
+});
+
+describe('resolveSpacing -- Phase 1 fields', () => {
+	it('includes the promoted editable spacing defaults', () => {
+		const s = resolveSpacing();
+		expect(s.fieldPaddingY).toBe(0);
+		expect(s.buttonGap).toBe(6);
+		expect(s.switchTrackPadding).toBe(2);
+		expect(s.textareaMinHeight).toBe(112);
+		expect(s.textareaPaddingY).toBe(11);
+	});
+});
+
+// Verifies components actually consume the tokens (closes the "defined but
+// unconsumed" gap). Variant builders return the class string statically, so we
+// can assert token references without rendering.
+describe('component variants consume their tokens', () => {
+	it('button reads padding, gap, and the hover easing token', () => {
+		const cls = button({ variant: 'primary', size: 'default' });
+		expect(cls).toContain('var(--button-padding-x)');
+		expect(cls).toContain('var(--button-gap)');
+		expect(cls).toContain('var(--motion-easing-hover');
+	});
+
+	it('button sm/lg derive padding from the themed base (no longer shadow it)', () => {
+		const sm = button({ variant: 'primary', size: 'sm' });
+		const lg = button({ variant: 'primary', size: 'lg' });
+		expect(sm).toContain('calc(var(--button-padding-x)');
+		expect(lg).toContain('calc(var(--button-padding-x)');
+	});
+
+	it('input/textarea read the vertical field padding token', () => {
+		const cls = input({ variant: 'primary' });
+		expect(cls).toContain('var(--field-padding-y)');
 	});
 });
 
