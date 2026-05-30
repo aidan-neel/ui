@@ -68,16 +68,15 @@
 	--motion-panel-scale-start: 0.96;
 	--motion-sheet-offset: 132px;
 	--motion-overlay-blur: 1px;
+	--motion-panel-easing: cubic-bezier(0.22, 1, 0.36, 1);
+	--motion-easing-hover: cubic-bezier(0.25, 0.1, 0.25, 1);
 
 	--border-size: 1px;
 
 	/* Spacing + sizing */
 	--space-control-x: 0.75rem;
-	--space-control-y: 0.5rem;
 	--space-panel: 0.75rem;
-	--space-panel-lg: 1rem;
 	--space-menu-item-x: 0.45rem;
-	--space-menu-item-y: 0.15rem;
 	--size-control-sm: 1.8rem;
 	--size-control-md: 2.2rem;
 	--size-control-lg: 2.4rem;
@@ -239,7 +238,6 @@
 		inset 0 0 0 1px var(--color-border);
 
 	--panel-padding: var(--space-panel);
-	--panel-padding-lg: var(--space-panel-lg);
 	--panel-shadow:
 		0 16px 36px -10px rgb(15 15 16 / 0.18), 0 6px 14px -6px rgb(15 15 16 / 0.1),
 		0 1px 3px rgb(15 15 16 / 0.05);
@@ -425,6 +423,7 @@
 	[data-ui='command-content'],
 	[data-ui='popover-content'] {
 		transition-duration: var(--motion-duration-panel) !important;
+		transition-timing-function: var(--motion-panel-easing);
 	}
 
 	/* Menu items: every item-style row in popover-based menus collapses to

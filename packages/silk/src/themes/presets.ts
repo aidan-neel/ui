@@ -667,6 +667,7 @@ export function themeToCss(theme: ThemeDraft) {
 \t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
 \t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
 \t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
+\t--motion-easing-hover: ${motion.hoverEasing ?? 'cubic-bezier(0.25,0.1,0.25,1)'};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.light.primary} 76%, #1237b9)` : 'transparent'};
 \t--text-xs: 12px;
 \t--text-sm: 14px;${flatShadowOverrides}
@@ -715,6 +716,7 @@ ${panelTokensToCss(theme, 'light')}
 \t--motion-panel-rotate-x: ${motion.panelRotateX ?? 0};
 \t--motion-panel-opacity-start: ${motion.panelOpacityStart ?? 0};
 \t--motion-panel-easing: ${motion.panelEasing ?? 'cubic-bezier(0.22,1,0.36,1)'};
+\t--motion-easing-hover: ${motion.hoverEasing ?? 'cubic-bezier(0.25,0.1,0.25,1)'};
 \t--button-primary-border: ${theme.primaryButtonOutline ? `color-mix(in srgb, ${theme.dark.primary} 76%, #7aa2ff)` : 'transparent'};${flatShadowOverrides}
 ${paletteToCss(theme.dark)}
 ${panelTokensToCss(theme, 'dark')}

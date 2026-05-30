@@ -23,6 +23,8 @@ export type ThemeMotion = {
 	panelOpacityStart?: number;
 	/** CSS easing function for panel transitions. Defaults to a soft ease-out. */
 	panelEasing?: string;
+	/** CSS easing function for hover/press transitions on controls. Defaults to a gentle ease. */
+	hoverEasing?: string;
 };
 
 export type ThemeTransitionPreset = {
