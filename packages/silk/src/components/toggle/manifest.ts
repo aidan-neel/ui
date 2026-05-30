@@ -4,7 +4,8 @@ export const manifest: Manifest = {
 	name: 'toggle',
 	version: '1.0.0',
 	visibility: 'public',
-	description: 'Two-state toggle button with bindable pressed state, sizes (sm/md/lg), variants (default/outlined).',
+	description:
+		'Two-state toggle button with bindable pressed state, sizes (sm/md/lg), variants (default/outlined).',
 	files: [
 		'components/toggle/toggle.svelte',
 		'components/toggle/index.ts',

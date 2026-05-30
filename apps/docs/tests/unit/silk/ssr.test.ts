@@ -166,19 +166,25 @@ describe('SSR -- Tier 2 components', () => {
 
 describe('SSR -- drift-prone bidirectional-sync components', () => {
 	it('modal (closed) does not include the title in SSR output', () => {
-		const result = render(ModalFixture as Component<Record<string, unknown>>, { props: { open: false } });
+		const result = render(ModalFixture as Component<Record<string, unknown>>, {
+			props: { open: false }
+		});
 		expect(result.body).not.toMatch(/Modal Title/);
 		expect(result.body).toMatch(/data-testid="trigger"/);
 	});
 
 	it('modal (open) includes the title and role="dialog" in SSR output', () => {
-		const result = render(ModalFixture as Component<Record<string, unknown>>, { props: { open: true } });
+		const result = render(ModalFixture as Component<Record<string, unknown>>, {
+			props: { open: true }
+		});
 		expect(result.body).toMatch(/Modal Title/);
 		expect(result.body).toMatch(/role="dialog"/);
 	});
 
 	it('sheet (closed) does not include the title in SSR output', () => {
-		const result = render(SheetFixture as Component<Record<string, unknown>>, { props: { open: false } });
+		const result = render(SheetFixture as Component<Record<string, unknown>>, {
+			props: { open: false }
+		});
 		expect(result.body).not.toMatch(/Sheet Title/);
 	});
 
@@ -187,7 +193,9 @@ describe('SSR -- drift-prone bidirectional-sync components', () => {
 		// On server render, `visible` defaults to false → no content.
 		// This is acceptable; the client mounts and the effect immediately
 		// sets visible=true. We pin SSR's observable shape here.
-		const result = render(SheetFixture as Component<Record<string, unknown>>, { props: { open: true } });
+		const result = render(SheetFixture as Component<Record<string, unknown>>, {
+			props: { open: true }
+		});
 		// At SSR snapshot time, the sheet content may or may not appear depending
 		// on whether the `visible` effect ran. We assert the consistent observable:
 		// the SSR output should not throw, and should at minimum render the trigger.
@@ -195,17 +203,23 @@ describe('SSR -- drift-prone bidirectional-sync components', () => {
 	});
 
 	it('popover (closed) does not include the content in SSR output', () => {
-		const result = render(PopoverFixture as Component<Record<string, unknown>>, { props: { open: false } });
+		const result = render(PopoverFixture as Component<Record<string, unknown>>, {
+			props: { open: false }
+		});
 		expect(result.body).not.toMatch(/Popover Title/);
 	});
 
 	it('alert-dialog (closed) does not include the dialog content in SSR output', () => {
-		const result = render(AlertDialogFixture as Component<Record<string, unknown>>, { props: { open: false } });
+		const result = render(AlertDialogFixture as Component<Record<string, unknown>>, {
+			props: { open: false }
+		});
 		expect(result.body).not.toMatch(/Delete project\?/);
 	});
 
 	it('alert-dialog (open) renders with role="alertdialog" not role="dialog"', () => {
-		const result = render(AlertDialogFixture as Component<Record<string, unknown>>, { props: { open: true } });
+		const result = render(AlertDialogFixture as Component<Record<string, unknown>>, {
+			props: { open: true }
+		});
 		expect(result.body).toMatch(/role="alertdialog"/);
 		expect(result.body).not.toMatch(/role="dialog"[^"]/);
 	});
@@ -222,14 +236,18 @@ describe('SSR -- output shape spot checks', () => {
 	});
 
 	it('badge variant=primary emits the data-ui or matching class hint', () => {
-		const result = render(Badge as Component<Record<string, unknown>>, { props: { variant: 'primary' } });
+		const result = render(Badge as Component<Record<string, unknown>>, {
+			props: { variant: 'primary' }
+		});
 		// We don't assert a specific class string (would couple to Tailwind
 		// generation); we assert the markup tag exists.
 		expect(result.body.length).toBeGreaterThan(0);
 	});
 
 	it('modal closed produces empty fixture body (the trigger renders, modal content does not)', () => {
-		const result = render(ModalFixture as Component<Record<string, unknown>>, { props: { open: false } });
+		const result = render(ModalFixture as Component<Record<string, unknown>>, {
+			props: { open: false }
+		});
 		// Trigger button is rendered.
 		expect(result.body).toMatch(/<button/);
 		// Modal title is NOT rendered (open=false).
@@ -237,12 +255,16 @@ describe('SSR -- output shape spot checks', () => {
 	});
 
 	it('modal open includes the title in the SSR output', () => {
-		const result = render(ModalFixture as Component<Record<string, unknown>>, { props: { open: true } });
+		const result = render(ModalFixture as Component<Record<string, unknown>>, {
+			props: { open: true }
+		});
 		expect(result.body).toMatch(/Modal Title/);
 	});
 
 	it('alert-dialog open uses role="alertdialog" in the SSR output', () => {
-		const result = render(AlertDialogFixture as Component<Record<string, unknown>>, { props: { open: true } });
+		const result = render(AlertDialogFixture as Component<Record<string, unknown>>, {
+			props: { open: true }
+		});
 		expect(result.body).toMatch(/role="alertdialog"/);
 	});
 });

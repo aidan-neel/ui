@@ -20,14 +20,13 @@
 	aria-valuemin={0}
 	aria-valuemax={max}
 	aria-valuenow={indeterminate ? undefined : clamped}
-	class={cn(
-		'relative h-2 w-full overflow-hidden rounded-full bg-secondary',
-		className
-	)}
+	class={cn('relative h-2 w-full overflow-hidden rounded-full bg-secondary', className)}
 	{...rest}
 >
 	{#if indeterminate}
-		<div class="progress-indeterminate absolute inset-y-0 left-0 w-1/3 rounded-full bg-primary"></div>
+		<div
+			class="progress-indeterminate absolute inset-y-0 left-0 w-1/3 rounded-full bg-primary"
+		></div>
 	{:else}
 		<div
 			class="h-full rounded-full bg-primary transition-[width] [transition-duration:var(--motion-duration-panel)] ease-out"
@@ -38,8 +37,12 @@
 
 <style>
 	@keyframes progress-slide {
-		0% { transform: translateX(-100%); }
-		100% { transform: translateX(400%); }
+		0% {
+			transform: translateX(-100%);
+		}
+		100% {
+			transform: translateX(400%);
+		}
 	}
 	.progress-indeterminate {
 		animation: progress-slide 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;

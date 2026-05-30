@@ -16,7 +16,10 @@
 <p
 	{...rest}
 	id={uiState.key + '-desc'}
-	class={cn(className, 'text-center [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted sm:text-left')}
+	class={cn(
+		className,
+		'text-center [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted sm:text-left'
+	)}
 >
 	{@render children?.()}
 </p>

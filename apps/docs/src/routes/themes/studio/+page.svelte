@@ -16,7 +16,7 @@
 	import * as Alert from '@silk/ui/components/alert';
 	import * as Tooltip from '@silk/ui/components/tooltip';
 	import * as Breadcrumb from '@silk/ui/components/breadcrumb';
-	import * as Modal from "@silk/ui/components/modal";
+	import * as Modal from '@silk/ui/components/modal';
 	import * as Command from '@silk/ui/components/command';
 	import { toast } from '@silk/ui/components/toast';
 	import {
@@ -41,7 +41,6 @@
 		defaultTypography,
 		resolveTypography,
 		type ThemeTypography,
-		defaultSpacing,
 		resolveSpacing,
 		type ThemeSpacing
 	} from '@silk/ui/themes/presets';
@@ -83,7 +82,6 @@
 	import Minimize from '@lucide/svelte/icons/minimize-2';
 	import Layers2 from '@lucide/svelte/icons/layers-2';
 	import Wind from '@lucide/svelte/icons/wind';
-	import Equal from '@lucide/svelte/icons/equal';
 
 	import type { PageData } from './$types';
 
@@ -457,17 +455,40 @@
 	// ─── Easing ───
 	const defaultEasing = 'cubic-bezier(0.22,1,0.36,1)';
 	const easingOptions = [
-		{ label: 'Soft', value: 'cubic-bezier(0.22,1,0.36,1)', description: 'Gentle ease-out -- Silk default.' },
-		{ label: 'Standard', value: 'cubic-bezier(0.4,0,0.2,1)', description: 'Material standard easing -- even acceleration, sharp landing.' },
-		{ label: 'Sharp', value: 'cubic-bezier(0.4,0,0.6,1)', description: 'Quick start, smooth tail.' },
-		{ label: 'Spring', value: 'cubic-bezier(0.34,1.56,0.64,1)', description: 'Overshoots a touch, springs back.' },
+		{
+			label: 'Soft',
+			value: 'cubic-bezier(0.22,1,0.36,1)',
+			description: 'Gentle ease-out -- Silk default.'
+		},
+		{
+			label: 'Standard',
+			value: 'cubic-bezier(0.4,0,0.2,1)',
+			description: 'Material standard easing -- even acceleration, sharp landing.'
+		},
+		{
+			label: 'Sharp',
+			value: 'cubic-bezier(0.4,0,0.6,1)',
+			description: 'Quick start, smooth tail.'
+		},
+		{
+			label: 'Spring',
+			value: 'cubic-bezier(0.34,1.56,0.64,1)',
+			description: 'Overshoots a touch, springs back.'
+		},
 		{ label: 'Linear', value: 'linear', description: 'Constant velocity. Use sparingly.' },
-		{ label: 'Ease in-out', value: 'cubic-bezier(0.65,0,0.35,1)', description: 'Symmetric acceleration / deceleration.' }
+		{
+			label: 'Ease in-out',
+			value: 'cubic-bezier(0.65,0,0.35,1)',
+			description: 'Symmetric acceleration / deceleration.'
+		}
 	] as const;
 
 	const currentEasing = $derived(
-		easingOptions.find((o) => o.value === (editorTheme.motion.panelEasing ?? defaultEasing)) ??
-			{ label: 'Custom', value: 'custom', description: 'Custom cubic-bezier set via All motion options.' }
+		easingOptions.find((o) => o.value === (editorTheme.motion.panelEasing ?? defaultEasing)) ?? {
+			label: 'Custom',
+			value: 'custom',
+			description: 'Custom cubic-bezier set via All motion options.'
+		}
 	);
 
 	function updateEasing(value: string) {
@@ -649,8 +670,7 @@
 			name: cleanedName,
 			slug,
 			description:
-				publishDescription.trim() ||
-				'A custom theme published from the Silk UI Theme Studio.',
+				publishDescription.trim() || 'A custom theme published from the Silk UI Theme Studio.',
 			publisher: publishPublisher.trim() || undefined
 		};
 		isPublishing = true;
@@ -1211,21 +1231,42 @@
 			name: 'Subtle',
 			description: 'Gentle lift -- Silk default.',
 			icon: ArrowDown,
-			motion: { panelX: 0, panelY: 5, panelScaleStart: 0.99, panelBlur: 0, panelPerspective: 0, panelRotateX: 0 }
+			motion: {
+				panelX: 0,
+				panelY: 5,
+				panelScaleStart: 0.99,
+				panelBlur: 0,
+				panelPerspective: 0,
+				panelRotateX: 0
+			}
 		},
 		{
 			slug: 'lift',
 			name: 'Lift',
 			description: 'Bigger rise with a soft blur.',
 			icon: ArrowUp,
-			motion: { panelX: 0, panelY: 12, panelScaleStart: 0.97, panelBlur: 2, panelPerspective: 0, panelRotateX: 0 }
+			motion: {
+				panelX: 0,
+				panelY: 12,
+				panelScaleStart: 0.97,
+				panelBlur: 2,
+				panelPerspective: 0,
+				panelRotateX: 0
+			}
 		},
 		{
 			slug: 'depth',
 			name: 'Depth',
 			description: '3D tilt -- perspective + rotateX. Experimental.',
 			icon: Layers2,
-			motion: { panelX: 0, panelY: 6, panelScaleStart: 0.985, panelBlur: 0, panelPerspective: 800, panelRotateX: -10 }
+			motion: {
+				panelX: 0,
+				panelY: 6,
+				panelScaleStart: 0.985,
+				panelBlur: 0,
+				panelPerspective: 800,
+				panelRotateX: -10
+			}
 		},
 		{
 			slug: 'slide',
@@ -1310,9 +1351,7 @@
 	// Toolbar Select.Item values for saved themes use their unique `id` (with a
 	// `local:` prefix) so two saved themes with the same name don't collide.
 	const selectedSelectValue = $derived(
-		activeSavedThemeId
-			? `local:${activeSavedThemeId}`
-			: selectedPresetSlug
+		activeSavedThemeId ? `local:${activeSavedThemeId}` : selectedPresetSlug
 	);
 
 	const activeSavedTheme = $derived(
@@ -1356,11 +1395,6 @@
 			duration: 2000,
 			type: 'success'
 		});
-	}
-
-	function loadSavedTheme(theme: SavedTheme) {
-		activeSavedThemeId = theme.id;
-		loadPreset(theme);
 	}
 
 	let removeSavedTarget = $state<SavedTheme | null>(null);
@@ -1577,7 +1611,8 @@
 				<Sparkles size={14} />
 			</span>
 			<div class="flex min-w-0 flex-col leading-none">
-				<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+				<span
+					class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
 					>Theme Studio</span
 				>
 				<span
@@ -1660,22 +1695,12 @@
 
 			<span class="mx-1 h-5 w-px bg-border" aria-hidden="true"></span>
 
-			<Button
-				variant="ghost"
-				size="sm"
-				class="h-8 gap-1.5 text-[0.78rem]"
-				onclick={shuffleTheme}
-			>
+			<Button variant="ghost" size="sm" class="h-8 gap-1.5 text-[0.78rem]" onclick={shuffleTheme}>
 				<Shuffle size={13} />
 				<span class="max-md:hidden">Shuffle</span>
 			</Button>
 
-			<Button
-				variant="ghost"
-				size="sm"
-				class="h-8 gap-1.5 text-[0.78rem]"
-				onclick={resetToDefault}
-			>
+			<Button variant="ghost" size="sm" class="h-8 gap-1.5 text-[0.78rem]" onclick={resetToDefault}>
 				<RefreshCcw size={13} />
 				<span class="max-md:hidden">Reset</span>
 			</Button>
@@ -1746,24 +1771,15 @@
 					<Send size={12} />
 					Publish
 				</Button>
-				<Modal.Content
-					class="w-full max-w-[min(30rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
-				>
-					<div
-						class="flex shrink-0 items-start justify-between px-5 py-4"
-					>
+				<Modal.Content class="w-full max-w-[min(30rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0">
+					<div class="flex shrink-0 items-start justify-between px-5 py-4">
 						<div class="flex flex-col gap-1">
 							<Modal.Title>Publish theme</Modal.Title>
 							<Modal.Description>
 								Add the details people will see when browsing the registry.
 							</Modal.Description>
 						</div>
-						<Modal.Close
-							variant="ghost"
-							size="icon"
-							class="size-8 shrink-0"
-							aria-label="Close"
-						>
+						<Modal.Close variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
 							<svg
 								viewBox="0 0 16 16"
 								aria-hidden="true"
@@ -1796,8 +1812,8 @@
 								class="min-h-[5rem] resize-y rounded-[var(--radius-md)] border border-border bg-[var(--color-field)] px-3 py-2 text-[0.86rem] leading-relaxed text-foreground outline-none transition-[border-color,box-shadow] placeholder:text-foreground-muted focus:border-[var(--field-focus-border)] focus:shadow-[0_0_0_3px_var(--color-ring)]"
 							></textarea>
 							<span class="text-[0.7rem] text-foreground-muted">
-								Optional · if blank we publish with "A custom theme published from the Silk UI
-								Theme Studio."
+								Optional · if blank we publish with "A custom theme published from the Silk UI Theme
+								Studio."
 							</span>
 						</div>
 						<Input
@@ -1817,12 +1833,8 @@
 							<span>This is the unique id used in the registry URL.</span>
 						</div>
 					</div>
-					<div
-						class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
-					>
-						<Modal.Close variant="ghost" size="sm" class="h-8 text-[0.8rem]">
-							Cancel
-						</Modal.Close>
+					<div class="flex shrink-0 items-center justify-end gap-2 px-5 py-3">
+						<Modal.Close variant="ghost" size="sm" class="h-8 text-[0.8rem]">Cancel</Modal.Close>
 						<Button
 							variant="primary"
 							size="sm"
@@ -1939,10 +1951,7 @@
 													<Settings class="text-foreground-muted" />
 													<span>Open settings</span>
 												</Command.Item>
-												<Command.Item
-													name="open inbox mail"
-													callback={() => (screenTab = 'mail')}
-												>
+												<Command.Item name="open inbox mail" callback={() => (screenTab = 'mail')}>
 													<Inbox class="text-foreground-muted" />
 													<span>Open mail</span>
 												</Command.Item>
@@ -1971,9 +1980,7 @@
 									<Modal.Content
 										class="w-full max-w-[min(28rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
 									>
-										<div
-											class="flex shrink-0 items-start justify-between px-5 py-4"
-										>
+										<div class="flex shrink-0 items-start justify-between px-5 py-4">
 											<div class="flex flex-col gap-1">
 												<Modal.Title>Create a new project</Modal.Title>
 												<Modal.Description>
@@ -2004,17 +2011,17 @@
 												bind:value={newProjectName}
 											/>
 											<div class="flex flex-col gap-1.5">
-												<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Team</span>
+												<span
+													class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+													>Team</span
+												>
 												<Select.Root value={newProjectTeam}>
 													<Select.Trigger class="w-full" variant="outlined">
 														{newProjectTeam.charAt(0).toUpperCase() + newProjectTeam.slice(1)}
 													</Select.Trigger>
 													<Select.Content>
 														{#each [{ v: 'design', l: 'Design' }, { v: 'engineering', l: 'Engineering' }, { v: 'product', l: 'Product' }, { v: 'marketing', l: 'Marketing' }] as t}
-															<Select.Item
-																value={t.v}
-																onclick={() => (newProjectTeam = t.v)}
-															>
+															<Select.Item value={t.v} onclick={() => (newProjectTeam = t.v)}>
 																{t.l}
 															</Select.Item>
 														{/each}
@@ -2022,17 +2029,11 @@
 												</Select.Root>
 											</div>
 										</div>
-										<div
-											class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
-										>
+										<div class="flex shrink-0 items-center justify-end gap-2 px-5 py-3">
 											<Modal.Close variant="ghost" size="sm" class="text-[0.8rem]">
 												Cancel
 											</Modal.Close>
-											<Modal.Confirm
-												size="sm"
-												class="text-[0.8rem]"
-												onclick={createProject}
-											>
+											<Modal.Confirm size="sm" class="text-[0.8rem]" onclick={createProject}>
 												<Plus size={13} />
 												Create project
 											</Modal.Confirm>
@@ -2061,699 +2062,828 @@
 
 					<div class="divide-y divide-border/60">
 						{#if screenTab === 'dashboard'}
-
-					<!-- ─── KPI strip ─── -->
-					<section class="grid grid-cols-3 gap-3 px-6 py-7 md:px-8 max-sm:grid-cols-1">
-						{#each [{ label: 'Revenue', value: '$48.2k', delta: '+12%' }, { label: 'Active users', value: '1,840', delta: '+8%' }, { label: 'Churn rate', value: '1.2%', delta: '−0.4%' }] as stat}
-							<div class="flex flex-col gap-1">
-								<p class="m-0 text-[0.78rem] text-foreground-muted">{stat.label}</p>
-								<p
-									class="m-0 text-[1.6rem] [font-weight:var(--font-weight-header,500)] [letter-spacing:var(--tracking-header,-0.02em)]"
-									style="font-family: var(--font-header);"
-								>
-									{stat.value}
-								</p>
-								<div class="mt-0.5 flex items-center gap-1.5">
-									<span
-										class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--color-success)]"
-									>
-										<TrendingUp size={11} />
-										{stat.delta}
-									</span>
-									<span class="text-[0.7rem] text-foreground-muted">vs last month</span>
-								</div>
-							</div>
-						{/each}
-					</section>
-
-					<!-- ─── Tabs with sliding indicator (live) ─── -->
-					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
-						<div class="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
-							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Tabs</p>
-								<p
-									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-									style="font-family: var(--font-header);"
-								>
-									Project activity
-								</p>
-							</div>
-							<Tabs.Root bind:value={playgroundTab}>
-								<Tabs.List>
-									<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-									<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
-									<Tabs.Trigger value="files">Files</Tabs.Trigger>
-								</Tabs.List>
-							</Tabs.Root>
-						</div>
-						<div class="text-[0.86rem] text-foreground-muted">
-							{#if playgroundTab === 'overview'}
-								<p class="m-0">
-									<span class="text-foreground">All systems operational.</span> The pipeline finished
-									in 42s with 0 regressions and a 99.4% cache hit rate.
-								</p>
-							{:else if playgroundTab === 'activity'}
-								<div class="flex flex-col gap-2">
-									{#each [{ who: 'Maya', what: 'merged main into release-2.5', when: '2m' }, { who: 'Aidan', what: 'opened PR #482 · refactor toolbar', when: '14m' }, { who: 'Leo', what: 'commented on issue #311', when: '1h' }] as item}
-										<div class="flex items-center gap-2">
-											<span class="size-1.5 rounded-full bg-[var(--color-info)]"></span>
-											<span class="text-foreground">{item.who}</span>
-											<span>{item.what}</span>
-											<span class="ml-auto text-[0.7rem]">{item.when}</span>
+							<!-- ─── KPI strip ─── -->
+							<section class="grid grid-cols-3 gap-3 px-6 py-7 md:px-8 max-sm:grid-cols-1">
+								{#each [{ label: 'Revenue', value: '$48.2k', delta: '+12%' }, { label: 'Active users', value: '1,840', delta: '+8%' }, { label: 'Churn rate', value: '1.2%', delta: '−0.4%' }] as stat}
+									<div class="flex flex-col gap-1">
+										<p class="m-0 text-[0.78rem] text-foreground-muted">{stat.label}</p>
+										<p
+											class="m-0 text-[1.6rem] [font-weight:var(--font-weight-header,500)] [letter-spacing:var(--tracking-header,-0.02em)]"
+											style="font-family: var(--font-header);"
+										>
+											{stat.value}
+										</p>
+										<div class="mt-0.5 flex items-center gap-1.5">
+											<span
+												class="inline-flex items-center gap-0.5 rounded-full bg-[var(--color-success)]/12 px-1.5 py-0.5 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-[var(--color-success)]"
+											>
+												<TrendingUp size={11} />
+												{stat.delta}
+											</span>
+											<span class="text-[0.7rem] text-foreground-muted">vs last month</span>
 										</div>
-									{/each}
-								</div>
-							{:else}
-								<div class="flex flex-col gap-2">
-									{#each ['silk-ui-roadmap.md', 'design-tokens.json', 'brand-guidelines.fig'] as file}
-										<div class="flex items-center gap-2">
-											<FileText size={13} />
-											<span class="text-foreground">{file}</span>
-										</div>
-									{/each}
-								</div>
-							{/if}
-						</div>
-					</section>
-
-					<!-- ─── Form section ─── -->
-					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
-						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Form</p>
-							<p
-								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-								style="font-family: var(--font-header);"
-							>
-								Account settings
-							</p>
-						</div>
-
-						<div class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
-							<Input
-								label="Full name"
-								placeholder="Alex Johnson"
-								variant="outlined"
-								bind:value={pgInputName}
-							/>
-							<Input
-								label="Email"
-								type="email"
-								placeholder="alex@company.com"
-								variant="outlined"
-								bind:value={pgInputEmail}
-							/>
-						</div>
-
-						<div class="flex flex-col gap-1.5">
-							<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Role</span>
-							<Select.Root value={pgRole}>
-								<Select.Trigger class="w-full" variant="outlined">
-									{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
-								</Select.Trigger>
-								<Select.Content>
-									{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r}
-										<Select.Item value={r.v} onclick={() => (pgRole = r.v)}>{r.l}</Select.Item>
-									{/each}
-								</Select.Content>
-							</Select.Root>
-						</div>
-
-						<div class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border">
-							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
-								<div class="flex items-center gap-2">
-									<Bell size={14} class="text-foreground-muted" />
-									<span class="text-[0.86rem]">Push notifications</span>
-								</div>
-								<Switch bind:switched={pgNotifications} aria-label="Toggle notifications" />
-							</div>
-							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
-								<div class="flex items-center gap-2">
-									<FileText size={14} class="text-foreground-muted" />
-									<span class="text-[0.86rem]">Weekly email digest</span>
-								</div>
-								<Switch bind:switched={pgEmailDigest} aria-label="Toggle email digest" />
-							</div>
-							<div class="flex items-center justify-between gap-3 px-3 py-2.5">
-								<div class="flex items-center gap-2">
-									<Settings size={14} class="text-foreground-muted" />
-									<span class="text-[0.86rem]">Two-factor auth</span>
-								</div>
-								<Switch bind:switched={pgTwoFactor} aria-label="Toggle two-factor" />
-							</div>
-						</div>
-
-						<Checkbox
-							bind:checked={pgAcceptTerms}
-							label="I agree to the terms of service"
-							description="You can revoke access at any time from the settings page."
-						/>
-
-						<div class="flex items-center justify-end gap-2">
-							<Button variant="ghost" size="sm">Cancel</Button>
-							<Button size="sm">
-								<Pencil size={13} />
-								Save changes
-							</Button>
-						</div>
-					</section>
-
-					<!-- ─── Buttons + Badges showcase ─── -->
-					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
-						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Variants</p>
-							<p
-								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-								style="font-family: var(--font-header);"
-							>
-								Buttons & badges
-							</p>
-						</div>
-
-						<div class="flex flex-wrap items-center gap-2">
-							<Button>Primary</Button>
-							<Button variant="secondary">Secondary</Button>
-							<Button variant="outlined">Outlined</Button>
-							<Button variant="ghost">Ghost</Button>
-							<Button variant="flat">Flat</Button>
-							<Button variant="destructive">Destructive</Button>
-						</div>
-						<div class="flex flex-wrap items-center gap-2">
-							<Button variant="success">Success</Button>
-							<Button variant="warning">Warning</Button>
-							<Button variant="error">Error</Button>
-							<Button disabled>Disabled</Button>
-							<Button size="sm">Small</Button>
-							<Button size="lg">Large</Button>
-						</div>
-
-						<div class="flex flex-wrap items-center gap-1.5">
-							<Badge>Primary</Badge>
-							<Badge variant="secondary">Secondary</Badge>
-							<Badge variant="outlined">Outlined</Badge>
-							<Badge variant="flat">Flat</Badge>
-							<Badge variant="ghost">Ghost</Badge>
-							<Badge variant="destructive">Destructive</Badge>
-							<Badge variant="alternate">Alternate</Badge>
-						</div>
-					</section>
-
-					<!-- ─── Alerts ─── -->
-					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
-						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Feedback</p>
-							<p
-								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-								style="font-family: var(--font-header);"
-							>
-								Alerts
-							</p>
-						</div>
-						<div class="grid grid-cols-2 gap-2.5 max-md:grid-cols-1">
-							<Alert.Root variant="info">
-								<Alert.Title>Heads up</Alert.Title>
-								<Alert.Description>A new release just rolled out to staging.</Alert.Description>
-							</Alert.Root>
-							<Alert.Root variant="success">
-								<Alert.Title>Saved</Alert.Title>
-								<Alert.Description>Your changes are in good shape.</Alert.Description>
-							</Alert.Root>
-							<Alert.Root variant="warning">
-								<Alert.Title>Almost out of credit</Alert.Title>
-								<Alert.Description>Add a card before usage caps out.</Alert.Description>
-							</Alert.Root>
-							<Alert.Root variant="error">
-								<Alert.Title>Build failed</Alert.Title>
-								<Alert.Description>Type-check returned 4 errors.</Alert.Description>
-							</Alert.Root>
-						</div>
-					</section>
-
-					<!-- ─── Progress + Skeleton ─── -->
-					<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
-						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Progress</p>
-							<p
-								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-								style="font-family: var(--font-header);"
-							>
-								Storage usage
-							</p>
-						</div>
-
-						<div class="flex flex-col gap-2.5">
-							{#each [{ label: 'Documents', pct: pgProgress }, { label: 'Images', pct: 38 }, { label: 'Builds', pct: 12 }] as bar}
-								<div>
-									<div class="mb-1 flex items-center justify-between text-[0.78rem]">
-										<span class="text-foreground-muted">{bar.label}</span>
-										<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{bar.pct}%</span>
 									</div>
-									<div class="h-1.5 overflow-hidden rounded-full bg-secondary">
-										<div
-											class="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
-											style="width:{bar.pct}%;"
-										></div>
-									</div>
-								</div>
-							{/each}
-						</div>
+								{/each}
+							</section>
 
-						<div class="flex items-center gap-2">
-							<Button
-								size="sm"
-								variant="outlined"
-								onclick={() => (pgProgress = Math.max(0, pgProgress - 8))}>−</Button
-							>
-							<Button
-								size="sm"
-								variant="outlined"
-								onclick={() => (pgProgress = Math.min(100, pgProgress + 8))}>+</Button
-							>
-							<span class="ml-2 text-[0.78rem] text-foreground-muted">Adjust documents</span>
-						</div>
-
-						<div class="flex flex-col gap-2 pt-1">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Skeleton</p>
-							<Skeleton class="h-3 w-full" />
-							<Skeleton class="h-3 w-[80%]" />
-							<Skeleton class="h-3 w-[60%]" />
-						</div>
-					</section>
-
-					<!-- ─── Notifications ─── -->
-					<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
-						<div class="flex items-center justify-between">
-							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Activity</p>
-								<p
-									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-									style="font-family: var(--font-header);"
-								>
-									Notifications
-								</p>
-							</div>
-							<Badge variant="ghost" class="px-1.5 text-[0.66rem]">3 new</Badge>
-						</div>
-						<div class="flex flex-col">
-							{#each [{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'now', dot: 'var(--color-success)' }, { title: 'New team member', desc: 'Maya joined the workspace', time: '4m ago', dot: 'var(--color-info)' }, { title: 'Card expires soon', desc: 'Update your payment method', time: '1h ago', dot: 'var(--color-warning)' }, { title: 'Build failed', desc: 'Type-check returned 4 errors', time: 'yesterday', dot: 'var(--color-destructive)' }] as item}
+							<!-- ─── Tabs with sliding indicator (live) ─── -->
+							<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
 								<div
-									class="flex items-start gap-2.5 rounded-md px-1.5 py-2 transition-colors hover:bg-secondary/40"
+									class="flex items-center justify-between gap-3 max-sm:flex-col max-sm:items-start"
 								>
-									<span
-										class="mt-1.5 size-1.5 shrink-0 rounded-full"
-										style={`background:${item.dot};`}
-									></span>
-									<div class="min-w-0 flex-1">
-										<p class="m-0 truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{item.title}</p>
-										<p class="m-0 mt-0.5 truncate text-[0.76rem] text-foreground-muted">
-											{item.desc}
+									<div>
+										<p
+											class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+										>
+											Tabs
+										</p>
+										<p
+											class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+											style="font-family: var(--font-header);"
+										>
+											Project activity
 										</p>
 									</div>
-									<span class="shrink-0 text-[0.72rem] text-foreground-muted">{item.time}</span>
+									<Tabs.Root bind:value={playgroundTab}>
+										<Tabs.List>
+											<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+											<Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+											<Tabs.Trigger value="files">Files</Tabs.Trigger>
+										</Tabs.List>
+									</Tabs.Root>
 								</div>
-							{/each}
-						</div>
-					</section>
-
-					<!-- ─── Command teaser + Tooltip ─── -->
-					<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
-						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Command</p>
-							<p
-								class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-								style="font-family: var(--font-header);"
-							>
-								Quick actions
-							</p>
-						</div>
-
-						<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border">
-							<div class="flex items-center gap-2 border-b border-border px-3 py-2">
-								<Search size={14} class="text-foreground-muted" />
-								<span class="flex-1 text-[0.84rem] text-foreground-muted">Type a command…</span>
-								<kbd
-									class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted"
-									>⌘K</kbd
-								>
-							</div>
-							<div class="flex flex-col p-1.5">
-								{#each [{ icon: Plus, label: 'Create project' }, { icon: Users, label: 'Invite member' }, { icon: CreditCard, label: 'Upgrade plan' }, { icon: Settings, label: 'Open settings' }] as item}
-									<Button variant="ghost" size="sm" class="w-full justify-start gap-2 text-[0.84rem]">
-										<item.icon size={13} class="text-foreground-muted" />
-										<span>{item.label}</span>
-										<span class="ml-auto text-[0.7rem] text-foreground-muted">↵</span>
-									</Button>
-								{/each}
-							</div>
-						</div>
-
-						<div class="flex items-center gap-2">
-							<Tooltip.Root>
-								<Tooltip.Trigger>
-									<Button variant="outlined" size="sm" class="gap-1.5 text-[0.78rem]">
-										<Info size={12} />
-										<span>Hover me</span>
-									</Button>
-								</Tooltip.Trigger>
-								<Tooltip.Content>This is a Silk tooltip.</Tooltip.Content>
-							</Tooltip.Root>
-							<span class="text-[0.76rem] text-foreground-muted"
-								>Tooltip uses the same motion preset</span
-							>
-						</div>
-					</section>
-
-					<!-- ─── Typography preview ─── -->
-					<section class="flex flex-col gap-5 px-6 py-7 md:px-8">
-						<div>
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Typography</p>
-							<p class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]" style="font-family: var(--font-header);">
-								Every role, live
-							</p>
-						</div>
-
-						<!-- Header sample -->
-						<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
-							<div class="flex items-baseline justify-between gap-3">
-								<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Header</span>
-								<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-header · --font-size-header · --font-weight-header · --tracking-header</span>
-							</div>
-							<h3
-								class="m-0 text-[2rem] leading-[1.05] [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-							>
-								Pack my box with five dozen liquor jugs.
-							</h3>
-							<p class="m-0 text-[1.25rem] leading-tight [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)] text-foreground-muted">
-								Sphinx of black quartz, judge my vow.
-							</p>
-						</div>
-
-						<!-- Body sample -->
-						<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
-							<div class="flex items-baseline justify-between gap-3">
-								<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Body</span>
-								<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-sans · --font-size-body · --font-weight-body · --tracking-body</span>
-							</div>
-							<p class="m-0 leading-relaxed [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground">
-								Silk uses the body role for prose, descriptions, and most paragraph copy. Switch fonts or tweak weights and tracking from the inspector — the change ripples through every body element in this preview and in your published theme.
-								<a href="/docs/introduction" class="text-primary underline-offset-2 hover:underline">Inline links</a> respect the primary token.
-							</p>
-							<p class="m-0 text-[0.86rem] leading-relaxed [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
-								Muted secondary text — used for descriptions and helper copy underneath fields.
-							</p>
-						</div>
-
-						<!-- Label sample -->
-						<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
-							<div class="flex items-baseline justify-between gap-3">
-								<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Label</span>
-								<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-size-label · --font-weight-label · --tracking-label</span>
-							</div>
-							<div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-								<span class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Field label</span>
-								<span class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Section header</span>
-								<span class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Eyebrow</span>
-								<span class="rounded-full bg-secondary px-2 py-0.5 [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Chip</span>
-							</div>
-						</div>
-
-						<!-- Button + Badge sample -->
-						<div class="grid grid-cols-2 gap-3 max-md:grid-cols-1">
-							<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
-								<div class="flex items-baseline justify-between gap-3">
-									<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Button</span>
-									<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-size-button · --font-weight-button · --tracking-button</span>
-								</div>
-								<div class="flex flex-wrap items-center gap-2">
-									<Button>Save changes</Button>
-									<Button variant="outlined">Discard</Button>
-									<Button variant="ghost">Cancel</Button>
-								</div>
-							</div>
-
-							<div class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4">
-								<div class="flex items-baseline justify-between gap-3">
-									<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted">Badge</span>
-									<span class="font-mono text-[0.62rem] text-foreground-muted/70">--font-size-badge · --font-weight-badge · --tracking-badge</span>
-								</div>
-								<div class="flex flex-wrap items-center gap-1.5">
-									<Badge>Live</Badge>
-									<Badge variant="secondary">Draft</Badge>
-									<Badge variant="outlined">Beta</Badge>
-									<Badge variant="ghost">v1.0</Badge>
-								</div>
-							</div>
-						</div>
-
-						<!-- Mono fallback -->
-						<p class="m-0 font-mono text-[0.82rem] text-foreground-muted">
-							const tokens = $derived(themeToCss(draft));
-						</p>
-					</section>
-					{:else if screenTab === 'settings'}
-						<!-- ─── Settings: General ─── -->
-						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
-							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">General</p>
-								<p
-									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-									style="font-family: var(--font-header);"
-								>
-									Profile
-								</p>
-							</div>
-							<div class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
-								<Input
-									label="Display name"
-									variant="outlined"
-									bind:value={pgInputName}
-								/>
-								<Input
-									label="Email"
-									type="email"
-									variant="outlined"
-									bind:value={pgInputEmail}
-								/>
-							</div>
-							<div class="flex flex-col gap-1.5">
-								<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Default role</span>
-								<Select.Root value={pgRole}>
-									<Select.Trigger class="w-full" variant="outlined">
-										{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
-									</Select.Trigger>
-									<Select.Content>
-										{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r}
-											<Select.Item value={r.v} onclick={() => (pgRole = r.v)}
-												>{r.l}</Select.Item
-											>
-										{/each}
-									</Select.Content>
-								</Select.Root>
-							</div>
-						</section>
-
-						<!-- ─── Settings: Preferences ─── -->
-						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
-							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Preferences</p>
-								<p
-									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-									style="font-family: var(--font-header);"
-								>
-									Notifications & security
-								</p>
-							</div>
-							<div
-								class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
-							>
-								<div class="flex items-center justify-between gap-3 px-3 py-2.5">
-									<div class="flex items-center gap-2">
-										<Bell size={14} class="text-foreground-muted" />
-										<div class="flex flex-col">
-											<span class="text-[0.86rem]">Push notifications</span>
-											<span class="text-[0.72rem] text-foreground-muted"
-												>Get notified about mentions and replies.</span
-											>
+								<div class="text-[0.86rem] text-foreground-muted">
+									{#if playgroundTab === 'overview'}
+										<p class="m-0">
+											<span class="text-foreground">All systems operational.</span> The pipeline finished
+											in 42s with 0 regressions and a 99.4% cache hit rate.
+										</p>
+									{:else if playgroundTab === 'activity'}
+										<div class="flex flex-col gap-2">
+											{#each [{ who: 'Maya', what: 'merged main into release-2.5', when: '2m' }, { who: 'Aidan', what: 'opened PR #482 · refactor toolbar', when: '14m' }, { who: 'Leo', what: 'commented on issue #311', when: '1h' }] as item}
+												<div class="flex items-center gap-2">
+													<span class="size-1.5 rounded-full bg-[var(--color-info)]"></span>
+													<span class="text-foreground">{item.who}</span>
+													<span>{item.what}</span>
+													<span class="ml-auto text-[0.7rem]">{item.when}</span>
+												</div>
+											{/each}
 										</div>
-									</div>
-									<Switch bind:switched={pgNotifications} aria-label="Toggle notifications" />
-								</div>
-								<div class="flex items-center justify-between gap-3 px-3 py-2.5">
-									<div class="flex items-center gap-2">
-										<FileText size={14} class="text-foreground-muted" />
-										<div class="flex flex-col">
-											<span class="text-[0.86rem]">Weekly email digest</span>
-											<span class="text-[0.72rem] text-foreground-muted"
-												>A Monday summary of activity in your workspace.</span
-											>
+									{:else}
+										<div class="flex flex-col gap-2">
+											{#each ['silk-ui-roadmap.md', 'design-tokens.json', 'brand-guidelines.fig'] as file}
+												<div class="flex items-center gap-2">
+													<FileText size={13} />
+													<span class="text-foreground">{file}</span>
+												</div>
+											{/each}
 										</div>
-									</div>
-									<Switch bind:switched={pgEmailDigest} aria-label="Toggle email digest" />
+									{/if}
 								</div>
-								<div class="flex items-center justify-between gap-3 px-3 py-2.5">
-									<div class="flex items-center gap-2">
-										<Settings size={14} class="text-foreground-muted" />
-										<div class="flex flex-col">
-											<span class="text-[0.86rem]">Two-factor auth</span>
-											<span class="text-[0.72rem] text-foreground-muted"
-												>Add an extra layer of sign-in security.</span
-											>
-										</div>
-									</div>
-									<Switch bind:switched={pgTwoFactor} aria-label="Toggle two-factor" />
-								</div>
-							</div>
-							<Checkbox
-								bind:checked={pgAcceptTerms}
-								label="I agree to the terms of service"
-								description="You can revoke access at any time from the settings page."
-							/>
-							<div class="flex items-center justify-end gap-2">
-								<Button variant="ghost" size="sm">Cancel</Button>
-								<Button size="sm">
-									<Pencil size={13} />
-									Save changes
-								</Button>
-							</div>
-						</section>
+							</section>
 
-						<!-- ─── Settings: Danger zone ─── -->
-						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
-							<div>
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Danger zone</p>
-								<p
-									class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
-									style="font-family: var(--font-header);"
-								>
-									Workspace lifecycle
-								</p>
-							</div>
-							<Alert.Root variant="warning">
-								<Alert.Title>Archive workspace</Alert.Title>
-								<Alert.Description>
-									Members lose access until you unarchive. You can do this at any time.
-								</Alert.Description>
-							</Alert.Root>
-							<Alert.Root variant="error">
-								<Alert.Title>Delete workspace</Alert.Title>
-								<Alert.Description>
-									Permanent — your projects, comments, and data will be removed.
-								</Alert.Description>
-							</Alert.Root>
-							<div class="flex items-center justify-end gap-2">
-								<Button variant="outlined" size="sm">Archive</Button>
-								<Button variant="destructive" size="sm">Delete workspace</Button>
-							</div>
-						</section>
-					{:else if screenTab === 'mail'}
-						<!-- ─── Mail: Inbox list ─── -->
-						<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
-							<div class="flex items-center justify-between">
+							<!-- ─── Form section ─── -->
+							<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
 								<div>
-									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Inbox</p>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Form
+									</p>
 									<p
 										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
 										style="font-family: var(--font-header);"
 									>
-										{mailMessages.filter((m) => m.unread).length} unread
+										Account settings
 									</p>
 								</div>
-								<Badge variant="outlined" class="text-[0.7rem]">5 messages</Badge>
-							</div>
-							<div
-								class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
-							>
-								{#each mailMessages as msg}
-									{@const active = msg.id === selectedMailId}
-									<button
-										type="button"
-										onclick={() => (selectedMailId = msg.id)}
-										class={`flex items-start gap-3 px-3 py-3 text-left transition-colors ${active ? 'bg-secondary/60' : 'hover:bg-secondary/40'}`}
-									>
-										<span
-											class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
-											>{msg.initials}</span
-										>
-										<div class="min-w-0 flex-1">
-											<div class="flex items-center justify-between gap-2">
-												<span class="truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{msg.sender}</span>
-												<span class="shrink-0 text-[0.7rem] text-foreground-muted"
-													>{msg.time}</span
-												>
-											</div>
-											<p class="m-0 mt-0.5 truncate text-[0.8rem]">
-												{msg.subject}
-											</p>
-											<p class="m-0 mt-0.5 truncate text-[0.74rem] text-foreground-muted">
-												{msg.preview}
-											</p>
-										</div>
-										{#if msg.unread}
-											<span
-												class="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary"
-												aria-label="Unread"
-											></span>
-										{/if}
-									</button>
-								{/each}
-							</div>
-						</section>
 
-						<!-- ─── Mail: Open message ─── -->
-						<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
-							<div class="flex items-start justify-between gap-3">
-								<div class="flex items-center gap-3">
+								<div class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+									<Input
+										label="Full name"
+										placeholder="Alex Johnson"
+										variant="outlined"
+										bind:value={pgInputName}
+									/>
+									<Input
+										label="Email"
+										type="email"
+										placeholder="alex@company.com"
+										variant="outlined"
+										bind:value={pgInputEmail}
+									/>
+								</div>
+
+								<div class="flex flex-col gap-1.5">
 									<span
-										class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
-										>{selectedMail.initials}</span
+										class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+										>Role</span
 									>
-									<div>
-										<p class="m-0 text-[0.92rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{selectedMail.sender}</p>
-										<p class="m-0 mt-0.5 text-[0.74rem] text-foreground-muted">
-											to me · {selectedMail.time}
-										</p>
+									<Select.Root value={pgRole}>
+										<Select.Trigger class="w-full" variant="outlined">
+											{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
+										</Select.Trigger>
+										<Select.Content>
+											{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r}
+												<Select.Item value={r.v} onclick={() => (pgRole = r.v)}>{r.l}</Select.Item>
+											{/each}
+										</Select.Content>
+									</Select.Root>
+								</div>
+
+								<div
+									class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
+								>
+									<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+										<div class="flex items-center gap-2">
+											<Bell size={14} class="text-foreground-muted" />
+											<span class="text-[0.86rem]">Push notifications</span>
+										</div>
+										<Switch bind:switched={pgNotifications} aria-label="Toggle notifications" />
+									</div>
+									<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+										<div class="flex items-center gap-2">
+											<FileText size={14} class="text-foreground-muted" />
+											<span class="text-[0.86rem]">Weekly email digest</span>
+										</div>
+										<Switch bind:switched={pgEmailDigest} aria-label="Toggle email digest" />
+									</div>
+									<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+										<div class="flex items-center gap-2">
+											<Settings size={14} class="text-foreground-muted" />
+											<span class="text-[0.86rem]">Two-factor auth</span>
+										</div>
+										<Switch bind:switched={pgTwoFactor} aria-label="Toggle two-factor" />
 									</div>
 								</div>
-								<div class="flex items-center gap-1.5">
-									<span
-										class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[0.68rem] text-foreground-muted"
-									>
-										<span
-											class="size-1.5 rounded-full"
-											style={`background:${tagToTone[selectedMail.tag] ?? 'var(--color-foreground-muted)'};`}
-										></span>
-										{selectedMail.tag}
-									</span>
+
+								<Checkbox
+									bind:checked={pgAcceptTerms}
+									label="I agree to the terms of service"
+									description="You can revoke access at any time from the settings page."
+								/>
+
+								<div class="flex items-center justify-end gap-2">
+									<Button variant="ghost" size="sm">Cancel</Button>
+									<Button size="sm">
+										<Pencil size={13} />
+										Save changes
+									</Button>
 								</div>
-							</div>
-							<h3
-								class="m-0 text-[1.2rem] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
-								style="font-family: var(--font-header);"
-							>
-								{selectedMail.subject}
-							</h3>
-							<p class="m-0 text-[0.92rem] leading-relaxed text-foreground">
-								{selectedMail.preview}
-							</p>
-							<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">
-								Reply if you have any questions. Otherwise this thread will close automatically in 7
-								days.
-							</p>
-							<div class="flex flex-wrap items-center gap-2">
-								<Button size="sm">
-									<Send size={13} />
-									Reply
-								</Button>
-								<Button variant="outlined" size="sm">Forward</Button>
-								<Button variant="ghost" size="sm">Mark unread</Button>
-								<Button variant="ghost" size="sm" class="text-[var(--color-destructive)]">
-									Delete
-								</Button>
-							</div>
-						</section>
-					{/if}
+							</section>
+
+							<!-- ─── Buttons + Badges showcase ─── -->
+							<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Variants
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Buttons & badges
+									</p>
+								</div>
+
+								<div class="flex flex-wrap items-center gap-2">
+									<Button>Primary</Button>
+									<Button variant="secondary">Secondary</Button>
+									<Button variant="outlined">Outlined</Button>
+									<Button variant="ghost">Ghost</Button>
+									<Button variant="flat">Flat</Button>
+									<Button variant="destructive">Destructive</Button>
+								</div>
+								<div class="flex flex-wrap items-center gap-2">
+									<Button variant="success">Success</Button>
+									<Button variant="warning">Warning</Button>
+									<Button variant="error">Error</Button>
+									<Button disabled>Disabled</Button>
+									<Button size="sm">Small</Button>
+									<Button size="lg">Large</Button>
+								</div>
+
+								<div class="flex flex-wrap items-center gap-1.5">
+									<Badge>Primary</Badge>
+									<Badge variant="secondary">Secondary</Badge>
+									<Badge variant="outlined">Outlined</Badge>
+									<Badge variant="flat">Flat</Badge>
+									<Badge variant="ghost">Ghost</Badge>
+									<Badge variant="destructive">Destructive</Badge>
+									<Badge variant="alternate">Alternate</Badge>
+								</div>
+							</section>
+
+							<!-- ─── Alerts ─── -->
+							<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Feedback
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Alerts
+									</p>
+								</div>
+								<div class="grid grid-cols-2 gap-2.5 max-md:grid-cols-1">
+									<Alert.Root variant="info">
+										<Alert.Title>Heads up</Alert.Title>
+										<Alert.Description>A new release just rolled out to staging.</Alert.Description>
+									</Alert.Root>
+									<Alert.Root variant="success">
+										<Alert.Title>Saved</Alert.Title>
+										<Alert.Description>Your changes are in good shape.</Alert.Description>
+									</Alert.Root>
+									<Alert.Root variant="warning">
+										<Alert.Title>Almost out of credit</Alert.Title>
+										<Alert.Description>Add a card before usage caps out.</Alert.Description>
+									</Alert.Root>
+									<Alert.Root variant="error">
+										<Alert.Title>Build failed</Alert.Title>
+										<Alert.Description>Type-check returned 4 errors.</Alert.Description>
+									</Alert.Root>
+								</div>
+							</section>
+
+							<!-- ─── Progress + Skeleton ─── -->
+							<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Progress
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Storage usage
+									</p>
+								</div>
+
+								<div class="flex flex-col gap-2.5">
+									{#each [{ label: 'Documents', pct: pgProgress }, { label: 'Images', pct: 38 }, { label: 'Builds', pct: 12 }] as bar}
+										<div>
+											<div class="mb-1 flex items-center justify-between text-[0.78rem]">
+												<span class="text-foreground-muted">{bar.label}</span>
+												<span
+													class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+													>{bar.pct}%</span
+												>
+											</div>
+											<div class="h-1.5 overflow-hidden rounded-full bg-secondary">
+												<div
+													class="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
+													style="width:{bar.pct}%;"
+												></div>
+											</div>
+										</div>
+									{/each}
+								</div>
+
+								<div class="flex items-center gap-2">
+									<Button
+										size="sm"
+										variant="outlined"
+										onclick={() => (pgProgress = Math.max(0, pgProgress - 8))}>−</Button
+									>
+									<Button
+										size="sm"
+										variant="outlined"
+										onclick={() => (pgProgress = Math.min(100, pgProgress + 8))}>+</Button
+									>
+									<span class="ml-2 text-[0.78rem] text-foreground-muted">Adjust documents</span>
+								</div>
+
+								<div class="flex flex-col gap-2 pt-1">
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Skeleton
+									</p>
+									<Skeleton class="h-3 w-full" />
+									<Skeleton class="h-3 w-[80%]" />
+									<Skeleton class="h-3 w-[60%]" />
+								</div>
+							</section>
+
+							<!-- ─── Notifications ─── -->
+							<section class="flex flex-col gap-2 px-6 py-7 md:px-8">
+								<div class="flex items-center justify-between">
+									<div>
+										<p
+											class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+										>
+											Activity
+										</p>
+										<p
+											class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+											style="font-family: var(--font-header);"
+										>
+											Notifications
+										</p>
+									</div>
+									<Badge variant="ghost" class="px-1.5 text-[0.66rem]">3 new</Badge>
+								</div>
+								<div class="flex flex-col">
+									{#each [{ title: 'Deployment succeeded', desc: 'v2.4.1 is live in production', time: 'now', dot: 'var(--color-success)' }, { title: 'New team member', desc: 'Maya joined the workspace', time: '4m ago', dot: 'var(--color-info)' }, { title: 'Card expires soon', desc: 'Update your payment method', time: '1h ago', dot: 'var(--color-warning)' }, { title: 'Build failed', desc: 'Type-check returned 4 errors', time: 'yesterday', dot: 'var(--color-destructive)' }] as item}
+										<div
+											class="flex items-start gap-2.5 rounded-md px-1.5 py-2 transition-colors hover:bg-secondary/40"
+										>
+											<span
+												class="mt-1.5 size-1.5 shrink-0 rounded-full"
+												style={`background:${item.dot};`}
+											></span>
+											<div class="min-w-0 flex-1">
+												<p
+													class="m-0 truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+												>
+													{item.title}
+												</p>
+												<p class="m-0 mt-0.5 truncate text-[0.76rem] text-foreground-muted">
+													{item.desc}
+												</p>
+											</div>
+											<span class="shrink-0 text-[0.72rem] text-foreground-muted">{item.time}</span>
+										</div>
+									{/each}
+								</div>
+							</section>
+
+							<!-- ─── Command teaser + Tooltip ─── -->
+							<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Command
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Quick actions
+									</p>
+								</div>
+
+								<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border">
+									<div class="flex items-center gap-2 border-b border-border px-3 py-2">
+										<Search size={14} class="text-foreground-muted" />
+										<span class="flex-1 text-[0.84rem] text-foreground-muted">Type a command…</span>
+										<kbd
+											class="rounded border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted"
+											>⌘K</kbd
+										>
+									</div>
+									<div class="flex flex-col p-1.5">
+										{#each [{ icon: Plus, label: 'Create project' }, { icon: Users, label: 'Invite member' }, { icon: CreditCard, label: 'Upgrade plan' }, { icon: Settings, label: 'Open settings' }] as item}
+											<Button
+												variant="ghost"
+												size="sm"
+												class="w-full justify-start gap-2 text-[0.84rem]"
+											>
+												<item.icon size={13} class="text-foreground-muted" />
+												<span>{item.label}</span>
+												<span class="ml-auto text-[0.7rem] text-foreground-muted">↵</span>
+											</Button>
+										{/each}
+									</div>
+								</div>
+
+								<div class="flex items-center gap-2">
+									<Tooltip.Root>
+										<Tooltip.Trigger>
+											<Button variant="outlined" size="sm" class="gap-1.5 text-[0.78rem]">
+												<Info size={12} />
+												<span>Hover me</span>
+											</Button>
+										</Tooltip.Trigger>
+										<Tooltip.Content>This is a Silk tooltip.</Tooltip.Content>
+									</Tooltip.Root>
+									<span class="text-[0.76rem] text-foreground-muted"
+										>Tooltip uses the same motion preset</span
+									>
+								</div>
+							</section>
+
+							<!-- ─── Typography preview ─── -->
+							<section class="flex flex-col gap-5 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Typography
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Every role, live
+									</p>
+								</div>
+
+								<!-- Header sample -->
+								<div
+									class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4"
+								>
+									<div class="flex items-baseline justify-between gap-3">
+										<span
+											class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+											>Header</span
+										>
+										<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+											>--font-header · --font-size-header · --font-weight-header · --tracking-header</span
+										>
+									</div>
+									<h3
+										class="m-0 text-[2rem] leading-[1.05] [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+									>
+										Pack my box with five dozen liquor jugs.
+									</h3>
+									<p
+										class="m-0 text-[1.25rem] leading-tight [font-family:var(--font-header)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)] text-foreground-muted"
+									>
+										Sphinx of black quartz, judge my vow.
+									</p>
+								</div>
+
+								<!-- Body sample -->
+								<div
+									class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4"
+								>
+									<div class="flex items-baseline justify-between gap-3">
+										<span
+											class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+											>Body</span
+										>
+										<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+											>--font-sans · --font-size-body · --font-weight-body · --tracking-body</span
+										>
+									</div>
+									<p
+										class="m-0 leading-relaxed [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground"
+									>
+										Silk uses the body role for prose, descriptions, and most paragraph copy. Switch
+										fonts or tweak weights and tracking from the inspector — the change ripples
+										through every body element in this preview and in your published theme.
+										<a
+											href="/docs/introduction"
+											class="text-primary underline-offset-2 hover:underline">Inline links</a
+										> respect the primary token.
+									</p>
+									<p
+										class="m-0 text-[0.86rem] leading-relaxed [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+									>
+										Muted secondary text — used for descriptions and helper copy underneath fields.
+									</p>
+								</div>
+
+								<!-- Label sample -->
+								<div
+									class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4"
+								>
+									<div class="flex items-baseline justify-between gap-3">
+										<span
+											class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+											>Label</span
+										>
+										<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+											>--font-size-label · --font-weight-label · --tracking-label</span
+										>
+									</div>
+									<div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+										<span
+											class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+											>Field label</span
+										>
+										<span
+											class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+											>Section header</span
+										>
+										<span
+											class="[font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+											>Eyebrow</span
+										>
+										<span
+											class="rounded-full bg-secondary px-2 py-0.5 [font-size:var(--font-size-label,14px)] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+											>Chip</span
+										>
+									</div>
+								</div>
+
+								<!-- Button + Badge sample -->
+								<div class="grid grid-cols-2 gap-3 max-md:grid-cols-1">
+									<div
+										class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4"
+									>
+										<div class="flex items-baseline justify-between gap-3">
+											<span
+												class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+												>Button</span
+											>
+											<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+												>--font-size-button · --font-weight-button · --tracking-button</span
+											>
+										</div>
+										<div class="flex flex-wrap items-center gap-2">
+											<Button>Save changes</Button>
+											<Button variant="outlined">Discard</Button>
+											<Button variant="ghost">Cancel</Button>
+										</div>
+									</div>
+
+									<div
+										class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-4"
+									>
+										<div class="flex items-baseline justify-between gap-3">
+											<span
+												class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase text-foreground-muted"
+												>Badge</span
+											>
+											<span class="font-mono text-[0.62rem] text-foreground-muted/70"
+												>--font-size-badge · --font-weight-badge · --tracking-badge</span
+											>
+										</div>
+										<div class="flex flex-wrap items-center gap-1.5">
+											<Badge>Live</Badge>
+											<Badge variant="secondary">Draft</Badge>
+											<Badge variant="outlined">Beta</Badge>
+											<Badge variant="ghost">v1.0</Badge>
+										</div>
+									</div>
+								</div>
+
+								<!-- Mono fallback -->
+								<p class="m-0 font-mono text-[0.82rem] text-foreground-muted">
+									const tokens = $derived(themeToCss(draft));
+								</p>
+							</section>
+						{:else if screenTab === 'settings'}
+							<!-- ─── Settings: General ─── -->
+							<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										General
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Profile
+									</p>
+								</div>
+								<div class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+									<Input label="Display name" variant="outlined" bind:value={pgInputName} />
+									<Input label="Email" type="email" variant="outlined" bind:value={pgInputEmail} />
+								</div>
+								<div class="flex flex-col gap-1.5">
+									<span
+										class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+										>Default role</span
+									>
+									<Select.Root value={pgRole}>
+										<Select.Trigger class="w-full" variant="outlined">
+											{pgRole.charAt(0).toUpperCase() + pgRole.slice(1)}
+										</Select.Trigger>
+										<Select.Content>
+											{#each [{ v: 'engineer', l: 'Engineer' }, { v: 'designer', l: 'Designer' }, { v: 'product', l: 'Product manager' }, { v: 'founder', l: 'Founder' }] as r}
+												<Select.Item value={r.v} onclick={() => (pgRole = r.v)}>{r.l}</Select.Item>
+											{/each}
+										</Select.Content>
+									</Select.Root>
+								</div>
+							</section>
+
+							<!-- ─── Settings: Preferences ─── -->
+							<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Preferences
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Notifications & security
+									</p>
+								</div>
+								<div
+									class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
+								>
+									<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+										<div class="flex items-center gap-2">
+											<Bell size={14} class="text-foreground-muted" />
+											<div class="flex flex-col">
+												<span class="text-[0.86rem]">Push notifications</span>
+												<span class="text-[0.72rem] text-foreground-muted"
+													>Get notified about mentions and replies.</span
+												>
+											</div>
+										</div>
+										<Switch bind:switched={pgNotifications} aria-label="Toggle notifications" />
+									</div>
+									<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+										<div class="flex items-center gap-2">
+											<FileText size={14} class="text-foreground-muted" />
+											<div class="flex flex-col">
+												<span class="text-[0.86rem]">Weekly email digest</span>
+												<span class="text-[0.72rem] text-foreground-muted"
+													>A Monday summary of activity in your workspace.</span
+												>
+											</div>
+										</div>
+										<Switch bind:switched={pgEmailDigest} aria-label="Toggle email digest" />
+									</div>
+									<div class="flex items-center justify-between gap-3 px-3 py-2.5">
+										<div class="flex items-center gap-2">
+											<Settings size={14} class="text-foreground-muted" />
+											<div class="flex flex-col">
+												<span class="text-[0.86rem]">Two-factor auth</span>
+												<span class="text-[0.72rem] text-foreground-muted"
+													>Add an extra layer of sign-in security.</span
+												>
+											</div>
+										</div>
+										<Switch bind:switched={pgTwoFactor} aria-label="Toggle two-factor" />
+									</div>
+								</div>
+								<Checkbox
+									bind:checked={pgAcceptTerms}
+									label="I agree to the terms of service"
+									description="You can revoke access at any time from the settings page."
+								/>
+								<div class="flex items-center justify-end gap-2">
+									<Button variant="ghost" size="sm">Cancel</Button>
+									<Button size="sm">
+										<Pencil size={13} />
+										Save changes
+									</Button>
+								</div>
+							</section>
+
+							<!-- ─── Settings: Danger zone ─── -->
+							<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+								<div>
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
+										Danger zone
+									</p>
+									<p
+										class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+										style="font-family: var(--font-header);"
+									>
+										Workspace lifecycle
+									</p>
+								</div>
+								<Alert.Root variant="warning">
+									<Alert.Title>Archive workspace</Alert.Title>
+									<Alert.Description>
+										Members lose access until you unarchive. You can do this at any time.
+									</Alert.Description>
+								</Alert.Root>
+								<Alert.Root variant="error">
+									<Alert.Title>Delete workspace</Alert.Title>
+									<Alert.Description>
+										Permanent — your projects, comments, and data will be removed.
+									</Alert.Description>
+								</Alert.Root>
+								<div class="flex items-center justify-end gap-2">
+									<Button variant="outlined" size="sm">Archive</Button>
+									<Button variant="destructive" size="sm">Delete workspace</Button>
+								</div>
+							</section>
+						{:else if screenTab === 'mail'}
+							<!-- ─── Mail: Inbox list ─── -->
+							<section class="flex flex-col gap-3 px-6 py-7 md:px-8">
+								<div class="flex items-center justify-between">
+									<div>
+										<p
+											class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+										>
+											Inbox
+										</p>
+										<p
+											class="m-0 mt-0.5 [font-size:var(--font-size-header,18px)] [font-weight:var(--font-weight-header,600)] [letter-spacing:var(--tracking-header,-0.02em)]"
+											style="font-family: var(--font-header);"
+										>
+											{mailMessages.filter((m) => m.unread).length} unread
+										</p>
+									</div>
+									<Badge variant="outlined" class="text-[0.7rem]">5 messages</Badge>
+								</div>
+								<div
+									class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-md)] border border-border"
+								>
+									{#each mailMessages as msg}
+										{@const active = msg.id === selectedMailId}
+										<button
+											type="button"
+											onclick={() => (selectedMailId = msg.id)}
+											class={`flex items-start gap-3 px-3 py-3 text-left transition-colors ${active ? 'bg-secondary/60' : 'hover:bg-secondary/40'}`}
+										>
+											<span
+												class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary text-[0.74rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+												>{msg.initials}</span
+											>
+											<div class="min-w-0 flex-1">
+												<div class="flex items-center justify-between gap-2">
+													<span
+														class="truncate text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+														>{msg.sender}</span
+													>
+													<span class="shrink-0 text-[0.7rem] text-foreground-muted"
+														>{msg.time}</span
+													>
+												</div>
+												<p class="m-0 mt-0.5 truncate text-[0.8rem]">
+													{msg.subject}
+												</p>
+												<p class="m-0 mt-0.5 truncate text-[0.74rem] text-foreground-muted">
+													{msg.preview}
+												</p>
+											</div>
+											{#if msg.unread}
+												<span
+													class="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary"
+													aria-label="Unread"
+												></span>
+											{/if}
+										</button>
+									{/each}
+								</div>
+							</section>
+
+							<!-- ─── Mail: Open message ─── -->
+							<section class="flex flex-col gap-4 px-6 py-7 md:px-8">
+								<div class="flex items-start justify-between gap-3">
+									<div class="flex items-center gap-3">
+										<span
+											class="grid size-10 place-items-center rounded-full bg-primary/12 text-[0.78rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)] text-primary"
+											>{selectedMail.initials}</span
+										>
+										<div>
+											<p
+												class="m-0 text-[0.92rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+											>
+												{selectedMail.sender}
+											</p>
+											<p class="m-0 mt-0.5 text-[0.74rem] text-foreground-muted">
+												to me · {selectedMail.time}
+											</p>
+										</div>
+									</div>
+									<div class="flex items-center gap-1.5">
+										<span
+											class="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-[0.68rem] text-foreground-muted"
+										>
+											<span
+												class="size-1.5 rounded-full"
+												style={`background:${tagToTone[selectedMail.tag] ?? 'var(--color-foreground-muted)'};`}
+											></span>
+											{selectedMail.tag}
+										</span>
+									</div>
+								</div>
+								<h3
+									class="m-0 text-[1.2rem] [font-weight:var(--font-weight-header,500)] leading-tight [letter-spacing:var(--tracking-header,-0.02em)]"
+									style="font-family: var(--font-header);"
+								>
+									{selectedMail.subject}
+								</h3>
+								<p class="m-0 text-[0.92rem] leading-relaxed text-foreground">
+									{selectedMail.preview}
+								</p>
+								<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">
+									Reply if you have any questions. Otherwise this thread will close automatically in
+									7 days.
+								</p>
+								<div class="flex flex-wrap items-center gap-2">
+									<Button size="sm">
+										<Send size={13} />
+										Reply
+									</Button>
+									<Button variant="outlined" size="sm">Forward</Button>
+									<Button variant="ghost" size="sm">Mark unread</Button>
+									<Button variant="ghost" size="sm" class="text-[var(--color-destructive)]">
+										Delete
+									</Button>
+								</div>
+							</section>
+						{/if}
+					</div>
 				</div>
 			</div>
-		</div>
 		</main>
 
 		<!-- Mobile drawer toggle (lg-: floating button, lg+: hidden) -->
@@ -2801,9 +2931,17 @@
 				</div>
 
 				<div class="min-h-0 flex-1 overflow-y-auto">
-					{#snippet colorRow(label: string, value: string | undefined, opts: ColorOption[], onChange: (v: string) => void)}
+					{#snippet colorRow(
+						label: string,
+						value: string | undefined,
+						opts: ColorOption[],
+						onChange: (v: string) => void
+					)}
 						<div class="flex items-center justify-between gap-2">
-							<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">{label}</span>
+							<span
+								class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>{label}</span
+							>
 							<ColorPicker
 								class="w-[170px]"
 								value={value ?? ''}
@@ -2815,45 +2953,94 @@
 
 					<!-- COLORS TAB -->
 					<Tabs.Content value="colors" class="flex flex-col gap-4 p-3.5">
-
 						<section class="flex flex-col gap-2.5">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
 									Light mode
 								</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">6 tokens</span>
+								<span
+									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+									>6 tokens</span
+								>
 							</div>
-							{@render colorRow('Background', lightBasePalette.background, lightBackgroundOptions, (v) => updateBasePalette('light', 'background', v))}
-							{@render colorRow('Surface', lightBasePalette.card, lightSurfaceOptions, (v) => updateBasePalette('light', 'card', v))}
-							{@render colorRow('Secondary', lightBasePalette.secondary, lightSecondaryOptions, (v) => updateBasePalette('light', 'secondary', v))}
-							{@render colorRow('Text', lightBasePalette.text, lightTextOptions, (v) => updateBasePalette('light', 'text', v))}
-							{@render colorRow('Primary', lightBasePalette.primary, lightPrimaryOptions, (v) => updatePrimaryColor('light', v))}
-							{@render colorRow('Border', lightBasePalette.border, lightBorderOptions, (v) => updateBasePalette('light', 'border', v))}
+							{@render colorRow(
+								'Background',
+								lightBasePalette.background,
+								lightBackgroundOptions,
+								(v) => updateBasePalette('light', 'background', v)
+							)}
+							{@render colorRow('Surface', lightBasePalette.card, lightSurfaceOptions, (v) =>
+								updateBasePalette('light', 'card', v)
+							)}
+							{@render colorRow(
+								'Secondary',
+								lightBasePalette.secondary,
+								lightSecondaryOptions,
+								(v) => updateBasePalette('light', 'secondary', v)
+							)}
+							{@render colorRow('Text', lightBasePalette.text, lightTextOptions, (v) =>
+								updateBasePalette('light', 'text', v)
+							)}
+							{@render colorRow('Primary', lightBasePalette.primary, lightPrimaryOptions, (v) =>
+								updatePrimaryColor('light', v)
+							)}
+							{@render colorRow('Border', lightBasePalette.border, lightBorderOptions, (v) =>
+								updateBasePalette('light', 'border', v)
+							)}
 						</section>
 
 						<div class="border-t border-border"></div>
 
 						<section class="flex flex-col gap-2.5">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
 									Dark mode
 								</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">6 tokens</span>
+								<span
+									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+									>6 tokens</span
+								>
 							</div>
-							{@render colorRow('Background', darkBasePalette.background, darkBackgroundOptions, (v) => updateBasePalette('dark', 'background', v))}
-							{@render colorRow('Surface', darkBasePalette.card, darkSurfaceOptions, (v) => updateBasePalette('dark', 'card', v))}
-							{@render colorRow('Secondary', darkBasePalette.secondary, darkSecondaryOptions, (v) => updateBasePalette('dark', 'secondary', v))}
-							{@render colorRow('Text', darkBasePalette.text, darkTextOptions, (v) => updateBasePalette('dark', 'text', v))}
-							{@render colorRow('Primary', darkBasePalette.primary, darkPrimaryOptions, (v) => updatePrimaryColor('dark', v))}
-							{@render colorRow('Border', darkBasePalette.border, darkBorderOptions, (v) => updateBasePalette('dark', 'border', v))}
+							{@render colorRow(
+								'Background',
+								darkBasePalette.background,
+								darkBackgroundOptions,
+								(v) => updateBasePalette('dark', 'background', v)
+							)}
+							{@render colorRow('Surface', darkBasePalette.card, darkSurfaceOptions, (v) =>
+								updateBasePalette('dark', 'card', v)
+							)}
+							{@render colorRow('Secondary', darkBasePalette.secondary, darkSecondaryOptions, (v) =>
+								updateBasePalette('dark', 'secondary', v)
+							)}
+							{@render colorRow('Text', darkBasePalette.text, darkTextOptions, (v) =>
+								updateBasePalette('dark', 'text', v)
+							)}
+							{@render colorRow('Primary', darkBasePalette.primary, darkPrimaryOptions, (v) =>
+								updatePrimaryColor('dark', v)
+							)}
+							{@render colorRow('Border', darkBasePalette.border, darkBorderOptions, (v) =>
+								updateBasePalette('dark', 'border', v)
+							)}
 						</section>
 
 						<div class="border-t border-border"></div>
 
-						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+						<section
+							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
+						>
 							<div class="flex flex-col gap-0.5">
-								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Overlays on surface</span>
-								<span class="text-[0.72rem] text-foreground-muted">Modals, dialogs &amp; sheets paint with Surface instead of Background.</span>
+								<span
+									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>Overlays on surface</span
+								>
+								<span class="text-[0.72rem] text-foreground-muted"
+									>Modals, dialogs &amp; sheets paint with Surface instead of Background.</span
+								>
 							</div>
 							<Switch
 								switched={overlaysOnSurfaceOn}
@@ -2862,10 +3049,17 @@
 							/>
 						</section>
 
-						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+						<section
+							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
+						>
 							<div class="flex flex-col gap-0.5">
-								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Fancy buttons</span>
-								<span class="text-[0.72rem] text-foreground-muted">Layered shadow &amp; inner highlight on all button variants. Off for flat.</span>
+								<span
+									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>Fancy buttons</span
+								>
+								<span class="text-[0.72rem] text-foreground-muted"
+									>Layered shadow &amp; inner highlight on all button variants. Off for flat.</span
+								>
 							</div>
 							<Switch
 								switched={fancyButtonsOn}
@@ -2874,10 +3068,17 @@
 							/>
 						</section>
 
-						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+						<section
+							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
+						>
 							<div class="flex flex-col gap-0.5">
-								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Fancy badges</span>
-								<span class="text-[0.72rem] text-foreground-muted">Layered shadow &amp; inner highlight on badges. Off for flat.</span>
+								<span
+									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>Fancy badges</span
+								>
+								<span class="text-[0.72rem] text-foreground-muted"
+									>Layered shadow &amp; inner highlight on badges. Off for flat.</span
+								>
 							</div>
 							<Switch
 								switched={fancyBadgesOn}
@@ -2886,10 +3087,17 @@
 							/>
 						</section>
 
-						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+						<section
+							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
+						>
 							<div class="flex flex-col gap-0.5">
-								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Fancy shadows</span>
-								<span class="text-[0.72rem] text-foreground-muted">Soft drop shadows on cards, modals, popovers, toasts, tooltips. Off for flat.</span>
+								<span
+									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>Fancy shadows</span
+								>
+								<span class="text-[0.72rem] text-foreground-muted"
+									>Soft drop shadows on cards, modals, popovers, toasts, tooltips. Off for flat.</span
+								>
 							</div>
 							<Switch
 								switched={fancyShadowsOn}
@@ -2898,10 +3106,17 @@
 							/>
 						</section>
 
-						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+						<section
+							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
+						>
 							<div class="flex flex-col gap-0.5">
-								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Haptic press</span>
-								<span class="text-[0.72rem] text-foreground-muted">Buttons nudge -1px on press. Off for static.</span>
+								<span
+									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>Haptic press</span
+								>
+								<span class="text-[0.72rem] text-foreground-muted"
+									>Buttons nudge -1px on press. Off for static.</span
+								>
 							</div>
 							<Switch
 								switched={hapticPressOn}
@@ -2910,10 +3125,18 @@
 							/>
 						</section>
 
-						<section class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5">
+						<section
+							class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/40 px-3 py-2.5"
+						>
 							<div class="flex flex-col gap-0.5">
-								<span class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">Pointer cursor</span>
-								<span class="text-[0.72rem] text-foreground-muted">Buttons, tabs, switches, and radios show a pointer on hover. Off for the system default cursor.</span>
+								<span
+									class="text-[0.82rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>Pointer cursor</span
+								>
+								<span class="text-[0.72rem] text-foreground-muted"
+									>Buttons, tabs, switches, and radios show a pointer on hover. Off for the system
+									default cursor.</span
+								>
 							</div>
 							<Switch
 								switched={pointerCursorOn}
@@ -2936,7 +3159,9 @@
 					<!-- TYPE TAB -->
 					<Tabs.Content value="type" class="flex flex-col gap-4 p-3.5">
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+							<p
+								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+							>
 								Header font
 							</p>
 							<Select.Root value={headerFontSelection}>
@@ -2945,10 +3170,7 @@
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
 									{#each fontOptions as font}
-										<Select.Item
-											value={font.label}
-											onclick={() => updateHeaderFont(font.label)}
-										>
+										<Select.Item value={font.label} onclick={() => updateHeaderFont(font.label)}>
 											<span style={`font-family:${font.value};`} class="text-left">
 												{font.label}
 											</span>
@@ -2959,7 +3181,9 @@
 						</section>
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+							<p
+								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+							>
 								Body font
 							</p>
 							<Select.Root value={bodyFontSelection}>
@@ -2968,10 +3192,7 @@
 								</Select.Trigger>
 								<Select.Content class="max-h-72 overflow-y-auto">
 									{#each fontOptions as font}
-										<Select.Item
-											value={font.label}
-											onclick={() => updateBodyFont(font.label)}
-										>
+										<Select.Item value={font.label} onclick={() => updateBodyFont(font.label)}>
 											<span style={`font-family:${font.value};`} class="text-left">
 												{font.label}
 											</span>
@@ -2985,22 +3206,33 @@
 
 						<section class="flex flex-col gap-2">
 							<div class="flex items-center justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Size, Weight & Tracking</p>
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
+									Size, Weight & Tracking
+								</p>
 								<span class="text-[0.66rem] text-foreground-muted/70">Per-element</span>
 							</div>
 							<div class="flex flex-col gap-2.5">
 								{#each weightFields as field}
 									{@const typo = editorTheme.typography ?? defaultTypography}
 									{@const currentWeight = typo[field.key] ?? defaultTypography[field.key]}
-									{@const currentTracking = typo[field.trackingKey] ?? defaultTypography[field.trackingKey]}
+									{@const currentTracking =
+										typo[field.trackingKey] ?? defaultTypography[field.trackingKey]}
 									{@const currentSize = typo[field.sizeKey] ?? defaultTypography[field.sizeKey]}
-									{@const fontFam = field.key === 'weightHeader' ? 'var(--font-header)' : 'var(--font-sans)'}
+									{@const fontFam =
+										field.key === 'weightHeader' ? 'var(--font-header)' : 'var(--font-sans)'}
 									<div class="flex flex-col gap-1.5">
 										<span class="text-[0.74rem] text-foreground-muted">{field.label}</span>
 										<div class="flex items-center gap-1.5">
 											<Select.Root value={String(currentSize)} class="">
-												<Select.Trigger class="h-8 w-[4.75rem] shrink-0 text-[0.78rem]" variant="outlined">
-													<span class="block min-w-0 flex-1 truncate text-left">{sizeLabelFor(currentSize)}</span>
+												<Select.Trigger
+													class="h-8 w-[4.75rem] shrink-0 text-[0.78rem]"
+													variant="outlined"
+												>
+													<span class="block min-w-0 flex-1 truncate text-left"
+														>{sizeLabelFor(currentSize)}</span
+													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
 													{#each sizeOptions as opt}
@@ -3022,8 +3254,13 @@
 												</Select.Content>
 											</Select.Root>
 											<Select.Root value={String(currentWeight)} class="">
-												<Select.Trigger class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]" variant="outlined">
-													<span class="block min-w-0 flex-1 truncate text-left">{weightLabel(currentWeight)}</span>
+												<Select.Trigger
+													class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]"
+													variant="outlined"
+												>
+													<span class="block min-w-0 flex-1 truncate text-left"
+														>{weightLabel(currentWeight)}</span
+													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
 													{#each weightOptions as opt}
@@ -3045,8 +3282,13 @@
 												</Select.Content>
 											</Select.Root>
 											<Select.Root value={String(currentTracking)} class="">
-												<Select.Trigger class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]" variant="outlined">
-													<span class="block min-w-0 flex-1 truncate text-left">{trackingLabelFor(currentTracking)}</span>
+												<Select.Trigger
+													class="h-8 w-[6.5rem] shrink-0 text-[0.78rem]"
+													variant="outlined"
+												>
+													<span class="block min-w-0 flex-1 truncate text-left"
+														>{trackingLabelFor(currentTracking)}</span
+													>
 												</Select.Trigger>
 												<Select.Content class="max-h-72 overflow-y-auto">
 													{#each trackingOptions as opt}
@@ -3075,14 +3317,24 @@
 
 						<div class="border-t border-border"></div>
 
-						<section class="flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+						<section
+							class="flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3"
+						>
+							<p
+								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+							>
 								Preview
 							</p>
-							<p class="m-0 text-[1.4rem] leading-tight" style="font-family: var(--font-header); font-weight: var(--font-weight-header, 500); letter-spacing: var(--tracking-header, -0.02em);">
+							<p
+								class="m-0 text-[1.4rem] leading-tight"
+								style="font-family: var(--font-header); font-weight: var(--font-weight-header, 500); letter-spacing: var(--tracking-header, -0.02em);"
+							>
 								The quick brown fox jumps.
 							</p>
-							<p class="m-0 text-[0.86rem] leading-[1.55] text-foreground-muted" style="font-weight: var(--font-weight-body, 400); letter-spacing: var(--tracking-body, 0em);">
+							<p
+								class="m-0 text-[0.86rem] leading-[1.55] text-foreground-muted"
+								style="font-weight: var(--font-weight-body, 400); letter-spacing: var(--tracking-body, 0em);"
+							>
 								Body text in {bodyFontSelection}. A calmer base that adapts to your product's tone.
 							</p>
 							<p class="m-0 font-mono text-[0.72rem] text-foreground-muted">
@@ -3095,7 +3347,11 @@
 					<Tabs.Content value="shape" class="flex flex-col gap-4 p-3.5">
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Radius</p>
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
+									Radius
+								</p>
 								<span
 									class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground"
 								>
@@ -3138,7 +3394,11 @@
 						<div class="border-t border-border"></div>
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Motion preset</p>
+							<p
+								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+							>
+								Motion preset
+							</p>
 							<div class="grid grid-cols-3 gap-1.5">
 								{#each transitionPresets as preset}
 									{@const active = editorTheme.durationPreset === preset.slug}
@@ -3147,9 +3407,9 @@
 											? 4
 											: preset.slug === 'swift' || preset.slug === 'snappy'
 												? 3
-											: preset.slug === 'crisp' || preset.slug === 'default'
-												? 2
-												: 1}
+												: preset.slug === 'crisp' || preset.slug === 'default'
+													? 2
+													: 1}
 									<button
 										type="button"
 										onclick={() => updateDurationPreset(preset.slug)}
@@ -3163,7 +3423,11 @@
 												></span>
 											{/each}
 										</span>
-										<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] {active ? 'text-foreground' : ''}">{preset.name}</span>
+										<span
+											class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] {active
+												? 'text-foreground'
+												: ''}">{preset.name}</span
+										>
 									</button>
 								{/each}
 							</div>
@@ -3176,10 +3440,14 @@
 
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
 									Transition preset
 								</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">
+								<span
+									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+								>
 									{activeTransitionShape?.name ?? 'Custom'}
 								</span>
 							</div>
@@ -3198,7 +3466,9 @@
 										>
 											<shape.icon size={12} />
 										</span>
-										<span class={`[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] ${active ? 'text-foreground' : ''}`}>
+										<span
+											class={`[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] ${active ? 'text-foreground' : ''}`}
+										>
 											{shape.name}
 										</span>
 									</button>
@@ -3228,8 +3498,15 @@
 
 						<section class="flex flex-col gap-2">
 							<div class="flex items-baseline justify-between">
-								<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Easing</p>
-								<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70">{currentEasing.label}</span>
+								<p
+									class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+								>
+									Easing
+								</p>
+								<span
+									class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+									>{currentEasing.label}</span
+								>
 							</div>
 							<Select.Root value={editorTheme.motion.panelEasing ?? defaultEasing} class="">
 								<Select.Trigger class="h-9 w-full text-[0.82rem]" variant="outlined">
@@ -3244,8 +3521,13 @@
 											onclick={() => updateEasing(opt.value)}
 										>
 											<span class="flex w-full items-center justify-between gap-3">
-												<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{opt.label}</span>
-												<code class="font-mono text-[0.66rem] text-foreground-muted">{opt.value}</code>
+												<span
+													class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+													>{opt.label}</span
+												>
+												<code class="font-mono text-[0.66rem] text-foreground-muted"
+													>{opt.value}</code
+												>
 											</span>
 										</Select.Item>
 									{/each}
@@ -3258,7 +3540,11 @@
 					<!-- PADDING TAB -->
 					<Tabs.Content value="padding" class="flex flex-col gap-5 p-3.5">
 						<div class="flex flex-col gap-1">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">Spacing & sizing</p>
+							<p
+								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+							>
+								Spacing & sizing
+							</p>
 						</div>
 
 						{#each spacingGroups as group, gi (group.title)}
@@ -3267,7 +3553,10 @@
 							{/if}
 							<section class="flex flex-col gap-3">
 								<div class="flex items-center justify-between">
-									<span class="text-[0.7rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80">{group.title}</span>
+									<span
+										class="text-[0.7rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80"
+										>{group.title}</span
+									>
 									<span class="text-[0.62rem] font-mono text-foreground-muted/60">px</span>
 								</div>
 								<div class="flex flex-col gap-3">
@@ -3277,13 +3566,16 @@
 										<div class="flex flex-col gap-2">
 											<div class="flex items-baseline justify-between gap-2">
 												<span class="text-[0.76rem] text-foreground">{field.label}</span>
-												<span class="rounded bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted">{value}</span>
+												<span
+													class="rounded bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.66rem] text-foreground-muted"
+													>{value}</span
+												>
 											</div>
 											<Slider
 												min={field.min}
 												max={field.max}
 												step={1}
-												value={value}
+												{value}
 												onValueChange={(v: number) => updateSpacing(field.key, v)}
 												label={field.label}
 											/>
@@ -3295,8 +3587,14 @@
 
 						<div class="border-t border-border/60"></div>
 
-						<section class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-3">
-							<p class="m-0 text-[0.66rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80">Live preview</p>
+						<section
+							class="flex flex-col gap-2 rounded-[var(--radius-md)] border border-border bg-background/40 p-3"
+						>
+							<p
+								class="m-0 text-[0.66rem] uppercase [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted/80"
+							>
+								Live preview
+							</p>
 							<div class="flex flex-wrap items-center gap-2">
 								<Button size="sm">Small</Button>
 								<Button>Default</Button>
@@ -3308,7 +3606,9 @@
 								<Badge variant="outlined">Beta</Badge>
 							</div>
 							<Input placeholder="Field preview" variant="outlined" />
-							<div class="flex items-center justify-between rounded-[var(--radius-md)] border border-border bg-card px-3 py-2">
+							<div
+								class="flex items-center justify-between rounded-[var(--radius-md)] border border-border bg-card px-3 py-2"
+							>
 								<span class="text-[0.78rem]">Toggle preview</span>
 								<Switch switched={true} aria-label="Switch preview" />
 							</div>
@@ -3320,10 +3620,13 @@
 						{#if savedThemes.length > 0}
 							<section class="flex flex-col gap-2">
 								<div class="flex items-center justify-between">
-									<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+									<p
+										class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+									>
 										Saved locally
 									</p>
-									<span class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
+									<span
+										class="text-[0.65rem] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted/70"
 										>{savedThemes.length}
 										{savedThemes.length === 1 ? 'theme' : 'themes'}</span
 									>
@@ -3358,7 +3661,11 @@
 												></span>
 											</div>
 											<div class="relative min-w-0 flex-1">
-												<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{preset.name}</p>
+												<p
+													class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+												>
+													{preset.name}
+												</p>
 												<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
 													Saved {new Date(preset.savedAt).toLocaleDateString(undefined, {
 														month: 'short',
@@ -3381,7 +3688,9 @@
 						{/if}
 
 						<section class="flex flex-col gap-2">
-							<p class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted">
+							<p
+								class="m-0 text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted"
+							>
 								Catalog
 							</p>
 							<div class="flex flex-col gap-1">
@@ -3392,13 +3701,29 @@
 										class={`group flex items-center gap-2.5 rounded-lg border p-2 text-left transition-colors ${selectedPresetSlug === preset.slug ? 'border-primary bg-primary/8' : 'border-border bg-background/40 hover:border-border-strong'}`}
 									>
 										<div class="flex gap-0.5">
-											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.light.background};`}></span>
-											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.light.primary};`}></span>
-											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.dark.background};`}></span>
-											<span class="size-5 rounded-md ring-1 ring-border/60" style={`background:${preset.dark.primary};`}></span>
+											<span
+												class="size-5 rounded-md ring-1 ring-border/60"
+												style={`background:${preset.light.background};`}
+											></span>
+											<span
+												class="size-5 rounded-md ring-1 ring-border/60"
+												style={`background:${preset.light.primary};`}
+											></span>
+											<span
+												class="size-5 rounded-md ring-1 ring-border/60"
+												style={`background:${preset.dark.background};`}
+											></span>
+											<span
+												class="size-5 rounded-md ring-1 ring-border/60"
+												style={`background:${preset.dark.primary};`}
+											></span>
 										</div>
 										<div class="min-w-0 flex-1">
-											<p class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{preset.name}</p>
+											<p
+												class="m-0 truncate text-[0.8rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+											>
+												{preset.name}
+											</p>
 											<p class="m-0 truncate text-[0.68rem] text-foreground-muted">
 												{preset.description ?? 'Custom theme preset'}
 											</p>
@@ -3421,21 +3746,14 @@
 		<Modal.Content
 			class="flex w-full max-w-[min(42rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
-			<div
-				class="flex shrink-0 items-start justify-between px-5 py-4"
-			>
+			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
 					<Modal.Title>All color tokens</Modal.Title>
 					<Modal.Description>
 						Override every palette token individually for light and dark mode.
 					</Modal.Description>
 				</div>
-				<Modal.Close
-					variant="ghost"
-					size="icon"
-					class="size-8 shrink-0"
-					aria-label="Close"
-				>
+				<Modal.Close variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
 					<X size={14} />
 				</Modal.Close>
 			</div>
@@ -3481,12 +3799,8 @@
 				</div>
 			</Tabs.Root>
 
-			<div
-				class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
-			>
-				<Modal.Close variant="primary" size="sm" class="h-8 text-[0.8rem]">
-					Done
-				</Modal.Close>
+			<div class="flex shrink-0 items-center justify-end gap-2 px-5 py-3">
+				<Modal.Close variant="primary" size="sm" class="h-8 text-[0.8rem]">Done</Modal.Close>
 			</div>
 		</Modal.Content>
 	</Modal.Root>
@@ -3500,14 +3814,15 @@
 			}
 		}
 	>
-		<Modal.Content
-			class="w-full max-w-[min(24rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
-		>
+		<Modal.Content class="w-full max-w-[min(24rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0">
 			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
 					<Modal.Title>Remove from library?</Modal.Title>
 					<Modal.Description>
-						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{removeSavedTarget?.name ?? ''}</span>
+						<span
+							class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+							>{removeSavedTarget?.name ?? ''}</span
+						>
 						will be deleted from your local saved themes.
 					</Modal.Description>
 				</div>
@@ -3516,17 +3831,12 @@
 				<Alert.Root variant="warning">
 					<Alert.Title>This only affects your browser</Alert.Title>
 					<Alert.Description>
-						Saved themes live in localStorage on this device — nothing is synced to the
-						registry.
+						Saved themes live in localStorage on this device — nothing is synced to the registry.
 					</Alert.Description>
 				</Alert.Root>
 			</div>
-			<div
-				class="flex shrink-0 items-center justify-end gap-2 px-5 py-3"
-			>
-				<Modal.Close variant="ghost" size="sm" class="h-8 text-[0.8rem]">
-					Cancel
-				</Modal.Close>
+			<div class="flex shrink-0 items-center justify-end gap-2 px-5 py-3">
+				<Modal.Close variant="ghost" size="sm" class="h-8 text-[0.8rem]">Cancel</Modal.Close>
 				<Button
 					variant="destructive"
 					size="sm"
@@ -3542,17 +3852,18 @@
 
 	<!-- ─── Save-before-swap alert ─── -->
 	<Modal.Root bind:open={saveAlertOpen}>
-		<Modal.Content
-			class="w-full max-w-[min(26rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0"
-		>
+		<Modal.Content class="w-full max-w-[min(26rem,calc(100vw-2rem))] gap-0 overflow-hidden p-0">
 			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
 					<Modal.Title>Save changes first?</Modal.Title>
 					<Modal.Description>
 						You have unsaved tweaks to
-						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{editorName || 'this theme'}</span>.
-						Loading
-						<span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+						<span
+							class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+							>{editorName || 'this theme'}</span
+						>. Loading
+						<span
+							class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
 							>{pendingThemeLoad?.name ?? 'another theme'}</span
 						>
 						will replace them.
@@ -3567,23 +3878,11 @@
 					</Alert.Description>
 				</Alert.Root>
 			</div>
-			<div
-				class="flex shrink-0 flex-wrap items-center justify-end gap-2 px-5 py-3"
-			>
-				<Button
-					variant="ghost"
-					size="sm"
-					class="h-8 text-[0.8rem]"
-					onclick={cancelPendingLoad}
-				>
+			<div class="flex shrink-0 flex-wrap items-center justify-end gap-2 px-5 py-3">
+				<Button variant="ghost" size="sm" class="h-8 text-[0.8rem]" onclick={cancelPendingLoad}>
 					Cancel
 				</Button>
-				<Button
-					variant="outlined"
-					size="sm"
-					class="h-8 text-[0.8rem]"
-					onclick={discardAndContinue}
-				>
+				<Button variant="outlined" size="sm" class="h-8 text-[0.8rem]" onclick={discardAndContinue}>
 					Discard
 				</Button>
 				<Button
@@ -3604,21 +3903,14 @@
 		<Modal.Content
 			class="flex w-full max-w-[min(36rem,calc(100vw-2rem))] flex-col gap-0 overflow-hidden p-0"
 		>
-			<div
-				class="flex shrink-0 items-start justify-between px-5 py-4"
-			>
+			<div class="flex shrink-0 items-start justify-between px-5 py-4">
 				<div class="flex flex-col gap-1">
 					<Modal.Title>All motion tokens</Modal.Title>
 					<Modal.Description>
 						Hand-tune every duration and panel offset. Starts from the current preset.
 					</Modal.Description>
 				</div>
-				<Modal.Close
-					variant="ghost"
-					size="icon"
-					class="size-8 shrink-0"
-					aria-label="Close"
-				>
+				<Modal.Close variant="ghost" size="icon" class="size-8 shrink-0" aria-label="Close">
 					<X size={14} />
 				</Modal.Close>
 			</div>
@@ -3635,7 +3927,10 @@
 							{@const value = durationToMs(editorTheme.motion[field.key])}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
-									<span class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">{field.label}</span>
+									<span
+										class="text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+										>{field.label}</span
+									>
 									<span
 										class="rounded-md bg-secondary/60 px-1.5 py-0.5 font-mono text-[0.68rem] text-foreground"
 									>
@@ -3649,10 +3944,7 @@
 									step="10"
 									{value}
 									oninput={(e) =>
-										updateMotionDuration(
-											field.key,
-											(e.currentTarget as HTMLInputElement).value
-										)}
+										updateMotionDuration(field.key, (e.currentTarget as HTMLInputElement).value)}
 									class="silk-range"
 								/>
 								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
@@ -3673,12 +3965,12 @@
 					<div class="grid grid-cols-2 gap-x-4 gap-y-4 max-sm:grid-cols-1">
 						{#each motionNumberFields as field}
 							{@const numericValue = (editorTheme.motion[field.key] ?? 0) as number}
-							{@const display = field.format
-								? field.format(numericValue)
-								: String(numericValue)}
+							{@const display = field.format ? field.format(numericValue) : String(numericValue)}
 							<label class="flex flex-col gap-1.5">
 								<div class="flex items-baseline justify-between gap-2">
-									<span class="flex items-center gap-1.5 text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">
+									<span
+										class="flex items-center gap-1.5 text-[0.74rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+									>
 										{field.label}
 										{#if field.experimental}
 											<span
@@ -3701,10 +3993,7 @@
 									step={field.step}
 									value={numericValue}
 									oninput={(e) =>
-										updateMotionNumber(
-											field.key,
-											(e.currentTarget as HTMLInputElement).value
-										)}
+										updateMotionNumber(field.key, (e.currentTarget as HTMLInputElement).value)}
 									class="silk-range"
 								/>
 								<span class="text-[0.66rem] text-foreground-muted">{field.hint}</span>
@@ -3714,20 +4003,11 @@
 				</section>
 			</div>
 
-			<div
-				class="flex shrink-0 items-center justify-between gap-2 px-5 py-3"
-			>
-				<Button
-					variant="ghost"
-					size="sm"
-					class="h-8 text-[0.8rem]"
-					onclick={resetMotionToPreset}
-				>
+			<div class="flex shrink-0 items-center justify-between gap-2 px-5 py-3">
+				<Button variant="ghost" size="sm" class="h-8 text-[0.8rem]" onclick={resetMotionToPreset}>
 					Reset to preset
 				</Button>
-				<Modal.Close variant="primary" size="sm" class="h-8 text-[0.8rem]">
-					Done
-				</Modal.Close>
+				<Modal.Close variant="primary" size="sm" class="h-8 text-[0.8rem]">Done</Modal.Close>
 			</div>
 		</Modal.Content>
 	</Modal.Root>

@@ -56,9 +56,7 @@ describe('ColorPicker -- popover open and close', () => {
 		render(ColorPickerFixture, { value: '#ff0000' });
 		await flush();
 		await openPicker();
-		let hexInput = document.querySelector(
-			'input[placeholder="000000"]'
-		) as HTMLInputElement | null;
+		let hexInput = document.querySelector('input[placeholder="000000"]') as HTMLInputElement | null;
 		hexInput?.focus();
 		await userEvent.keyboard('{Escape}');
 		await flush();

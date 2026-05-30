@@ -286,6 +286,8 @@ describe('themeToTypeScriptPreset', () => {
 	it('produces output that re-parses to equivalent structural shape', () => {
 		const ts = themeToTypeScriptPreset(defaultPreset);
 		expect(ts).toContain(defaultPreset.slug);
-		expect(ts).toContain(defaultPreset.fontSans);
+		// fontSans contains double quotes (e.g. '"IBM Plex Sans", sans-serif'), so the
+		// serializer JSON-escapes them; assert against the escaped form it actually emits.
+		expect(ts).toContain(JSON.stringify(defaultPreset.fontSans));
 	});
 });

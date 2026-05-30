@@ -1,9 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vitest';
-import {
-	useState,
-	UIState,
-	states
-} from '@silk/ui/internals/state.svelte.ts';
+import { useState, UIState, states } from '@silk/ui/internals/state.svelte.ts';
 
 /*
  * `states` is a module-level singleton. Tests reset it before each case

@@ -14,10 +14,7 @@
 
 <span
 	{...rest}
-	class={cn(
-		classProp,
-		`bg-secondary font-mono text-foreground/90 text-xs rounded-md p-1 px-2`
-	)}
+	class={cn(classProp, `bg-secondary font-mono text-foreground/90 text-xs rounded-md p-1 px-2`)}
 >
 	{@render children?.()}
 </span>

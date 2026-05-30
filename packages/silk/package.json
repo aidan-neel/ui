@@ -3,7 +3,9 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
-	"sideEffects": ["**/*.css"],
+	"sideEffects": [
+		"**/*.css"
+	],
 	"dependencies": {
 		"@floating-ui/dom": "^1.7.6",
 		"@lucide/svelte": "^1.7.0",

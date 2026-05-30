@@ -142,7 +142,10 @@
 
 <svelte:head>
 	<title>Silk · Theming</title>
-	<meta name="description" content="Build a theme system that controls color, shape, motion, and surface tone from one place." />
+	<meta
+		name="description"
+		content="Build a theme system that controls color, shape, motion, and surface tone from one place."
+	/>
 </svelte:head>
 
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
@@ -183,7 +186,10 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Layers size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Four surfaces, one source
 		</h2>
 	</div>
@@ -228,7 +234,10 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Wand size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Theme in three layers
 		</h2>
 	</div>
@@ -250,7 +259,9 @@
 			</p>
 			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
 				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+					<span
+						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>
 						<Terminal size={11} />
 						app.css
 					</span>
@@ -267,7 +278,9 @@
 					</button>
 				</div>
 				<pre
-					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(codeBlocks.semantic.code, codeBlocks.semantic.lang)}</code></pre>
+					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+						>{@html highlight(codeBlocks.semantic.code, codeBlocks.semantic.lang)}</code
+					></pre>
 			</div>
 		</Tabs.Content>
 
@@ -278,7 +291,9 @@
 			</p>
 			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
 				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+					<span
+						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>
 						<Terminal size={11} />
 						app.css
 					</span>
@@ -295,18 +310,24 @@
 					</button>
 				</div>
 				<pre
-					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(codeBlocks.component.code, codeBlocks.component.lang)}</code></pre>
+					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+						>{@html highlight(codeBlocks.component.code, codeBlocks.component.lang)}</code
+					></pre>
 			</div>
 		</Tabs.Content>
 
 		<Tabs.Content value="overrides">
 			<p class="m-0 pb-3 text-[0.86rem] leading-relaxed text-foreground-muted">
-				When a single primitive needs special care, use the <code class="font-mono text-foreground">data-ui</code>
+				When a single primitive needs special care, use the <code class="font-mono text-foreground"
+					>data-ui</code
+				>
 				and <code class="font-mono text-foreground">data-variant</code> hooks. Cleaner than forking.
 			</p>
 			<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
 				<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-					<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+					<span
+						class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>
 						<Terminal size={11} />
 						app.css
 					</span>
@@ -323,7 +344,9 @@
 					</button>
 				</div>
 				<pre
-					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(codeBlocks.overrides.code, codeBlocks.overrides.lang)}</code></pre>
+					class="m-0 max-h-[24rem] overflow-auto px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+						>{@html highlight(codeBlocks.overrides.code, codeBlocks.overrides.lang)}</code
+					></pre>
 			</div>
 		</Tabs.Content>
 	</Tabs.Root>
@@ -335,7 +358,10 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Wand size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Two ways to author a theme
 		</h2>
 	</div>
@@ -346,7 +372,10 @@
 				<Badge variant="ghost">Visual</Badge>
 				<Badge variant="outlined" class="text-[0.62rem]">/themes/studio</Badge>
 			</div>
-			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+			<p
+				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
 				Theme Studio
 			</p>
 			<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
@@ -366,7 +395,10 @@
 				<Badge variant="ghost">Code</Badge>
 				<Badge variant="outlined" class="text-[0.62rem]">@theme + .dark</Badge>
 			</div>
-			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+			<p
+				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
 				Write a theme by hand
 			</p>
 			<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">
@@ -389,7 +421,10 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Palette size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Start from a preset
 		</h2>
 	</div>
@@ -400,7 +435,9 @@
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
 		<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
 			<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-				<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+				<span
+					class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+				>
 					<Terminal size={11} />
 					shell
 				</span>
@@ -416,13 +453,16 @@
 					{/if}
 				</button>
 			</div>
-			<pre
-				class="m-0 px-4 py-3 font-mono text-[0.82rem] leading-relaxed text-foreground"><code>{@html highlight(presetCmd, 'shell')}</code></pre>
+			<pre class="m-0 px-4 py-3 font-mono text-[0.82rem] leading-relaxed text-foreground"><code
+					>{@html highlight(presetCmd, 'shell')}</code
+				></pre>
 		</div>
 
 		<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
 			<div class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5">
-				<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+				<span
+					class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+				>
 					<Terminal size={11} />
 					app.css
 				</span>
@@ -438,16 +478,17 @@
 					{/if}
 				</button>
 			</div>
-			<pre
-				class="m-0 px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(importCss, 'css')}</code></pre>
+			<pre class="m-0 px-4 py-3 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+					>{@html highlight(importCss, 'css')}</code
+				></pre>
 		</div>
 	</div>
 
 	<Alert.Root variant="info">
 		<Alert.Title>Presets aren't a fork</Alert.Title>
 		<Alert.Description>
-			They're just <code class="font-mono text-foreground">@theme</code> blocks. Override any token
-			beneath the import and yours wins.
+			They're just <code class="font-mono text-foreground">@theme</code> blocks. Override any token beneath
+			the import and yours wins.
 		</Alert.Description>
 	</Alert.Root>
 </section>
@@ -457,7 +498,10 @@
 	class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 >
 	<div class="flex flex-col gap-1">
-		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<p
+			class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Ready to make it yours?
 		</p>
 		<p class="m-0 text-[0.86rem] text-foreground-muted">

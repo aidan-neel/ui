@@ -39,7 +39,7 @@
 		const first = new Date(viewYear, viewMonth, 1);
 		const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 		const leading = (first.getDay() - weekStartsOn + 7) % 7;
-		const cells: ({ date: Date; inMonth: boolean })[] = [];
+		const cells: { date: Date; inMonth: boolean }[] = [];
 
 		// trailing days of previous month
 		const prevDays = new Date(viewYear, viewMonth, 0).getDate();
@@ -123,9 +123,7 @@
 		}
 		// Focus the cell after Svelte re-renders the grid.
 		await tick();
-		const cell = gridEl?.querySelector<HTMLElement>(
-			`[data-date="${dateKey(focusedDate)}"]`
-		);
+		const cell = gridEl?.querySelector<HTMLElement>(`[data-date="${dateKey(focusedDate)}"]`);
 		cell?.focus();
 	}
 
@@ -140,9 +138,7 @@
 			viewYear = next.getFullYear();
 		}
 		await tick();
-		const cell = gridEl?.querySelector<HTMLElement>(
-			`[data-date="${dateKey(focusedDate)}"]`
-		);
+		const cell = gridEl?.querySelector<HTMLElement>(`[data-date="${dateKey(focusedDate)}"]`);
 		cell?.focus();
 	}
 
@@ -182,12 +178,14 @@
 				return;
 		}
 	}
-
 </script>
 
 <div
 	data-ui="calendar"
-	class={cn('inline-flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-[var(--calendar-padding)]', className)}
+	class={cn(
+		'inline-flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-card p-[var(--calendar-padding)]',
+		className
+	)}
 	{...rest}
 >
 	<div class="flex items-center justify-between gap-2">
@@ -199,7 +197,10 @@
 		>
 			<ChevronLeft size={14} />
 		</button>
-		<span class="[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground">{monthName}</span>
+		<span
+			class="[font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground"
+			>{monthName}</span
+		>
 		<button
 			type="button"
 			aria-label="Next month"
@@ -210,18 +211,15 @@
 		</button>
 	</div>
 
-	<div class="grid grid-cols-7 gap-1 text-center [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] uppercase text-foreground-muted">
+	<div
+		class="grid grid-cols-7 gap-1 text-center [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] uppercase text-foreground-muted"
+	>
 		{#each weekdays as w, i (i)}
 			<span>{w}</span>
 		{/each}
 	</div>
 
-	<div
-		bind:this={gridEl}
-		role="grid"
-		class="grid grid-cols-7 gap-1"
-		onkeydown={handleGridKeydown}
-	>
+	<div bind:this={gridEl} role="grid" class="grid grid-cols-7 gap-1" onkeydown={handleGridKeydown}>
 		{#each grid as cell, i (i)}
 			{@const selected = value ? isSameDay(cell.date, value) : false}
 			{@const isToday = isSameDay(cell.date, today)}

@@ -53,9 +53,7 @@
 		if (nextValue !== syncedValue) {
 			syncedValue = nextValue;
 			uiState.data.value = nextValue;
-			uiState.data.selectedLabel = nextValue
-				? (uiState.data.labels.get(nextValue) ?? '')
-				: '';
+			uiState.data.selectedLabel = nextValue ? (uiState.data.labels.get(nextValue) ?? '') : '';
 		}
 	});
 

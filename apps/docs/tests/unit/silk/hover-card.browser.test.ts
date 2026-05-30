@@ -47,9 +47,7 @@ describe('HoverCard -- hover opens after openDelay', () => {
 		await flush();
 
 		await expect.element(page.getByTestId('hovercard-title')).toBeInTheDocument();
-		await expect
-			.element(page.getByTestId('hovercard-description'))
-			.toBeInTheDocument();
+		await expect.element(page.getByTestId('hovercard-description')).toBeInTheDocument();
 	});
 
 	it('role="dialog" with aria-modal="false" is set on the rendered content', async () => {
@@ -86,8 +84,7 @@ describe('HoverCard -- leave closes after closeDelay', () => {
 		await flush();
 		await expect.element(page.getByTestId('hovercard-title')).toBeInTheDocument();
 
-		const trigger = document.querySelector('[data-testid="hovercard-trigger"]')
-			?.parentElement;
+		const trigger = document.querySelector('[data-testid="hovercard-trigger"]')?.parentElement;
 		trigger?.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
 		trigger?.dispatchEvent(new FocusEvent('blur', { bubbles: true }));
 		await new Promise((r) => setTimeout(r, 100));
@@ -101,8 +98,7 @@ describe('HoverCard -- trigger element shape', () => {
 	it('renders trigger as <span> when no href', async () => {
 		render(HoverCardFixture, { openDelay: 10, closeDelay: 10 });
 		await flush();
-		const wrapper = document
-			.querySelector('[data-testid="hovercard-trigger"]')?.parentElement;
+		const wrapper = document.querySelector('[data-testid="hovercard-trigger"]')?.parentElement;
 		expect(wrapper?.tagName.toLowerCase()).toBe('span');
 	});
 
@@ -113,11 +109,8 @@ describe('HoverCard -- trigger element shape', () => {
 			triggerHref: '/user/123'
 		});
 		await flush();
-		const wrapper = document
-			.querySelector('[data-testid="hovercard-trigger"]')?.parentElement;
+		const wrapper = document.querySelector('[data-testid="hovercard-trigger"]')?.parentElement;
 		expect(wrapper?.tagName.toLowerCase()).toBe('a');
-		expect((wrapper as HTMLAnchorElement | null)?.getAttribute('href')).toBe(
-			'/user/123'
-		);
+		expect((wrapper as HTMLAnchorElement | null)?.getAttribute('href')).toBe('/user/123');
 	});
 });

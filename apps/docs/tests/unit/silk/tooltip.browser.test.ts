@@ -86,8 +86,7 @@ describe('Tooltip -- leave closes after closeDelay', () => {
 
 		// Move pointer away from trigger via synthetic leave events (vitest's
 		// BrowserPage has no positional hover; element-level dispatch covers it).
-		const trigger = document.querySelector('[data-testid="tooltip-trigger"]')
-			?.parentElement;
+		const trigger = document.querySelector('[data-testid="tooltip-trigger"]')?.parentElement;
 		trigger?.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
 		trigger?.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
 		await new Promise((r) => setTimeout(r, 80));

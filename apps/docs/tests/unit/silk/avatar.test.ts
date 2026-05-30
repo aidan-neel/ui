@@ -13,7 +13,7 @@ describe('Avatar -- rendering', () => {
 		expect(screen.getByTestId('avatar-fallback')).toBeInTheDocument();
 	});
 
-	it('shows the fallback initially when src is provided (image hasn\'t loaded yet)', () => {
+	it("shows the fallback initially when src is provided (image hasn't loaded yet)", () => {
 		render(AvatarFixture, { props: { src: 'https://example.com/img.png', alt: 'User' } });
 		// Before onload fires, imageLoaded is false → fallback renders.
 		expect(screen.getByTestId('avatar-fallback')).toBeInTheDocument();

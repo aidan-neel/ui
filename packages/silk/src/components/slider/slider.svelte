@@ -29,10 +29,7 @@
 	{...rest}
 >
 	<div class="relative h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-		<div
-			class="absolute inset-y-0 left-0 rounded-full bg-primary"
-			style:width={`${pct}%`}
-		></div>
+		<div class="absolute inset-y-0 left-0 rounded-full bg-primary" style:width={`${pct}%`}></div>
 	</div>
 	<input
 		type="range"
@@ -61,7 +58,9 @@
 		border: 2px solid var(--color-primary);
 		box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
 		cursor: pointer;
-		transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+		transition:
+			transform 120ms ease-out,
+			box-shadow 120ms ease-out;
 	}
 	:global(.silk-slider-input:focus-visible::-webkit-slider-thumb) {
 		box-shadow: 0 0 0 3px var(--color-ring);

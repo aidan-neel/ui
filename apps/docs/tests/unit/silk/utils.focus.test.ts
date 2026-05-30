@@ -1,14 +1,13 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import {
-	getFocusableElements,
-	trapFocus,
-	clickOutside
-} from '@silk/ui/utils';
+import { getFocusableElements, trapFocus, clickOutside } from '@silk/ui/utils';
 
 // offsetParent and element.animate are stubbed globally in tests/setup.ts.
 // See that file for the rationale.
 
-function makeButton(parent: HTMLElement, opts: { id?: string; text?: string; disabled?: boolean; ariaHidden?: boolean } = {}) {
+function makeButton(
+	parent: HTMLElement,
+	opts: { id?: string; text?: string; disabled?: boolean; ariaHidden?: boolean } = {}
+) {
 	const btn = document.createElement('button');
 	if (opts.id) btn.id = opts.id;
 	if (opts.text) btn.textContent = opts.text;

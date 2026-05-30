@@ -69,9 +69,7 @@ describe('Calendar -- selection', () => {
 		const { container } = render(Calendar, {
 			props: { value: new Date(2026, 4, 15) }
 		});
-		const selected = container.querySelectorAll(
-			'[role="gridcell"][aria-selected="true"]'
-		);
+		const selected = container.querySelectorAll('[role="gridcell"][aria-selected="true"]');
 		expect(selected.length).toBe(1);
 	});
 
@@ -105,7 +103,9 @@ describe('Calendar -- min/max range', () => {
 		});
 		const day5 = Array.from(
 			container.querySelectorAll<HTMLButtonElement>('[role="gridcell"]')
-		).find((c) => !c.classList.contains('text-foreground-muted/50') && c.textContent?.trim() === '5');
+		).find(
+			(c) => !c.classList.contains('text-foreground-muted/50') && c.textContent?.trim() === '5'
+		);
 		expect(day5).toBeDefined();
 		expect(day5).toBeDisabled();
 	});
@@ -116,7 +116,9 @@ describe('Calendar -- min/max range', () => {
 		});
 		const day25 = Array.from(
 			container.querySelectorAll<HTMLButtonElement>('[role="gridcell"]')
-		).find((c) => !c.classList.contains('text-foreground-muted/50') && c.textContent?.trim() === '25');
+		).find(
+			(c) => !c.classList.contains('text-foreground-muted/50') && c.textContent?.trim() === '25'
+		);
 		expect(day25).toBeDefined();
 		expect(day25).toBeDisabled();
 	});
@@ -125,9 +127,7 @@ describe('Calendar -- min/max range', () => {
 describe('Calendar -- today marker', () => {
 	it('marks today with aria-current="date"', () => {
 		render(Calendar, { props: { value: new Date() } });
-		const todayCell = document.querySelector(
-			'[role="gridcell"][aria-current="date"]'
-		);
+		const todayCell = document.querySelector('[role="gridcell"][aria-current="date"]');
 		expect(todayCell).toBeInTheDocument();
 	});
 });

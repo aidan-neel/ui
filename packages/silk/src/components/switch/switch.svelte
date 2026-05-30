@@ -56,9 +56,7 @@
 			className,
 			'relative inline-flex h-[calc(var(--size-switch-thumb)+(var(--switch-track-padding)*2)+0.05rem)] w-[var(--size-switch-track)] shrink-0 items-center rounded-full border p-[var(--switch-track-padding)] focus-visible:outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-[0.55]'
 		)}
-		style:background-color={switched
-			? 'var(--switch-track-active-bg)'
-			: 'var(--switch-track-bg)'}
+		style:background-color={switched ? 'var(--switch-track-active-bg)' : 'var(--switch-track-bg)'}
 		style:border-color={switched
 			? 'color-mix(in srgb, var(--switch-track-active-bg) 78%, black)'
 			: 'color-mix(in srgb, var(--color-border-strong) 88%, transparent)'}
@@ -72,9 +70,7 @@
 			aria-hidden="true"
 			data-state={switched ? 'checked' : 'unchecked'}
 			class="block h-[var(--size-switch-thumb)] w-[var(--size-switch-thumb)] rounded-full bg-white ring-1 ring-inset ring-black/[0.06] will-change-transform"
-			style:transform={switched
-				? `translateX(${thumbOnOffset})`
-				: 'translateX(0px)'}
+			style:transform={switched ? `translateX(${thumbOnOffset})` : 'translateX(0px)'}
 			style:box-shadow={switched
 				? '0 2px 4px rgb(16 24 40 / 0.14), 0 4px 12px -2px rgb(16 24 40 / 0.22), inset 0 1px 0 rgb(255 255 255 / 0.7)'
 				: '0 1px 1px rgb(16 24 40 / 0.08), 0 2px 5px -1px rgb(16 24 40 / 0.18), inset 0 1px 0 rgb(255 255 255 / 0.65)'}

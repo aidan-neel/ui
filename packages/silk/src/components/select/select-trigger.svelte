@@ -38,11 +38,9 @@
 	aria-haspopup="listbox"
 	aria-controls={`popover-${String(key)}-content`}
 	aria-expanded={uiState.data.open}
-	aria-label={
-		uiState.data.value !== ''
-			? `Selected value ${uiState.data.selectedLabel || uiState.data.value}`
-			: ((rest as { 'aria-label'?: string })['aria-label'] ?? 'Open select')
-	}
+	aria-label={uiState.data.value !== ''
+		? `Selected value ${uiState.data.selectedLabel || uiState.data.value}`
+		: ((rest as { 'aria-label'?: string })['aria-label'] ?? 'Open select')}
 	{variant}
 	{...rest}
 >

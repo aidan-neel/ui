@@ -22,10 +22,14 @@
 	});
 
 	const iconColorClass = $derived.by(() => {
-		if (toast.type === 'success') return 'text-[var(--color-success)] bg-[color-mix(in_srgb,var(--color-success)_12%,transparent)]';
-		if (toast.type === 'error') return 'text-[var(--color-error)] bg-[color-mix(in_srgb,var(--color-error)_12%,transparent)]';
-		if (toast.type === 'warning') return 'text-[var(--color-warning)] bg-[color-mix(in_srgb,var(--color-warning)_12%,transparent)]';
-		if (toast.type === 'info') return 'text-[var(--color-info)] bg-[color-mix(in_srgb,var(--color-info)_12%,transparent)]';
+		if (toast.type === 'success')
+			return 'text-[var(--color-success)] bg-[color-mix(in_srgb,var(--color-success)_12%,transparent)]';
+		if (toast.type === 'error')
+			return 'text-[var(--color-error)] bg-[color-mix(in_srgb,var(--color-error)_12%,transparent)]';
+		if (toast.type === 'warning')
+			return 'text-[var(--color-warning)] bg-[color-mix(in_srgb,var(--color-warning)_12%,transparent)]';
+		if (toast.type === 'info')
+			return 'text-[var(--color-info)] bg-[color-mix(in_srgb,var(--color-info)_12%,transparent)]';
 		if (toast.type === 'loading') return 'text-foreground-muted bg-secondary/40';
 		return '';
 	});
@@ -73,7 +77,9 @@
 				{toast.title}
 			</p>
 			{#if toast.description}
-				<p class="[font-size:var(--font-size-body,16px)] leading-[1.45] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
+				<p
+					class="[font-size:var(--font-size-body,16px)] leading-[1.45] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+				>
 					{toast.description}
 				</p>
 			{/if}

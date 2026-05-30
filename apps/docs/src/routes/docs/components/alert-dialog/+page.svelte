@@ -4,7 +4,6 @@
 	import { highlight } from '$lib/highlight';
 	import * as AlertDialog from '@silk/ui/components/alert-dialog';
 	import * as Tabs from '@silk/ui/components/tabs';
-	import * as Tooltip from '@silk/ui/components/tooltip';
 	import { components, sanitizeComponent } from '$lib/components';
 
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -18,8 +17,6 @@
 	import External from '@lucide/svelte/icons/external-link';
 	import Trash from '@lucide/svelte/icons/trash-2';
 
-	const TITLE = 'Alert Dialog';
-	const SLUG = 'alert-dialog';
 	const SOURCE = 'https://github.com/aidan-neel/silk/tree/main/registry/silk/default/alert-dialog';
 
 	const curIndex = components.indexOf('alert-dialog');
@@ -32,15 +29,69 @@
 	);
 
 	const apiRows = [
-		{ component: 'Root', prop: 'open', type: 'boolean', default: 'false', description: 'Optional bindable open state.' },
-		{ component: 'Trigger', prop: '...ButtonProps', type: '--', default: '--', description: 'Renders as a Silk Button. Inherits every Button prop.' },
-		{ component: 'Content', prop: 'allowClickOutside', type: 'boolean', default: 'true', description: 'Disable to force the user to confirm or exit explicitly.' },
-		{ component: 'Header', prop: 'children', type: 'Snippet', default: '--', description: 'Container for Title + Description.' },
-		{ component: 'Title', prop: 'children', type: 'Snippet', default: '--', description: 'Short, decisive question or statement.' },
-		{ component: 'Description', prop: 'children', type: 'Snippet', default: '--', description: 'One or two sentences explaining the consequence.' },
-		{ component: 'Footer', prop: 'children', type: 'Snippet', default: '--', description: 'Action row -- keep Cancel on the left, Confirm on the right.' },
-		{ component: 'Exit', prop: 'children', type: 'Snippet', default: '--', description: 'Closes the dialog without firing the action.' },
-		{ component: 'Confirm', prop: 'onclick', type: '() => void', default: '--', description: 'Fires the action and closes the dialog.' }
+		{
+			component: 'Root',
+			prop: 'open',
+			type: 'boolean',
+			default: 'false',
+			description: 'Optional bindable open state.'
+		},
+		{
+			component: 'Trigger',
+			prop: '...ButtonProps',
+			type: '--',
+			default: '--',
+			description: 'Renders as a Silk Button. Inherits every Button prop.'
+		},
+		{
+			component: 'Content',
+			prop: 'allowClickOutside',
+			type: 'boolean',
+			default: 'true',
+			description: 'Disable to force the user to confirm or exit explicitly.'
+		},
+		{
+			component: 'Header',
+			prop: 'children',
+			type: 'Snippet',
+			default: '--',
+			description: 'Container for Title + Description.'
+		},
+		{
+			component: 'Title',
+			prop: 'children',
+			type: 'Snippet',
+			default: '--',
+			description: 'Short, decisive question or statement.'
+		},
+		{
+			component: 'Description',
+			prop: 'children',
+			type: 'Snippet',
+			default: '--',
+			description: 'One or two sentences explaining the consequence.'
+		},
+		{
+			component: 'Footer',
+			prop: 'children',
+			type: 'Snippet',
+			default: '--',
+			description: 'Action row -- keep Cancel on the left, Confirm on the right.'
+		},
+		{
+			component: 'Exit',
+			prop: 'children',
+			type: 'Snippet',
+			default: '--',
+			description: 'Closes the dialog without firing the action.'
+		},
+		{
+			component: 'Confirm',
+			prop: 'onclick',
+			type: '() => void',
+			default: '--',
+			description: 'Fires the action and closes the dialog.'
+		}
 	];
 
 	const playgroundCode = $derived(`<AlertDialog.Root>
@@ -74,18 +125,28 @@
 
 <svelte:head>
 	<title>Silk · Alert Dialog</title>
-	<meta name="description" content="A modal that interrupts the user to confirm a consequential action." />
+	<meta
+		name="description"
+		content="A modal that interrupts the user to confirm a consequential action."
+	/>
 </svelte:head>
 
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
 	<div class="flex flex-wrap items-start justify-between gap-3">
 		<div class="flex flex-wrap items-center gap-2">
-			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]">Component</Badge>
-		<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">9 sub-components</Badge>
-		<Badge variant="ghost" class="text-[0.66rem]">Composable</Badge>
+			<Badge variant="outlined" icon={Component} iconSize={11} class="gap-1.5 text-[0.66rem]"
+				>Component</Badge
+			>
+			<Badge variant="outlined" class="text-[0.66rem]">v0.4.2</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">9 sub-components</Badge>
+			<Badge variant="ghost" class="text-[0.66rem]">Composable</Badge>
 		</div>
-		<a href={SOURCE} target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground">
+		<a
+			href={SOURCE}
+			target="_blank"
+			rel="noreferrer noopener"
+			class="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground-muted transition-colors hover:bg-secondary/60 hover:text-foreground"
+		>
 			View source
 			<External size={11} />
 		</a>
@@ -99,13 +160,14 @@
 			Alert Dialog
 		</h1>
 		<p class="m-0 max-w-[42rem] text-[1rem] leading-relaxed text-foreground-muted">
-			A modal that stops everything to ask one question. Reach for it when an action is
-			expensive, irreversible, or affects other people. If the user can shrug and undo, use a
-			Toast instead.
+			A modal that stops everything to ask one question. Reach for it when an action is expensive,
+			irreversible, or affects other people. If the user can shrug and undo, use a Toast instead.
 		</p>
 	</div>
 
-	<div class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card">
+	<div
+		class="flex max-w-[28rem] items-stretch overflow-hidden rounded-[var(--radius-md)] border border-border bg-card"
+	>
 		<div class="flex flex-1 items-center gap-3 px-3 py-2.5">
 			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted">
 				<Hash size={12} />
@@ -133,8 +195,12 @@
 		<div
 			class="absolute inset-x-10 -top-4 -z-10 h-32 rounded-full bg-[radial-gradient(60%_60%_at_50%_50%,color-mix(in_srgb,var(--color-primary)_18%,transparent),transparent_70%)] blur-2xl"
 		></div>
-		<div class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]">
-			<div class="grid min-h-[10rem] place-items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8">
+		<div
+			class="overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card shadow-[var(--shadow-sm)]"
+		>
+			<div
+				class="grid min-h-[10rem] place-items-center border-b border-border/70 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-secondary)_60%,transparent),transparent_70%)] p-8"
+			>
 				<AlertDialog.Root>
 					<AlertDialog.Trigger variant="destructive">
 						<Trash size={14} />
@@ -155,7 +221,11 @@
 
 			<div class="flex flex-col divide-y divide-border/60">
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<label for="pg-title" class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">Title</label>
+					<label
+						for="pg-title"
+						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+						>Title</label
+					>
 					<input
 						id="pg-title"
 						bind:value={pgTitle}
@@ -164,7 +234,11 @@
 				</div>
 
 				<div class="flex flex-col gap-2 px-6 py-4">
-					<label for="pg-desc" class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">Description</label>
+					<label
+						for="pg-desc"
+						class="text-[0.7rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+						>Description</label
+					>
 					<input
 						id="pg-desc"
 						bind:value={pgDescription}
@@ -173,8 +247,13 @@
 				</div>
 			</div>
 
-			<div class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5">
-				<span class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">Snippet</span>
+			<div
+				class="flex items-center justify-between gap-2 border-t border-border/70 bg-secondary/40 px-6 py-2.5"
+			>
+				<span
+					class="text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+					>Snippet</span
+				>
 				<button
 					type="button"
 					onclick={() => copy(playgroundCode, 'playground')}
@@ -190,7 +269,9 @@
 				</button>
 			</div>
 			<pre
-				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code>{@html highlight(playgroundCode, "svelte")}</code></pre>
+				class="m-0 overflow-x-auto bg-secondary/40 px-6 py-4 font-mono text-[0.78rem] leading-relaxed text-foreground"><code
+					>{@html highlight(playgroundCode, 'svelte')}</code
+				></pre>
 		</div>
 	</div>
 </section>
@@ -203,7 +284,10 @@
 				<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 					<Layers size={12} />
 				</span>
-				<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+				<h2
+					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+					style="font-family: var(--font-header);"
+				>
 					Patterns
 				</h2>
 			</div>
@@ -220,7 +304,9 @@
 
 			<div class="mt-3 grid gap-3 md:grid-cols-2">
 				<Tabs.Content value="destructive" class="contents">
-					<div class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8">
+					<div
+						class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
+					>
 						<AlertDialog.Root>
 							<AlertDialog.Trigger variant="destructive">Delete project</AlertDialog.Trigger>
 							<AlertDialog.Content class="max-w-[26rem]">
@@ -237,7 +323,10 @@
 							</AlertDialog.Content>
 						</AlertDialog.Root>
 					</div>
-					<pre class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code>{@html highlight(`<AlertDialog.Root>
+					<pre
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<AlertDialog.Root>
   <AlertDialog.Trigger variant="destructive">
     Delete project
   </AlertDialog.Trigger>
@@ -253,11 +342,16 @@
       <AlertDialog.Confirm>Delete project</AlertDialog.Confirm>
     </AlertDialog.Footer>
   </AlertDialog.Content>
-</AlertDialog.Root>`, "svelte")}</code></pre>
+</AlertDialog.Root>`,
+								'svelte'
+							)}</code
+						></pre>
 				</Tabs.Content>
 
 				<Tabs.Content value="sign-out" class="contents">
-					<div class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8">
+					<div
+						class="grid place-items-center rounded-[var(--radius-lg)] border border-border bg-card p-8"
+					>
 						<AlertDialog.Root>
 							<AlertDialog.Trigger variant="outlined">Sign out</AlertDialog.Trigger>
 							<AlertDialog.Content class="max-w-[24rem]">
@@ -274,7 +368,10 @@
 							</AlertDialog.Content>
 						</AlertDialog.Root>
 					</div>
-					<pre class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code>{@html highlight(`<AlertDialog.Root>
+					<pre
+						class="m-0 overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-secondary/40 px-4 py-4 font-mono text-[0.78rem] leading-relaxed"><code
+							>{@html highlight(
+								`<AlertDialog.Root>
   <AlertDialog.Trigger variant="outlined">Sign out</AlertDialog.Trigger>
   <AlertDialog.Content>
     <AlertDialog.Header>
@@ -288,7 +385,10 @@
       <AlertDialog.Confirm>Sign out</AlertDialog.Confirm>
     </AlertDialog.Footer>
   </AlertDialog.Content>
-</AlertDialog.Root>`, "svelte")}</code></pre>
+</AlertDialog.Root>`,
+								'svelte'
+							)}</code
+						></pre>
 				</Tabs.Content>
 			</div>
 		</Tabs.Root>
@@ -301,7 +401,10 @@
 				<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 					<Hash size={12} />
 				</span>
-				<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+				<h2
+					class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+					style="font-family: var(--font-header);"
+				>
 					API
 				</h2>
 			</div>
@@ -312,15 +415,26 @@
 				{#each apiRows as row}
 					<li class="grid grid-cols-[1fr_1.4fr_0.6fr] gap-3 px-4 py-3 max-md:grid-cols-1">
 						<div class="flex flex-col gap-1">
-							<code class="font-mono text-[0.7rem] text-foreground-muted">AlertDialog.{row.component}</code>
-							<code class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]">{row.prop}</code>
+							<code class="font-mono text-[0.7rem] text-foreground-muted"
+								>AlertDialog.{row.component}</code
+							>
+							<code
+								class="font-mono text-[0.82rem] [font-weight:var(--font-weight-label,600)] [letter-spacing:var(--tracking-label,0em)]"
+								>{row.prop}</code
+							>
 						</div>
 						<div class="flex flex-col gap-1">
-							<code class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground">{row.type}</code>
+							<code
+								class="overflow-x-auto rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.74rem] text-foreground"
+								>{row.type}</code
+							>
 							<p class="m-0 text-[0.78rem] leading-snug text-foreground-muted">{row.description}</p>
 						</div>
 						<div class="md:text-right">
-							<code class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem]">{row.default}</code>
+							<code
+								class="inline-block rounded-md bg-secondary/40 px-2 py-1 font-mono text-[0.72rem]"
+								>{row.default}</code
+							>
 						</div>
 					</li>
 				{/each}
@@ -328,10 +442,19 @@
 		</div>
 	</section>
 
-	<section class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center">
+	<section
+		class="flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
+	>
 		<div class="flex flex-col gap-1">
-			<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">Want to make it yours?</p>
-			<p class="m-0 text-[0.86rem] text-foreground-muted">Every Silk component reads from your theme tokens — open the studio to restyle them.</p>
+			<p
+				class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+				style="font-family: var(--font-header);"
+			>
+				Want to make it yours?
+			</p>
+			<p class="m-0 text-[0.86rem] text-foreground-muted">
+				Every Silk component reads from your theme tokens — open the studio to restyle them.
+			</p>
 		</div>
 		<Button href="/themes/studio">Open theme studio<ArrowRight size={14} /></Button>
 	</section>

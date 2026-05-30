@@ -14,19 +14,14 @@
 		label?: string;
 	} & ButtonProps;
 
-	let {
-		children,
-		class: className,
-		value,
-		label,
-		onclick: userOnclick,
-		...rest
-	}: Props = $props();
+	let { children, class: className, value, label, onclick: userOnclick, ...rest }: Props = $props();
 	let element = $state<HTMLButtonElement | HTMLAnchorElement | undefined>();
 
 	function resolveLabel() {
 		if (label) return label;
-		const fromAttr = element?.querySelector<HTMLElement>('[data-select-label]')?.textContent?.trim();
+		const fromAttr = element
+			?.querySelector<HTMLElement>('[data-select-label]')
+			?.textContent?.trim();
 		if (fromAttr) return fromAttr;
 		return element?.textContent?.trim() ?? '';
 	}
@@ -57,8 +52,7 @@
 	{...rest}
 	onclick={() => {
 		uiState.data.value = value;
-		uiState.data.selectedLabel =
-			resolveLabel() || uiState.data.labels.get(value) || value;
+		uiState.data.selectedLabel = resolveLabel() || uiState.data.labels.get(value) || value;
 		uiState.data.open = false;
 		uiState.data.buttonRef?.focus();
 		userOnclick?.();

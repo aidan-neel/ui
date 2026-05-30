@@ -4,7 +4,8 @@ export const manifest: Manifest = {
 	name: 'context-menu',
 	version: '1.0.0',
 	visibility: 'public',
-	description: 'Right-click contextual menu with sub-menus and checkbox items. Positioned via @floating-ui virtual element.',
+	description:
+		'Right-click contextual menu with sub-menus and checkbox items. Positioned via @floating-ui virtual element.',
 	role: 'menu',
 	files: [
 		'components/context-menu/context-menu.svelte',

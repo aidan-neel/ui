@@ -13,7 +13,8 @@ export const manifest: Manifest = {
 	name: 'input',
 	version: '2.0.0',
 	visibility: 'public',
-	description: 'Text input wrapping a native <input>. 3 variants. Forwards file/checkbox/text/number/etc. types.',
+	description:
+		'Text input wrapping a native <input>. 3 variants. Forwards file/checkbox/text/number/etc. types.',
 	files: [
 		'components/input/input.svelte',
 		'components/input/variants.ts',

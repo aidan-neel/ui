@@ -66,9 +66,7 @@ describe('Select -- selection behavior', () => {
 		await openSelect();
 
 		// Verify all options start unselected.
-		const unselectedAtOpen = document.querySelectorAll(
-			'[role="option"][aria-selected="false"]'
-		);
+		const unselectedAtOpen = document.querySelectorAll('[role="option"][aria-selected="false"]');
 		expect(unselectedAtOpen.length).toBe(3);
 	});
 
@@ -82,7 +80,12 @@ describe('Select -- selection behavior', () => {
 
 		// State-level check: find the SelectState in the registry and assert its value.
 		const selectState = Object.values(states).find(
-			(s) => s && s.data && typeof s.data === 'object' && 'value' in (s.data ?? {}) && 'selectedLabel' in (s.data ?? {})
+			(s) =>
+				s &&
+				s.data &&
+				typeof s.data === 'object' &&
+				'value' in (s.data ?? {}) &&
+				'selectedLabel' in (s.data ?? {})
 		);
 		expect(selectState).toBeDefined();
 		expect((selectState!.data as { value: string }).value).toBe('banana');

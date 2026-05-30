@@ -76,19 +76,13 @@ describe('Toggle -- interaction', () => {
 });
 
 describe('Toggle -- size and variant', () => {
-	it.each(['sm', 'md', 'lg'] as const)(
-		'accepts size="%s" without throwing',
-		(size) => {
-			render(Toggle, { props: { pressed: false, size } });
-			expect(screen.getByRole('button')).toBeInTheDocument();
-		}
-	);
+	it.each(['sm', 'md', 'lg'] as const)('accepts size="%s" without throwing', (size) => {
+		render(Toggle, { props: { pressed: false, size } });
+		expect(screen.getByRole('button')).toBeInTheDocument();
+	});
 
-	it.each(['default', 'outlined'] as const)(
-		'accepts variant="%s" without throwing',
-		(variant) => {
-			render(Toggle, { props: { pressed: false, variant } });
-			expect(screen.getByRole('button')).toBeInTheDocument();
-		}
-	);
+	it.each(['default', 'outlined'] as const)('accepts variant="%s" without throwing', (variant) => {
+		render(Toggle, { props: { pressed: false, variant } });
+		expect(screen.getByRole('button')).toBeInTheDocument();
+	});
 });

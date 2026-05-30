@@ -2,12 +2,7 @@
 	import { cn } from '@silk/ui/utils';
 	import type { ScrollAreaProps } from '.';
 
-	let {
-		class: className,
-		children,
-		orientation = 'vertical',
-		...rest
-	}: ScrollAreaProps = $props();
+	let { class: className, children, orientation = 'vertical', ...rest }: ScrollAreaProps = $props();
 </script>
 
 <div
@@ -15,7 +10,9 @@
 	data-orientation={orientation}
 	class={cn(
 		'silk-scroll relative',
-		orientation === 'horizontal' ? 'overflow-x-auto overflow-y-hidden' : 'overflow-y-auto overflow-x-hidden',
+		orientation === 'horizontal'
+			? 'overflow-x-auto overflow-y-hidden'
+			: 'overflow-y-auto overflow-x-hidden',
 		'overscroll-contain',
 		className
 	)}

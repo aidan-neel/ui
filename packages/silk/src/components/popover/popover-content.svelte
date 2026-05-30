@@ -99,11 +99,7 @@
 			popover.style.setProperty('--popover-trigger-width', `${triggerWidth}px`);
 		}
 
-		positionFloatingPanel(
-			reference,
-			popover,
-			refElement ? 'right-start' : uiState.placement
-		);
+		positionFloatingPanel(reference, popover, refElement ? 'right-start' : uiState.placement);
 	}
 
 	onMount(() => {
@@ -199,7 +195,9 @@
 <div
 	role="presentation"
 	data-floating-content
-	class={cn('absolute left-0 top-0 z-[130] flex max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] items-center justify-center')}
+	class={cn(
+		'absolute left-0 top-0 z-[130] flex max-w-[calc(100vw-1rem)] max-h-[calc(100vh-1rem)] items-center justify-center'
+	)}
 	bind:this={popover as HTMLElement}
 	onmouseenter={cancelClose}
 	onmouseleave={() => {
@@ -217,14 +215,13 @@
 			{...rest}
 			id={id ?? `popover-${String(key)}-content`}
 			{role}
-			aria-modal={ariaModalProp ?? (role === 'dialog' || role === 'alertdialog' ? 'true' : undefined)}
-			aria-labelledby={
-				rest['aria-label']
-					? undefined
-					: role === 'dialog' || role === 'alertdialog'
-						? `popover-${String(key)}-title`
-						: undefined
-			}
+			aria-modal={ariaModalProp ??
+				(role === 'dialog' || role === 'alertdialog' ? 'true' : undefined)}
+			aria-labelledby={rest['aria-label']
+				? undefined
+				: role === 'dialog' || role === 'alertdialog'
+					? `popover-${String(key)}-title`
+					: undefined}
 			{tabindex}
 			transition:flyAndScale={{ durationVar: '--motion-duration-panel' }}
 			data-ui="popover-content"

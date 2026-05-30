@@ -41,11 +41,20 @@ export type PopoverTriggerProps = {
 	element?: HTMLButtonElement | HTMLAnchorElement | undefined;
 	onclick?: () => void;
 	style?: string;
-} &
-	Pick<
-		HTMLButtonAttributes,
-		'disabled' | 'type' | 'name' | 'value' | 'id' | 'role' | 'tabindex' | 'aria-label' | 'aria-controls' | 'aria-expanded' | 'aria-haspopup'
-	> &
+} & Pick<
+	HTMLButtonAttributes,
+	| 'disabled'
+	| 'type'
+	| 'name'
+	| 'value'
+	| 'id'
+	| 'role'
+	| 'tabindex'
+	| 'aria-label'
+	| 'aria-controls'
+	| 'aria-expanded'
+	| 'aria-haspopup'
+> &
 	Partial<Record<`data-${string}`, string | boolean | null>>;
 export type PopoverTitleProps = DefaultProps;
 

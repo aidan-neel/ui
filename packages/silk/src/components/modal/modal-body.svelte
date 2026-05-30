@@ -5,10 +5,6 @@
 	let { class: className, children, ...rest }: ModalBodyProps = $props();
 </script>
 
-<div
-	{...rest}
-	data-ui="modal-body"
-	class={cn(className, 'flex flex-col')}
->
+<div {...rest} data-ui="modal-body" class={cn(className, 'flex flex-col')}>
 	{@render children?.()}
 </div>

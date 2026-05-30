@@ -70,7 +70,9 @@
 			<span class="grid size-6 place-items-center rounded-md bg-secondary/70 text-foreground-muted">
 				<Hash size={12} />
 			</span>
-			<code class="flex-1 font-mono text-[0.82rem] text-foreground">{@html highlight(installCommand, 'shell')}</code>
+			<code class="flex-1 font-mono text-[0.82rem] text-foreground"
+				>{@html highlight(installCommand, 'shell')}</code
+			>
 		</div>
 		<button
 			type="button"
@@ -78,10 +80,11 @@
 			class="border-l border-border bg-card px-3 text-foreground-muted transition-colors hover:bg-secondary/50 hover:text-foreground"
 			aria-label="Copy install command"
 		>
-			{#if copied}<Check size={14} class="text-[var(--color-success)]" />{:else}<Copy size={14} />{/if}
+			{#if copied}<Check size={14} class="text-[var(--color-success)]" />{:else}<Copy
+					size={14}
+				/>{/if}
 		</button>
 	</div>
-
 </header>
 
 <!-- ─── Pillars ─────────────────────────────────────────────────── -->
@@ -90,7 +93,10 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Layers size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Why Silk
 		</h2>
 	</div>
@@ -119,7 +125,10 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<GitFork size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			What's inside
 		</h2>
 	</div>
@@ -134,7 +143,11 @@
 					>
 						{stat.value}
 					</span>
-					<p class="m-0 text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{stat.label}</p>
+					<p
+						class="m-0 text-[0.84rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+					>
+						{stat.label}
+					</p>
 					<p class="m-0 text-[0.72rem] text-foreground-muted">{stat.sub}</p>
 				</div>
 			{/each}
@@ -148,19 +161,30 @@
 		<span class="grid size-6 place-items-center rounded-md bg-primary/10 text-primary">
 			<Sparkles size={12} />
 		</span>
-		<h2 class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<h2
+			class="m-0 text-[1.4rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Principles
 		</h2>
 	</div>
 
-	<div class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card">
+	<div
+		class="flex flex-col divide-y divide-border/60 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-card"
+	>
 		{#each [{ icon: Gauge, title: 'Fast feels intentional', body: 'Hover transitions cap at 240ms. Motion presets travel through a single CSS variable, so the whole UI changes tone together.' }, { icon: Keyboard, title: 'Keyboard-first', body: 'Tab order, escape handling, focus traps, and arrow-key navigation work out of the box — no extras to install.' }, { icon: Accessibility, title: 'Accessible by default', body: 'ARIA roles, labelled regions, and live-region toasts ship configured. Sensible focus rings even before you customize.' }, { icon: Type, title: 'Typography is a token', body: 'Headers, body, and mono each come from `--font-*` variables. Pair Geist with anything in seconds.' }] as principle}
 			<div class="flex items-start gap-4 px-5 py-4">
-				<span class="grid size-9 shrink-0 place-items-center rounded-md bg-secondary/60 text-foreground">
+				<span
+					class="grid size-9 shrink-0 place-items-center rounded-md bg-secondary/60 text-foreground"
+				>
 					<principle.icon size={15} />
 				</span>
 				<div class="flex flex-col gap-1">
-					<p class="m-0 text-[0.94rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight">{principle.title}</p>
+					<p
+						class="m-0 text-[0.94rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+					>
+						{principle.title}
+					</p>
 					<p class="m-0 text-[0.84rem] leading-relaxed text-foreground-muted">{principle.body}</p>
 				</div>
 			</div>
@@ -174,8 +198,8 @@
 		<Alert.Title>Built on tokens, not magic</Alert.Title>
 		<Alert.Description>
 			Silk reads from CSS variables for color, radius, type, and motion. The Theme Studio at
-			<code class="font-mono text-foreground">/themes/studio</code> is just a UI on top of them
-			— change a token there, change every page that imported a component.
+			<code class="font-mono text-foreground">/themes/studio</code> is just a UI on top of them — change
+			a token there, change every page that imported a component.
 		</Alert.Description>
 	</Alert.Root>
 </section>
@@ -185,7 +209,10 @@
 	class="mt-12 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 >
 	<div class="flex flex-col gap-1">
-		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<p
+			class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			Ready in five minutes
 		</p>
 		<p class="m-0 text-[0.86rem] text-foreground-muted">

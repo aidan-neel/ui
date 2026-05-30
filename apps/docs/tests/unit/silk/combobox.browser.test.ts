@@ -81,9 +81,7 @@ describe('Combobox -- search input', () => {
 		await openCombobox();
 		await new Promise((r) => setTimeout(r, 50));
 
-		const search = document.querySelector(
-			'input[placeholder="Search fruits"]'
-		) as HTMLInputElement;
+		const search = document.querySelector('input[placeholder="Search fruits"]') as HTMLInputElement;
 		search.focus();
 		await userEvent.type(search, 'app');
 		await flush();

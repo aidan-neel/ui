@@ -15,7 +15,6 @@
 	import Sun from '@lucide/svelte/icons/sun';
 	import { toggleMode, mode } from 'mode-watcher';
 	import * as Command from '@silk/ui/components/command';
-	import * as DropdownMenu from '@silk/ui/components/dropdown-menu';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import Component from '@lucide/svelte/icons/component';
 	import Download from '@lucide/svelte/icons/download';
@@ -24,18 +23,9 @@
 	import History from '@lucide/svelte/icons/history';
 	import LayoutTemplate from '@lucide/svelte/icons/layout-template';
 	import Palette from '@lucide/svelte/icons/palette';
-	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import * as Sheet from '@silk/ui/components/sheet';
-	import { applyLiveThemeCss } from '@silk/ui/themes/live';
-	import { themeToCss, type ThemeDraft } from '@silk/ui/themes/presets';
-	import { toast } from '@silk/ui/components/toast';
 
-	type PopularTheme = ThemeDraft & { id?: string; createdAt?: string; updatedAt?: string };
-
-	const {
-		popularThemes = [],
-		starCount = null
-	}: { popularThemes?: PopularTheme[]; starCount?: number | null } = $props();
+	const { starCount = null }: { starCount?: number | null } = $props();
 
 	function formatStarCount(n: number | null): string {
 		if (n === null || Number.isNaN(n)) return 'Star';
@@ -49,16 +39,6 @@
 	let scrolled = $state(false);
 	let mobileMenuOpen = $state(false);
 	const isStudio = $derived($page.url.pathname.startsWith('/themes/studio'));
-
-	function applyPopularTheme(theme: PopularTheme) {
-		applyLiveThemeCss(themeToCss(theme as ThemeDraft));
-		toast({
-			title: `${theme.name} applied`,
-			description: 'Live tokens updated across the app.',
-			duration: 1800,
-			type: 'success'
-		});
-	}
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
@@ -259,7 +239,10 @@
 							d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
 						/>
 					</svg>
-					<span class="text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Star · {formatStarCount(starCount)}</span>
+					<span
+						class="text-[0.72rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+						>Star · {formatStarCount(starCount)}</span
+					>
 				</Button>
 			</div>
 

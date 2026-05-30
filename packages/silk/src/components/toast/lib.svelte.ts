@@ -97,7 +97,10 @@ function dismissToast(id: number) {
 /** Schedules automatic dismissal for a toast after the provided duration. */
 function scheduleToastRemoval(id: number, duration: number) {
 	clearToastTimeout(id);
-	toastTimeouts.set(id, setTimeout(() => dismissToast(id), duration));
+	toastTimeouts.set(
+		id,
+		setTimeout(() => dismissToast(id), duration)
+	);
 }
 
 /** Pauses a toast timer while the user is interacting with it. */

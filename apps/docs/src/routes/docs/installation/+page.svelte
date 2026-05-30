@@ -46,7 +46,7 @@
 			body: 'Import from the path the CLI created. No barrel re-exports, no extra setup.',
 			code: `<script>
   import { Button } from '@silk/ui/components/button';
-<\/script>
+<${'/'}script>
 
 <Button>Get started</Button>`,
 			lang: 'svelte'
@@ -66,7 +66,10 @@
 
 <svelte:head>
 	<title>Silk · Installation</title>
-	<meta name="description" content="Install Silk UI in a fresh SvelteKit project — five commands." />
+	<meta
+		name="description"
+		content="Install Silk UI in a fresh SvelteKit project — five commands."
+	/>
 </svelte:head>
 
 <header class="flex flex-col gap-5 border-b border-border/60 pb-10">
@@ -114,11 +117,15 @@
 			</div>
 			<div class="flex flex-1 flex-col gap-3">
 				<p class="m-0 text-[0.86rem] leading-relaxed text-foreground-muted">{step.body}</p>
-				<div class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40">
+				<div
+					class="overflow-hidden rounded-[var(--radius-md)] border border-border bg-secondary/40"
+				>
 					<div
 						class="flex items-center justify-between gap-2 border-b border-border/70 px-3 py-1.5"
 					>
-						<span class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted">
+						<span
+							class="inline-flex items-center gap-1.5 text-[0.66rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] uppercase tracking-wide text-foreground-muted"
+						>
 							<Terminal size={11} />
 							{step.lang}
 						</span>
@@ -137,7 +144,9 @@
 						</button>
 					</div>
 					<pre
-						class="m-0 overflow-x-auto px-4 py-3 font-mono text-[0.82rem] leading-relaxed text-foreground"><code>{@html highlight(step.code, step.lang)}</code></pre>
+						class="m-0 overflow-x-auto px-4 py-3 font-mono text-[0.82rem] leading-relaxed text-foreground"><code
+							>{@html highlight(step.code, step.lang)}</code
+						></pre>
 				</div>
 			</div>
 		</div>
@@ -150,16 +159,16 @@
 		<Alert.Title>Already on shadcn-style flow?</Alert.Title>
 		<Alert.Description>
 			Silk's CLI mirrors it. Same <code class="font-mono text-foreground">init</code> →
-			<code class="font-mono text-foreground">add</code> contract — but every component is a Svelte
-			5 file, not a Radix wrapper.
+			<code class="font-mono text-foreground">add</code> contract — but every component is a Svelte 5
+			file, not a Radix wrapper.
 		</Alert.Description>
 	</Alert.Root>
 
 	<Alert.Root variant="warning">
 		<Alert.Title>Tailwind v4 only</Alert.Title>
 		<Alert.Description>
-			Silk uses Tailwind v4 features (CSS-first config, `@theme`, `color-mix`). If your project
-			pins Tailwind v3, upgrade first.
+			Silk uses Tailwind v4 features (CSS-first config, `@theme`, `color-mix`). If your project pins
+			Tailwind v3, upgrade first.
 		</Alert.Description>
 	</Alert.Root>
 </section>
@@ -169,7 +178,10 @@
 	class="mt-10 flex flex-col items-start justify-between gap-4 rounded-[var(--radius-lg)] border border-border bg-card p-6 sm:flex-row sm:items-center"
 >
 	<div class="flex flex-col gap-1">
-		<p class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight" style="font-family: var(--font-header);">
+		<p
+			class="m-0 text-[1rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] tracking-tight"
+			style="font-family: var(--font-header);"
+		>
 			You're set. Pick a starting point.
 		</p>
 		<p class="m-0 text-[0.86rem] text-foreground-muted">

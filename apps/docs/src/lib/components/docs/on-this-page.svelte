@@ -16,7 +16,9 @@
 
 	let items = $state<TocItem[]>([]);
 
-	const selector = ['.docs-section-heading', '.docs-subsection-heading', 'h1', 'h2', 'h3'].join(', ');
+	const selector = ['.docs-section-heading', '.docs-subsection-heading', 'h1', 'h2', 'h3'].join(
+		', '
+	);
 
 	function slugify(text: string) {
 		return text
@@ -35,6 +37,8 @@
 	}
 
 	function buildToc(root: HTMLElement) {
+		// Local, non-reactive dedup helper — SvelteMap is unnecessary here.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const seen = new Map<string, number>();
 
 		items = Array.from(root.querySelectorAll(selector))
@@ -81,6 +85,8 @@
 	});
 
 	$effect(() => {
+		// Touch the pathname so this effect re-runs on navigation.
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		page.url.pathname;
 		void refreshToc();
 	});
@@ -88,7 +94,11 @@
 
 {#if items.length > 0}
 	<aside class={`text-sm ${className}`}>
-		<p class="mb-4 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground">On This Page</p>
+		<p
+			class="mb-4 [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] text-foreground"
+		>
+			On This Page
+		</p>
 		<nav aria-label="On this page">
 			<ul class="space-y-1.5 text-[0.96rem] text-foreground-muted">
 				{#each items as item}

@@ -14,7 +14,10 @@
 	const tabsState = getContext<TabsState>('tabs');
 
 	function toIdPart(input: string) {
-		return input.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+		return input
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/(^-|-$)/g, '');
 	}
 
 	const triggerId = $derived(`${tabsState.id}-trigger-${toIdPart(value)}`);

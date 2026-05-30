@@ -39,9 +39,7 @@ describe('transitionPresets', () => {
 
 	it('sorts non-default presets alphabetically by name', () => {
 		const nonDefault = transitionPresets.filter((p) => p.slug !== 'default');
-		const sortedNames = [...nonDefault]
-			.map((p) => p.name)
-			.sort((a, b) => a.localeCompare(b));
+		const sortedNames = [...nonDefault].map((p) => p.name).sort((a, b) => a.localeCompare(b));
 		expect(nonDefault.map((p) => p.name)).toEqual(sortedNames);
 	});
 

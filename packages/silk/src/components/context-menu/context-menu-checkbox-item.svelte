@@ -10,7 +10,14 @@
 	const parent = getContext<string>('parent');
 	const uiState = states[key].data as ContextMenuState;
 
-	let { class: className, children, value, callback, inset = false, ...rest }: ContextMenuCheckboxItemProps = $props();
+	let {
+		class: className,
+		children,
+		value,
+		callback,
+		inset = false,
+		...rest
+	}: ContextMenuCheckboxItemProps = $props();
 
 	function getOrCreateCheckboxItem(itemValue: string) {
 		const existingItem = Array.from(uiState.checkboxItems).find((item) => item.value === itemValue);

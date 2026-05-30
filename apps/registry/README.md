@@ -53,11 +53,11 @@ Then `docker compose down -v` to delete the local volume.
 
 Run the registry image (`./Dockerfile`) with these set:
 
-| Variable        | Required | Notes                                    |
-| --------------- | -------- | ---------------------------------------- |
-| `DATABASE_URL`  | yes      | Supabase transaction pooler (port 6543). |
-| `DIRECT_URL`    | yes      | Supabase direct/session (port 5432).     |
-| `PORT`          | no       | Defaults to 4100 via docker-compose.     |
+| Variable       | Required | Notes                                    |
+| -------------- | -------- | ---------------------------------------- |
+| `DATABASE_URL` | yes      | Supabase transaction pooler (port 6543). |
+| `DIRECT_URL`   | yes      | Supabase direct/session (port 5432).     |
+| `PORT`         | no       | Defaults to 4100 via docker-compose.     |
 
 ## Managing themes
 

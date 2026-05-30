@@ -7,7 +7,6 @@
 	import Check from '@lucide/svelte/icons/check';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Palette from '@lucide/svelte/icons/palette';
-	import Sparkles from '@lucide/svelte/icons/sparkles';
 	import Bell from '@lucide/svelte/icons/bell';
 	import Plus from '@lucide/svelte/icons/plus';
 	import Pin from '@lucide/svelte/icons/pin';
@@ -92,15 +91,22 @@
 		};
 		applyConfig(params);
 		return {
-			update(p) { applyConfig(p ?? {}); },
-			destroy() { observer?.disconnect(); }
+			update(p) {
+				applyConfig(p ?? {});
+			},
+			destroy() {
+				observer?.disconnect();
+			}
 		};
 	};
 </script>
 
 <svelte:head>
 	<title>Silk UI · Themed Svelte components</title>
-	<meta name="description" content="40 Svelte 5 components, a live theme studio, and tokens that bend instead of break." />
+	<meta
+		name="description"
+		content="40 Svelte 5 components, a live theme studio, and tokens that bend instead of break."
+	/>
 </svelte:head>
 
 <div class="page">
@@ -157,7 +163,10 @@
 					<div class="preview-topbar-crumb">
 						<span class="text-[0.72rem] text-foreground-muted">Workspace</span>
 						<span class="text-foreground-muted/50">/</span>
-						<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Dashboard</span>
+						<span
+							class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+							>Dashboard</span
+						>
 					</div>
 					<div class="preview-topbar-search">
 						<Search size={12} />
@@ -192,8 +201,14 @@
 						<div class="preview-card-head">
 							<Avatar.Root size="md"><Avatar.Fallback>AN</Avatar.Fallback></Avatar.Root>
 							<div class="preview-card-meta">
-								<p class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight">Aidan Neel</p>
-								<p class="m-0 text-[0.74rem] leading-tight text-foreground-muted">aidan@silk-ui.dev</p>
+								<p
+									class="m-0 text-[0.86rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)] leading-tight"
+								>
+									Aidan Neel
+								</p>
+								<p class="m-0 text-[0.74rem] leading-tight text-foreground-muted">
+									aidan@silk-ui.dev
+								</p>
 							</div>
 							<Badge variant="primary" class="ml-auto px-2 text-[0.66rem]">Pro</Badge>
 						</div>
@@ -212,7 +227,9 @@
 						<div class="flex flex-col gap-1.5">
 							<div class="flex items-center justify-between">
 								<span class="text-[0.78rem] text-foreground-muted">Storage</span>
-								<span class="font-mono text-[0.72rem] text-foreground-muted">{volume} of 100 GB</span>
+								<span class="font-mono text-[0.72rem] text-foreground-muted"
+									>{volume} of 100 GB</span
+								>
 							</div>
 							<Slider bind:value={volume} label="Storage" />
 							<Progress value={volume} />
@@ -231,11 +248,16 @@
 
 						<div class="preview-tile">
 							<div class="preview-tile-head">
-								<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Quick actions</span>
+								<span
+									class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+									>Quick actions</span
+								>
 								<Star size={13} class="text-foreground-muted" />
 							</div>
 							<div class="preview-tile-row">
-								<Toggle bind:pressed={pinned} size="sm" aria-label="Pin"><Pin size={12} />Pin</Toggle>
+								<Toggle bind:pressed={pinned} size="sm" aria-label="Pin"
+									><Pin size={12} />Pin</Toggle
+								>
 								<Badge variant="outlined" class="px-2 text-[0.7rem]"><Plus size={11} />New</Badge>
 								<Badge variant="ghost" class="px-2 text-[0.7rem]">Drafts</Badge>
 								<Badge variant="primary" class="px-2 text-[0.7rem]">Beta</Badge>
@@ -255,20 +277,27 @@
 				<!-- Bottom row: activity list -->
 				<div class="preview-activity">
 					<div class="preview-activity-head">
-						<span class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">Recent activity</span>
-						<a href="#" class="inline-flex items-center gap-1 text-[0.74rem] text-foreground-muted hover:text-foreground">
+						<span
+							class="text-[0.78rem] [font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+							>Recent activity</span
+						>
+						<a
+							href="#"
+							class="inline-flex items-center gap-1 text-[0.74rem] text-foreground-muted hover:text-foreground"
+						>
 							View all <ArrowUpRight size={11} />
 						</a>
 					</div>
-					{#each [
-						{ initials: 'MC', name: 'Maya Chen', action: 'published the Aurora theme', time: '2m' },
-						{ initials: 'LP', name: 'Leo Park', action: 'shipped fix(calendar): keyboard nav', time: '14m' },
-						{ initials: 'SR', name: 'Sofia Reyes', action: 'opened PR #42 in registry', time: '1h' }
-					] as row}
+					{#each [{ initials: 'MC', name: 'Maya Chen', action: 'published the Aurora theme', time: '2m' }, { initials: 'LP', name: 'Leo Park', action: 'shipped fix(calendar): keyboard nav', time: '14m' }, { initials: 'SR', name: 'Sofia Reyes', action: 'opened PR #42 in registry', time: '1h' }] as row}
 						<div class="preview-activity-row">
 							<Avatar.Root size="sm"><Avatar.Fallback>{row.initials}</Avatar.Fallback></Avatar.Root>
 							<div class="flex-1 min-w-0">
-								<p class="m-0 text-[0.8rem] leading-tight"><span class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]">{row.name}</span> <span class="text-foreground-muted">{row.action}</span></p>
+								<p class="m-0 text-[0.8rem] leading-tight">
+									<span
+										class="[font-weight:var(--font-weight-label,500)] [letter-spacing:var(--tracking-label,0em)]"
+										>{row.name}</span
+									> <span class="text-foreground-muted">{row.action}</span>
+								</p>
 							</div>
 							<span class="font-mono text-[0.7rem] text-foreground-muted">{row.time}</span>
 						</div>
@@ -294,7 +323,9 @@
 			<span class="picker-eyebrow">Compound APIs</span>
 			<h2 class="section-title">Composable like you'd build it yourself.</h2>
 			<p class="section-sub">
-				Each component splits into the parts you'd expect — <code>Root</code>, <code>Trigger</code>, <code>Content</code>, <code>Header</code>. No magic, no hidden state. The markup reads like the design spec.
+				Each component splits into the parts you'd expect — <code>Root</code>, <code>Trigger</code>,
+				<code>Content</code>, <code>Header</code>. No magic, no hidden state. The markup reads like
+				the design spec.
 			</p>
 		</div>
 
@@ -306,21 +337,30 @@
 					<span class="callout-num">01</span>
 					<div>
 						<p class="callout-title">Tokens that bend.</p>
-						<p class="callout-body">Every color, radius, and motion variable threads through 40 components. Override one — they all update.</p>
+						<p class="callout-body">
+							Every color, radius, and motion variable threads through 40 components. Override one —
+							they all update.
+						</p>
 					</div>
 				</div>
 				<div class="callout">
 					<span class="callout-num">02</span>
 					<div>
 						<p class="callout-title">Accessibility, defaulted.</p>
-						<p class="callout-body">Focus traps, scroll lock, keyboard semantics, ARIA. Modal-like overlays freeze focus to the panel automatically.</p>
+						<p class="callout-body">
+							Focus traps, scroll lock, keyboard semantics, ARIA. Modal-like overlays freeze focus
+							to the panel automatically.
+						</p>
 					</div>
 				</div>
 				<div class="callout">
 					<span class="callout-num">03</span>
 					<div>
 						<p class="callout-title">Source-distributed.</p>
-						<p class="callout-body">CLI pulls components into your repo as source. Your code, your edits — never a black-box dependency.</p>
+						<p class="callout-body">
+							CLI pulls components into your repo as source. Your code, your edits — never a
+							black-box dependency.
+						</p>
 					</div>
 				</div>
 			</aside>
@@ -332,13 +372,21 @@
 		<div class="closer-content">
 			<div class="closer-inner">
 				<h2 class="closer-title">Start from a stronger baseline.</h2>
-				<p class="closer-sub">Open the docs, copy a component, restyle the whole library from the studio.</p>
+				<p class="closer-sub">
+					Open the docs, copy a component, restyle the whole library from the studio.
+				</p>
 				<div class="closer-cta">
 					<Button href="/docs/introduction" size="lg">
 						Read the docs
 						<ArrowRight size={15} />
 					</Button>
-					<Button href="https://github.com/aidan-neel/ui" variant="ghost" size="lg" target="_blank" rel="noreferrer noopener">
+					<Button
+						href="https://github.com/aidan-neel/ui"
+						variant="ghost"
+						size="lg"
+						target="_blank"
+						rel="noreferrer noopener"
+					>
 						Star on GitHub
 					</Button>
 				</div>
@@ -396,7 +444,10 @@
 		gap: 1.25rem;
 	}
 	@media (max-width: 768px) {
-		.hero { padding: 4rem 1.25rem 3rem; gap: 1rem; }
+		.hero {
+			padding: 4rem 1.25rem 3rem;
+			gap: 1rem;
+		}
 	}
 	.eyebrow {
 		display: inline-flex;
@@ -429,10 +480,12 @@
 		text-wrap: balance;
 	}
 	.headline-accent {
-		background: linear-gradient(90deg,
+		background: linear-gradient(
+			90deg,
 			var(--color-foreground) 0%,
 			color-mix(in srgb, var(--color-foreground) 45%, var(--color-primary)) 70%,
-			var(--color-primary) 100%);
+			var(--color-primary) 100%
+		);
 		-webkit-background-clip: text;
 		background-clip: text;
 		color: transparent;
@@ -466,14 +519,20 @@
 		color: var(--color-foreground-muted);
 		backdrop-filter: blur(6px);
 		cursor: pointer;
-		transition: border-color 160ms ease, background-color 160ms ease;
+		transition:
+			border-color 160ms ease,
+			background-color 160ms ease;
 	}
 	.install:hover {
 		border-color: color-mix(in srgb, var(--color-foreground) 16%, transparent);
 		background: var(--color-card);
 	}
-	.install-prompt { color: color-mix(in srgb, var(--color-foreground-muted) 60%, transparent); }
-	.install-cmd { color: var(--color-foreground); }
+	.install-prompt {
+		color: color-mix(in srgb, var(--color-foreground-muted) 60%, transparent);
+	}
+	.install-cmd {
+		color: var(--color-foreground);
+	}
 	.install-copy {
 		display: inline-flex;
 		align-items: center;
@@ -557,7 +616,9 @@
 		gap: 0.6rem;
 	}
 	@media (max-width: 560px) {
-		.preview-stats { grid-template-columns: 1fr; }
+		.preview-stats {
+			grid-template-columns: 1fr;
+		}
 	}
 	.preview-stat {
 		display: flex;
@@ -599,7 +660,9 @@
 		gap: 0.85rem;
 	}
 	@media (max-width: 760px) {
-		.preview-grid { grid-template-columns: 1fr; }
+		.preview-grid {
+			grid-template-columns: 1fr;
+		}
 	}
 	.preview-card {
 		display: flex;
@@ -610,14 +673,30 @@
 		background: color-mix(in srgb, var(--color-background) 80%, transparent);
 		padding: 0.95rem;
 	}
-	.preview-card-head { display: flex; align-items: center; gap: 0.6rem; }
-	.preview-card-meta { display: flex; flex-direction: column; }
-	.preview-card-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.1rem 0; }
+	.preview-card-head {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+	.preview-card-meta {
+		display: flex;
+		flex-direction: column;
+	}
+	.preview-card-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.1rem 0;
+	}
 	.preview-divider {
 		border-top: 1px solid var(--color-border);
 		margin: 0.3rem 0;
 	}
-	.preview-stack { display: flex; flex-direction: column; gap: 0.85rem; }
+	.preview-stack {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
 	.preview-tile {
 		display: flex;
 		flex-direction: column;
@@ -627,9 +706,20 @@
 		background: color-mix(in srgb, var(--color-background) 80%, transparent);
 		padding: 0.85rem;
 	}
-	.preview-tile-head { display: flex; justify-content: space-between; align-items: center; }
-	.preview-tile-row { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
-	.preview-calendar { padding: 0.55rem 0.6rem; }
+	.preview-tile-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.preview-tile-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		align-items: center;
+	}
+	.preview-calendar {
+		padding: 0.55rem 0.6rem;
+	}
 
 	.preview-activity {
 		display: flex;
@@ -664,9 +754,15 @@
 		gap: 1.5rem;
 	}
 	@media (max-width: 720px) {
-		.stats-strip { grid-template-columns: repeat(2, 1fr); }
+		.stats-strip {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
-	.stat { display: flex; flex-direction: column; gap: 0.2rem; }
+	.stat {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
 	.stat-value {
 		font-family: var(--font-header), sans-serif;
 		font-size: clamp(2rem, 3.5vw, 2.7rem);
@@ -686,7 +782,9 @@
 		margin: 6rem auto 0;
 		padding: 0 1.5rem;
 	}
-	.codeshow-intro { max-width: 38rem; }
+	.codeshow-intro {
+		max-width: 38rem;
+	}
 	.section-title {
 		margin: 0.6rem 0 0.9rem;
 		font-family: var(--font-header), sans-serif;
@@ -716,7 +814,9 @@
 		gap: 2rem;
 	}
 	@media (max-width: 960px) {
-		.codeshow-grid { grid-template-columns: 1fr; }
+		.codeshow-grid {
+			grid-template-columns: 1fr;
+		}
 	}
 	.codeshow-code {
 		margin: 0;
@@ -729,8 +829,15 @@
 		overflow-x: auto;
 		font-family: var(--font-mono), monospace;
 	}
-	.codeshow-callouts { display: flex; flex-direction: column; gap: 1.3rem; }
-	.callout { display: flex; gap: 0.85rem; }
+	.codeshow-callouts {
+		display: flex;
+		flex-direction: column;
+		gap: 1.3rem;
+	}
+	.callout {
+		display: flex;
+		gap: 0.85rem;
+	}
 	.callout-num {
 		flex-shrink: 0;
 		display: grid;
@@ -772,13 +879,23 @@
 		border-bottom: 1px solid var(--color-border);
 		border-radius: 0;
 		background:
-			radial-gradient(ellipse at top left, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 60%),
-			radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 60%),
+			radial-gradient(
+				ellipse at top left,
+				color-mix(in srgb, var(--color-primary) 18%, transparent),
+				transparent 60%
+			),
+			radial-gradient(
+				ellipse at bottom right,
+				color-mix(in srgb, var(--color-accent) 16%, transparent),
+				transparent 60%
+			),
 			var(--color-card);
 		text-align: center;
 	}
 	@media (max-width: 640px) {
-		.closer-content { padding: 3.5rem 1.25rem; }
+		.closer-content {
+			padding: 3.5rem 1.25rem;
+		}
 	}
 	.closer-inner {
 		max-width: 56rem;
@@ -819,20 +936,41 @@
 		gap: 1.5rem;
 	}
 	@media (max-width: 720px) {
-		.footer { flex-direction: column; }
+		.footer {
+			flex-direction: column;
+		}
 	}
-	.footer-mark { margin: 0; font-weight: var(--font-weight-header, 600); letter-spacing: var(--tracking-header, -0.02em); }
-	.footer-tag { margin: 0.3rem 0 0; font-size: 0.9rem; color: var(--color-foreground-muted); }
-	.footer-nav { display: flex; gap: 1.3rem; flex-wrap: wrap; }
+	.footer-mark {
+		margin: 0;
+		font-weight: var(--font-weight-header, 600);
+		letter-spacing: var(--tracking-header, -0.02em);
+	}
+	.footer-tag {
+		margin: 0.3rem 0 0;
+		font-size: 0.9rem;
+		color: var(--color-foreground-muted);
+	}
+	.footer-nav {
+		display: flex;
+		gap: 1.3rem;
+		flex-wrap: wrap;
+	}
 	.footer-nav a {
 		font-size: 0.9rem;
 		color: var(--color-foreground-muted);
 		text-decoration: none;
 		transition: color 160ms ease;
 	}
-	.footer-nav a:hover { color: var(--color-foreground); }
+	.footer-nav a:hover {
+		color: var(--color-foreground);
+	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.reveal { opacity: 1; transform: none; filter: none; transition: none; }
+		.reveal {
+			opacity: 1;
+			transform: none;
+			filter: none;
+			transition: none;
+		}
 	}
 </style>

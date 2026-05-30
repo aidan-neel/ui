@@ -17,6 +17,8 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"test": "vitest run",
+		"test:ci": "vitest run --project unit --project ssr",
+		"test:browser": "vitest run --project browser",
 		"test:watch": "vitest"
 	},
 	"devDependencies": {
@@ -64,5 +66,8 @@
 		"tailwind-merge": "^3.5.0",
 		"tailwind-variants": "^3.2.2"
 	},
-	"trustedDependencies": ["@tailwindcss/oxide", "esbuild"]
+	"trustedDependencies": [
+		"@tailwindcss/oxide",
+		"esbuild"
+	]
 }

@@ -11,9 +11,9 @@ services:
     env_file:
       - apps/registry/.env
     environment:
-      PORT: "4100"
+      PORT: '4100'
     ports:
-      - "4100:4100"
+      - '4100:4100'
 
   docs:
     build:
@@ -23,7 +23,7 @@ services:
     depends_on:
       - registry
     environment:
-      PORT: "3000"
-      HOST: "0.0.0.0"
+      PORT: '3000'
+      HOST: '0.0.0.0'
     ports:
-      - "3000:3000"
+      - '3000:3000'

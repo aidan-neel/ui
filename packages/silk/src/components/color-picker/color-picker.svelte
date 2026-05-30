@@ -247,7 +247,9 @@
 			</div>
 
 			<!-- Hue + preview row -->
-			<div class="flex items-center gap-2.5 border-b border-border/60 p-[var(--color-picker-padding)]">
+			<div
+				class="flex items-center gap-2.5 border-b border-border/60 p-[var(--color-picker-padding)]"
+			>
 				<span
 					class="size-7 shrink-0 rounded-md ring-1 ring-inset ring-black/10"
 					style="background:{previewHex};"
@@ -291,7 +293,9 @@
 			<div class="flex flex-col gap-1.5 border-b border-border/60 p-[var(--color-picker-padding)]">
 				{#each [{ key: 'h', label: 'H', max: 360, value: hslH, unit: '°' }, { key: 's', label: 'S', max: 100, value: hslS, unit: '%' }, { key: 'l', label: 'L', max: 100, value: hslL, unit: '%' }] as channel (channel.key)}
 					<div class="flex items-center gap-2">
-						<span class="w-3 shrink-0 font-mono [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted">
+						<span
+							class="w-3 shrink-0 font-mono [font-size:var(--font-size-body,16px)] [font-weight:var(--font-weight-body,400)] [letter-spacing:var(--tracking-body,0em)] text-foreground-muted"
+						>
 							{channel.label}
 						</span>
 						<input

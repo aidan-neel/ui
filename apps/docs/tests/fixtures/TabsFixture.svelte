@@ -1,10 +1,8 @@
 <script lang="ts">
 	import * as Tabs from '@silk/ui/components/tabs';
 
-	let {
-		value = $bindable('one'),
-		orientation = 'horizontal' as 'horizontal' | 'vertical'
-	} = $props();
+	let { value = $bindable('one'), orientation = 'horizontal' as 'horizontal' | 'vertical' } =
+		$props();
 </script>
 
 <Tabs.Root bind:value {orientation}>
